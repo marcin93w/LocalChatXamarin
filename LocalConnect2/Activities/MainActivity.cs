@@ -6,7 +6,6 @@ using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
-using LocalConnect2.ViewModels;
 
 namespace LocalConnect2.Activities
 {
@@ -14,7 +13,7 @@ namespace LocalConnect2.Activities
         Label = "LocalConnect2", 
         MainLauncher = true, 
         Icon = "@drawable/icon", 
-        Theme = "@android:style/Theme.Black.NoTitleBar.Fullscreen")]
+        Theme = "@android:style/Theme.Black.NoTitleBar")]
     public class MainActivity : FragmentActivity
     {
         protected override void OnCreate(Bundle bundle)

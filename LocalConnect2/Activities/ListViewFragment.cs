@@ -9,13 +9,20 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using LocalConnect2.ViewModels;
+using LocalConnect2.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace LocalConnect2.Activities
 {
     public class ListViewFragment : Fragment
     {
+        private readonly PeopleViewModel _peopleViewModel ;
+
+        public ListViewFragment()
+        {
+            _peopleViewModel = new PeopleViewModel();
+        }
+
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
         {
@@ -23,10 +30,17 @@ namespace LocalConnect2.Activities
                     Resource.Layout.ListViewFragment, container, false);
 
             var list = rootView.FindViewById<ListView>(Resource.Id.listView);
-            list.Adapter = new PeopleListAdapter(rootView.Context, Resource.Layout.ListItem,
-                new PeopleViewModel());
+            list.Adapter = new PeopleListAdapter(rootView.Context, Resource.Layout.ListItem, _peopleViewModel);
+            list.ItemClick += UserToChatSelected;
 
             return rootView;
+        }
+
+        private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)
+        {
+            var chatActivity = new Intent(Activity.ApplicationContext, typeof(ChatActivity));
+            chatActivity.PutExtra("User", e.Id);
+            StartActivity(chatActivity);
         }
     }
 }

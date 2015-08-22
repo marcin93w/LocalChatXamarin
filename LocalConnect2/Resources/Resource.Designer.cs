@@ -26,6 +26,8 @@ namespace LocalConnect2
 		
 		public static void UpdateIdValues()
 		{
+			global::GalaSoft.MvvmLight.Resource.String.ApplicationName = global::LocalConnect2.Resource.String.ApplicationName;
+			global::GalaSoft.MvvmLight.Resource.String.Hello = global::LocalConnect2.Resource.String.Hello;
 		}
 		
 		public partial class Attribute
@@ -256,32 +258,44 @@ namespace LocalConnect2
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f070008
+			public const int AddMessageForm = 2131165192;
+			
+			// aapt resource value: 0x7f070007
+			public const int MessagesList = 2131165191;
+			
+			// aapt resource value: 0x7f07000a
+			public const int SendButton = 2131165194;
+			
+			// aapt resource value: 0x7f070009
+			public const int TextInput = 2131165193;
+			
 			// aapt resource value: 0x7f070005
 			public const int adjust_height = 2131165189;
 			
 			// aapt resource value: 0x7f070006
 			public const int adjust_width = 2131165190;
 			
-			// aapt resource value: 0x7f070010
-			public const int backToList = 2131165200;
+			// aapt resource value: 0x7f070014
+			public const int backToList = 2131165204;
 			
 			// aapt resource value: 0x7f070000
 			public const int hybrid = 2131165184;
 			
-			// aapt resource value: 0x7f07000a
-			public const int listLayout = 2131165194;
+			// aapt resource value: 0x7f07000e
+			public const int listLayout = 2131165198;
 			
-			// aapt resource value: 0x7f07000c
-			public const int listView = 2131165196;
+			// aapt resource value: 0x7f070010
+			public const int listView = 2131165200;
+			
+			// aapt resource value: 0x7f070013
+			public const int map = 2131165203;
+			
+			// aapt resource value: 0x7f070012
+			public const int mapLayout = 2131165202;
 			
 			// aapt resource value: 0x7f07000f
-			public const int map = 2131165199;
-			
-			// aapt resource value: 0x7f07000e
-			public const int mapLayout = 2131165198;
-			
-			// aapt resource value: 0x7f07000b
-			public const int menuLayout = 2131165195;
+			public const int menuLayout = 2131165199;
 			
 			// aapt resource value: 0x7f070001
 			public const int none = 2131165185;
@@ -289,17 +303,17 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070002
 			public const int normal = 2131165186;
 			
+			// aapt resource value: 0x7f070011
+			public const int pager = 2131165201;
+			
 			// aapt resource value: 0x7f07000d
-			public const int pager = 2131165197;
+			public const int personDesc = 2131165197;
 			
-			// aapt resource value: 0x7f070009
-			public const int personDesc = 2131165193;
+			// aapt resource value: 0x7f07000b
+			public const int personImage = 2131165195;
 			
-			// aapt resource value: 0x7f070007
-			public const int personImage = 2131165191;
-			
-			// aapt resource value: 0x7f070008
-			public const int personName = 2131165192;
+			// aapt resource value: 0x7f07000c
+			public const int personName = 2131165196;
 			
 			// aapt resource value: 0x7f070003
 			public const int satellite = 2131165187;
@@ -337,16 +351,19 @@ namespace LocalConnect2
 		{
 			
 			// aapt resource value: 0x7f030000
-			public const int ListItem = 2130903040;
+			public const int Chat = 2130903040;
 			
 			// aapt resource value: 0x7f030001
-			public const int ListViewFragment = 2130903041;
+			public const int ListItem = 2130903041;
 			
 			// aapt resource value: 0x7f030002
-			public const int Main = 2130903042;
+			public const int ListViewFragment = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int MapViewFragment = 2130903043;
+			public const int Main = 2130903043;
+			
+			// aapt resource value: 0x7f030004
+			public const int MapViewFragment = 2130903044;
 			
 			static Layout()
 			{

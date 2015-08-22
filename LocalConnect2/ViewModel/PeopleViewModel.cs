@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace LocalConnect2.ViewModels
+namespace LocalConnect2.ViewModel
 {
     public class Pearson
     {
@@ -15,7 +12,7 @@ namespace LocalConnect2.ViewModels
     }
 
 
-    public class PeopleViewModel
+    public class PeopleViewModel : MainViewModel
     {
         public List<Pearson> People { set; get; }
 

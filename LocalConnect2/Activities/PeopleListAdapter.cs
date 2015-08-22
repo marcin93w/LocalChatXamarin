@@ -2,7 +2,7 @@ using System.Linq;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
-using LocalConnect2.ViewModels;
+using LocalConnect2.ViewModel;
 
 namespace LocalConnect2.Activities
 {
