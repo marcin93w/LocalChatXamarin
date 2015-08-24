@@ -9,6 +9,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using LocalConnect2.Activities.Adapters;
 using LocalConnect2.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 
@@ -20,7 +21,7 @@ namespace LocalConnect2.Activities
 
         public ListViewFragment()
         {
-            _peopleViewModel = new PeopleViewModel();
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,

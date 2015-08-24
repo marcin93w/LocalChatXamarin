@@ -7,10 +7,15 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var http = require('http').createServer(app);
-http.listen(1338, "192.168.8.104");
+http.listen(1338, "192.168.0.10");
+
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/localConnect');
+
+var passport = require('passport');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var api = require('./routes/api');
 var chat = require('./modules/chat')(http);
 
 // view engine setup
@@ -27,9 +32,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -10,25 +10,27 @@ namespace LocalConnect2.Services
 {
     public class MessageReceivedEventArgs : EventArgs
     {
+        public string Message { get; }
+
         public MessageReceivedEventArgs(string message)
         {
             Message = message;
         }
-
-        public string Message { get; }
     }
 
     public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 
-    public class ChatService
+    public class ChatClient
     {
+        private readonly string _url = "http://192.168.0.10:1338";
+
         private Socket _socket;
 
         public event MessageReceivedEventHandler MessageReceived;
 
         public void Initialize()
         {
-            _socket = IO.Socket("http://192.168.8.104:1338").Connect();
+            _socket = IO.Socket(_url).Connect();
             _socket.On("chat message", message =>
             {
                 if (MessageReceived != null)

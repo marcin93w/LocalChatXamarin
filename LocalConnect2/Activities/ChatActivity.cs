@@ -23,7 +23,7 @@ namespace LocalConnect2.Activities
 
         public ChatActivity()
         {
-            _chatViewModel = new ChatViewModel(RunOnUiThread);
+            _chatViewModel = ViewModelLocator.Instance.GetViewModel<ChatViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)

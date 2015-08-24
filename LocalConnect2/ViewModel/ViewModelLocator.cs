@@ -12,6 +12,8 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using System;
+using Android.App;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
@@ -24,34 +26,40 @@ namespace LocalConnect2.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
+        private static ViewModelLocator _instance;
+
+        public static ViewModelLocator Instance => _instance ?? (_instance = new ViewModelLocator());
+
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>
-        public ViewModelLocator()
+        private ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
-
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<ChatViewModel>();
+            SimpleIoc.Default.Register<PeopleViewModel>();
+            SimpleIoc.Default.Register<LoginViewModel>();
         }
 
-        public MainViewModel Main
+        public T GetViewModel<T>(Activity activity = null) where T: ViewModelBase
         {
-            get
+            var viewModel = ServiceLocator.Current.GetInstance<T>();
+
+            if (viewModel is IUiInvokableViewModel)
             {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
+                if (activity != null)
+                {
+                    (viewModel as IUiInvokableViewModel).RunOnUiThread = activity.RunOnUiThread;
+                }
+                else
+                {
+                    throw new Exception("You must pass Activity object to initialize UiInvokableViewModel");
+                }
             }
-        }
+
+            return viewModel;
+        } 
         
         public static void Cleanup()
         {

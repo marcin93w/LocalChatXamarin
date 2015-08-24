@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GalaSoft.MvvmLight;
 
 namespace LocalConnect2.ViewModel
 {
@@ -12,7 +13,7 @@ namespace LocalConnect2.ViewModel
     }
 
 
-    public class PeopleViewModel : MainViewModel
+    public class PeopleViewModel : ViewModelBase
     {
         public List<Pearson> People { set; get; }
 

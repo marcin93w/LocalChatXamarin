@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Android.Runtime;
+using GalaSoft.MvvmLight;
 using LocalConnect2.Services;
 
 namespace LocalConnect2.ViewModel
 {
-    public class ChatViewModel : UiInvokableViewModel
+    public class ChatViewModel : ViewModelBase, IUiInvokableViewModel
     {
-        private readonly ChatService _chatService;
+        private readonly ChatClient _chatService;
+        public RunOnUiThreadHandler RunOnUiThread { get; set; }
 
         public ObservableCollection<MessageViewModel> Messages { set; get; }
 
-        public ChatViewModel(Action<Action> uiThreadHandler) : base(uiThreadHandler)
+        public ChatViewModel()
         {
             Messages = new ObservableCollection<MessageViewModel>();
-            _chatService = new ChatService();
+            _chatService = new ChatClient();
             _chatService.Initialize();
             _chatService.MessageReceived += HandleMessageReceive;
         }
@@ -31,5 +33,6 @@ namespace LocalConnect2.ViewModel
             _chatService.SendMessage(message);
             Messages.Add(new MessageViewModel(message));
         }
+
     }
 }

@@ -261,8 +261,20 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070008
 			public const int AddMessageForm = 2131165192;
 			
+			// aapt resource value: 0x7f070013
+			public const int ErrorText = 2131165203;
+			
+			// aapt resource value: 0x7f070014
+			public const int LoginButton = 2131165204;
+			
+			// aapt resource value: 0x7f070011
+			public const int LoginInput = 2131165201;
+			
 			// aapt resource value: 0x7f070007
 			public const int MessagesList = 2131165191;
+			
+			// aapt resource value: 0x7f070012
+			public const int PasswordInput = 2131165202;
 			
 			// aapt resource value: 0x7f07000a
 			public const int SendButton = 2131165194;
@@ -276,8 +288,8 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070006
 			public const int adjust_width = 2131165190;
 			
-			// aapt resource value: 0x7f070014
-			public const int backToList = 2131165204;
+			// aapt resource value: 0x7f070018
+			public const int backToList = 2131165208;
 			
 			// aapt resource value: 0x7f070000
 			public const int hybrid = 2131165184;
@@ -288,11 +300,11 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070010
 			public const int listView = 2131165200;
 			
-			// aapt resource value: 0x7f070013
-			public const int map = 2131165203;
+			// aapt resource value: 0x7f070017
+			public const int map = 2131165207;
 			
-			// aapt resource value: 0x7f070012
-			public const int mapLayout = 2131165202;
+			// aapt resource value: 0x7f070016
+			public const int mapLayout = 2131165206;
 			
 			// aapt resource value: 0x7f07000f
 			public const int menuLayout = 2131165199;
@@ -303,8 +315,8 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070002
 			public const int normal = 2131165186;
 			
-			// aapt resource value: 0x7f070011
-			public const int pager = 2131165201;
+			// aapt resource value: 0x7f070015
+			public const int pager = 2131165205;
 			
 			// aapt resource value: 0x7f07000d
 			public const int personDesc = 2131165197;
@@ -360,10 +372,13 @@ namespace LocalConnect2
 			public const int ListViewFragment = 2130903042;
 			
 			// aapt resource value: 0x7f030003
-			public const int Main = 2130903043;
+			public const int Login = 2130903043;
 			
 			// aapt resource value: 0x7f030004
-			public const int MapViewFragment = 2130903044;
+			public const int Main = 2130903044;
+			
+			// aapt resource value: 0x7f030005
+			public const int MapViewFragment = 2130903045;
 			
 			static Layout()
 			{

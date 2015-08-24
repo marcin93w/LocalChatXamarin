@@ -31,13 +31,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="controllers\authentication.js" />
+    <Compile Include="controllers\user.js" />
+    <Compile Include="models\user.js" />
     <Compile Include="modules\chat.js" />
     <Compile Include="routes\index.js" />
-    <Compile Include="routes\users.js" />
+    <Compile Include="routes\api.js" />
     <Compile Include="bin\www" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\style.styl" />
-    <Content Include="README.md" />
     <Content Include="views\chat.html" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
@@ -46,6 +48,8 @@
   <ItemGroup>
     <Folder Include="bin\" />
     <Folder Include="modules\" />
+    <Folder Include="controllers\" />
+    <Folder Include="models\" />
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />

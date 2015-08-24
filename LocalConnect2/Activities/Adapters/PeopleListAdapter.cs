@@ -4,7 +4,7 @@ using Android.Views;
 using Android.Widget;
 using LocalConnect2.ViewModel;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect2.Activities.Adapters
 {
     public class PeopleListAdapter : ArrayAdapter<string>
     {
