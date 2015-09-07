@@ -1,7 +1,8 @@
 ﻿var express = require('express');
 var router = express.Router();
 
-var authController = require('../controllers/authentication');
+var authController = require('../controllers/user');
+var personController = require('../controllers/person');
 
 /* GET home page. */
 router.get('/', function (req, res) {
@@ -14,6 +15,9 @@ router.get('/chatTester', function (req, res) {
 });
 
 router.get('/register', authController.postNewUser);
-router.get('/listUsers', authController.getAllUsers);
+router.post('/listUsers', authController.getAllUsers);
+
+router.post('/people/add', personController.postNewPerson);
+router.get('/people/testGet', personController.getAllPeople);
 
 module.exports = router;

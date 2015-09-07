@@ -1,12 +1,12 @@
 ﻿(function (user) {
     var User = require('../models/user');
     
-    user.getUserData = function (req, res) {
+    user.getAuthToken = function (req, res) {
         var token = 'asda';
         var user = req.user;
         user.token = token;
         user.save();
-        res.json(user);
+        res.json({ token: user.token });
     };
     
     user.postNewUser = function (req, res) {
@@ -24,12 +24,28 @@
     };
     
     //for DEBUG purposes
+    var Person = require('../models/person');
     user.getAllUsers = function (req, res) {
         User.find(function (err, users) {
             if (err)
                 res.send(err);
             
-            res.json(users);
+            var person = new Person({
+                firstname: req.body.firstname,
+                surname: req.body.surname,
+                shortDescription: req.body.shortDescription,
+                longDescription: req.body.longDescription,
+                user: users[0]._id
+            });
+            
+            person.save(function (err) {
+                if (err)
+                    res.send(err);
+                
+                res.json({ message: 'Person successfully registered!' });
+            });
+
+            //res.json(users);
         });
     };
 
