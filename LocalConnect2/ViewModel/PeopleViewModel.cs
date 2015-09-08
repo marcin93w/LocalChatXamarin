@@ -1,81 +1,46 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using Android.Gms.Common.Apis;
 using GalaSoft.MvvmLight;
+using LocalConnect2.Models;
+using LocalConnect2.Services;
 
 namespace LocalConnect2.ViewModel
 {
-    public class Pearson
+
+    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
     {
-        public string FirstName { set; get; }
-        public string Surname { set; get; }
-        public string Description { set; get; }
+        private readonly PeopleModel _peopleModel;
 
-        public string Name => FirstName + " " + Surname;
-    }
+        public List<Person> People { set; get; }
 
-
-    public class PeopleViewModel : ViewModelBase
-    {
-        public List<Pearson> People { set; get; }
+        public event OnDataLoadEventHandler OnDataLoad;
 
         public PeopleViewModel()
         {
-            People = new List<Pearson>
+            _peopleModel = new PeopleModel();
+            People = new List<Person>();
+        }
+
+        public async void FetchData()
+        {
+            string errorMsg = null;
+            try
             {
-                new Pearson
+                People = (await _peopleModel.FetchPeopleList()).ToList();
+            }
+            catch (ConnectionException ex)
+            {
+                errorMsg = ex.Message;
+            }
+            finally
+            {
+                if (OnDataLoad != null)
                 {
-                    FirstName = "Maxwell",
-                    Surname = "Baer",
-                    Description = "This is simple description"
-                },
-                new Pearson
-                {
-                    FirstName = "Evangeline",
-                    Surname = "Crosswell",
-                    Description = "This is another simple description"
-                },
-                new Pearson
-                {
-                    FirstName = "Ericka",
-                    Surname = "Fischetti",
-                    Description = "This is simple description 3"
-                },
-                new Pearson
-                {
-                    FirstName = "Maxwell",
-                    Surname = "Baer",
-                    Description = ""
-                },
-                new Pearson
-                {
-                    FirstName = "Devona",
-                    Surname = "Marlett",
-                    Description = "This is simple description"
-                },
-                new Pearson
-                {
-                    FirstName = "Maranda",
-                    Surname = "Baer",
-                    Description = "This is simple"
-                },
-                new Pearson
-                {
-                    FirstName = "Maxwell",
-                    Surname = "Macdougall",
-                    Description = "This is simple description"
-                },
-                new Pearson
-                {
-                    FirstName = "Maxwell",
-                    Surname = "Baer",
-                    Description = "This is simple description. This is simple description. This is simple description"
-                },
-                new Pearson
-                {
-                    FirstName = "Maxwell",
-                    Surname = "Michener",
-                    Description = "This is simple description"
-                },
-            };
-        } 
+                    OnDataLoad(this, new OnDataLoadEventArgs(errorMsg));
+                }
+            }
+        }
     }
 }

@@ -1,17 +1,3 @@
-/*
-  In App.xaml:
-  <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:LocalConnect2"
-                           x:Key="Locator" />
-  </Application.Resources>
-  
-  In the View:
-  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
-
-  You can also use Blend to do all this with the tool's support.
-  See http://www.galasoft.ch/mvvm
-*/
-
 using System;
 using Android.App;
 using GalaSoft.MvvmLight;
@@ -30,9 +16,6 @@ namespace LocalConnect2.ViewModel
 
         public static ViewModelLocator Instance => _instance ?? (_instance = new ViewModelLocator());
 
-        /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
-        /// </summary>
         private ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);

@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Android.Content;
 using Android.Gms.Maps;
 using Android.OS;
 using Android.Support.V4.App;
@@ -24,6 +25,13 @@ namespace LocalConnect2.Activities
             var viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
                 new ListViewFragment(), new MapViewFragment(viewPager));
+        }
+
+        private void OpenLoginActivity()
+        {
+            var loginActivity = new Intent(ApplicationContext, typeof(LoginActivity));
+            StartActivity(loginActivity);
+            Finish();
         }
     }
 }

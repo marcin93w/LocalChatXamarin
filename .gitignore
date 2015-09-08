@@ -1,6 +1,7 @@
 /.vs/LocalConnect2/v14/*.suo
 /LocalConnect2/bin
 /LocalConnect2/obj
+/LocalConnect2/dist
 /LocalConnect2/*.user
 /LCNodeBackend/.ntvs_analysis.dat
 /LCNodeBackend/node_modules

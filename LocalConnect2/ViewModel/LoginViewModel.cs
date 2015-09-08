@@ -4,12 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using GalaSoft.MvvmLight;
 using LocalConnect2.Services;
 
@@ -22,32 +16,28 @@ namespace LocalConnect2.ViewModel
         
         public string AuthenticationErrorMessage { set; get; }
 
-        public async Task<bool> Authenticate()
+        public async Task<string> Authenticate()
         {
-            var restClient = new RestClient();
             try
             {
-                var authenticated = await restClient.Login(Login, Password);
+                var authToken = await RestClient.Instance.Login(Login, Password);
 
-                if (!authenticated)
+                if (string.IsNullOrEmpty(authToken))
                 {
                     AuthenticationErrorMessage = "Bad username or password";
                 }
 
-                return authenticated;
+                return authToken;
             }
             catch (WebException ex)
             {
                 if (((HttpWebResponse) ex.Response).StatusCode == HttpStatusCode.Unauthorized)
-                {
                     AuthenticationErrorMessage = "Bad username or password";
-                }
                 else
-                {
                     AuthenticationErrorMessage = "Can not connect to server. " + ex.Message;
-                }
-                return false;
             }
+
+            return null;
         }
     }
 }

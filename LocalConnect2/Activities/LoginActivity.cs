@@ -6,6 +6,7 @@ using System.Text;
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Preferences;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -45,8 +46,10 @@ namespace LocalConnect2.Activities
             _loginViewModel.Login = loginInput.Text;
             _loginViewModel.Password = passwordInput.Text;
 
-            if (await _loginViewModel.Authenticate())
+            var authToken = await _loginViewModel.Authenticate();
+            if (!string.IsNullOrEmpty(authToken))
             {
+                SaveAuthToken(authToken);
                 var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
                 StartActivity(mainActivity);
             }
@@ -56,6 +59,14 @@ namespace LocalConnect2.Activities
                 errorMessage.Text = _loginViewModel.AuthenticationErrorMessage;
                 errorMessage.Visibility = ViewStates.Visible;
             }
+        }
+
+        private void SaveAuthToken(string authToken)
+        {
+            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
+            var editor = prefs.Edit();
+            editor.PutString("auth_token", authToken);
+            editor.Apply();
         }
     }
 }

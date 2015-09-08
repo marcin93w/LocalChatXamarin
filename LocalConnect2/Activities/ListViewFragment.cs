@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using LocalConnect2.Activities.Adapters;
+using LocalConnect2.Services;
 using LocalConnect2.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 
@@ -30,9 +31,23 @@ namespace LocalConnect2.Activities
             var rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.ListViewFragment, container, false);
 
-            var list = rootView.FindViewById<ListView>(Resource.Id.listView);
-            list.Adapter = new PeopleListAdapter(rootView.Context, Resource.Layout.ListItem, _peopleViewModel);
-            list.ItemClick += UserToChatSelected;
+            _peopleViewModel.OnDataLoad += (sender, eventArgs) =>
+            {
+                if (eventArgs.IsSuccesful)
+                {
+                    var list = rootView.FindViewById<ListView>(Resource.Id.listView);
+                    list.Adapter = new PeopleListAdapter(rootView.Context, 
+                        Resource.Layout.ListItem, _peopleViewModel);
+                    list.ItemClick += UserToChatSelected;
+                }
+                else
+                {
+                    if(Activity != null)
+                        Toast.MakeText(Activity, eventArgs.ErrorMessage, ToastLength.Long).Show();
+                }
+            };
+            _peopleViewModel.FetchData();
+
 
             return rootView;
         }

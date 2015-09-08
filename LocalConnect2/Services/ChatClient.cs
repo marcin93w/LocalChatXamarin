@@ -22,7 +22,7 @@ namespace LocalConnect2.Services
 
     public class ChatClient
     {
-        private readonly string _url = "http://192.168.0.10:1338";
+        private readonly string _url = "wss://lc-fancydesign.rhcloud.com:8443";
 
         private Socket _socket;
 
