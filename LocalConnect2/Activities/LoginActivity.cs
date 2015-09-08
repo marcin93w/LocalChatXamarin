@@ -40,6 +40,13 @@ namespace LocalConnect2.Activities
 
         private async void Login(object sender, EventArgs eventArgs)
         {
+            var loadingPanel = FindViewById(Resource.Id.LoadingPanel);
+            loadingPanel.Visibility = ViewStates.Visible;
+            loadingPanel.Clickable = true;
+
+            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
+            errorMessage.Visibility = ViewStates.Gone;
+
             var loginInput = FindViewById<TextView>(Resource.Id.LoginInput);
             var passwordInput = FindViewById<TextView>(Resource.Id.PasswordInput);
 
@@ -55,10 +62,11 @@ namespace LocalConnect2.Activities
             }
             else
             {
-                var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
                 errorMessage.Text = _loginViewModel.AuthenticationErrorMessage;
                 errorMessage.Visibility = ViewStates.Visible;
             }
+
+            loadingPanel.Visibility = ViewStates.Gone;
         }
 
         private void SaveAuthToken(string authToken)
