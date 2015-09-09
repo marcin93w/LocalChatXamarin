@@ -52,6 +52,37 @@ namespace LocalConnect2.Services
             }
         }
 
+        public async Task<string> LoginWithToken(string authToken)
+        {
+            var url = Path.Combine(_url, "loginWithToken");
+
+            var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            request.ContentType = "application/json";
+            request.Method = "GET";
+            request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}"; ;
+
+            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+            {
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    using (var stream = response.GetResponseStream())
+                    {
+                        var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
+                        Console.Out.WriteLine("Response: {0}", jsonDoc);
+
+                        var newToken = jsonDoc["token"].GetValue();
+                        _authenticationHeader = $"Bearer {newToken}";
+
+                        return newToken;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         public async Task<JsonValue> FetchDataAsync(string method)
         {
             var url = Path.Combine(_url, method);

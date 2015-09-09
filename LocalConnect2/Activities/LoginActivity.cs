@@ -24,6 +24,7 @@ namespace LocalConnect2.Activities
         private readonly LoginViewModel _loginViewModel;
 
         private View _loadingPanel;
+        private View _initializingPanel;
 
         public LoginActivity()
         {
@@ -37,9 +38,12 @@ namespace LocalConnect2.Activities
             SetContentView(Resource.Layout.Login);
 
             _loadingPanel = FindViewById(Resource.Id.LoadingPanel);
+            _initializingPanel = FindViewById(Resource.Id.InitializingPanel);
 
             var loginButton = FindViewById<Button>(Resource.Id.LoginButton);
             loginButton.Click += Login;
+
+            CheckSavedAuthToken();
         }
 
         protected override void OnResume()
@@ -47,6 +51,27 @@ namespace LocalConnect2.Activities
             base.OnResume();
 
             _loadingPanel.Visibility = ViewStates.Gone;
+        }
+
+        private async void CheckSavedAuthToken()
+        {
+            var savedToken = ReadAuthToken();
+            if (savedToken == null)
+            {
+                _initializingPanel.Visibility = ViewStates.Gone;
+            }
+            else
+            {
+                var newAuthToken = await _loginViewModel.Authenticate(savedToken);
+                if (string.IsNullOrEmpty(newAuthToken))
+                {
+                    _initializingPanel.Visibility = ViewStates.Gone;
+                }
+                else
+                {
+                    TakeToApp(newAuthToken);
+                }
+            }
         }
 
         private async void Login(object sender, EventArgs eventArgs)
@@ -66,9 +91,7 @@ namespace LocalConnect2.Activities
             var authToken = await _loginViewModel.Authenticate();
             if (!string.IsNullOrEmpty(authToken))
             {
-                SaveAuthToken(authToken);
-                var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
-                StartActivity(mainActivity);
+                TakeToApp(authToken);
             }
             else
             {
@@ -78,12 +101,26 @@ namespace LocalConnect2.Activities
             }
         }
 
+        private void TakeToApp(string authToken)
+        {
+            SaveAuthToken(authToken);
+            var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
+            StartActivity(mainActivity);
+            Finish();
+        }
+
         private void SaveAuthToken(string authToken)
         {
             var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
             var editor = prefs.Edit();
             editor.PutString("auth_token", authToken);
             editor.Apply();
+        }
+
+        private string ReadAuthToken()
+        {
+            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
+            return prefs.GetString("auth_token", null);
         }
     }
 }

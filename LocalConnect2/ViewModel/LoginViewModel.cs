@@ -16,23 +16,35 @@ namespace LocalConnect2.ViewModel
         
         public string AuthenticationErrorMessage { set; get; }
 
-        public async Task<string> Authenticate()
+        public async Task<string> Authenticate(string authToken = null)
         {
             try
             {
-                var authToken = await RestClient.Instance.Login(Login, Password);
+                string newToken;
+                if (authToken != null)
+                {
+                    newToken = await RestClient.Instance.LoginWithToken(authToken);
+                }
+                else
+                {
+                    newToken = await RestClient.Instance.Login(Login, Password);
+                }
 
-                if (string.IsNullOrEmpty(authToken))
+                if (string.IsNullOrEmpty(newToken))
                 {
                     AuthenticationErrorMessage = "Bad username or password";
                 }
 
-                return authToken;
+                return newToken;
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
-                if (((HttpWebResponse) ex.Response).StatusCode == HttpStatusCode.Unauthorized)
-                    AuthenticationErrorMessage = "Bad username or password";
+                if (ex is WebException)
+                {
+                    var response = (HttpWebResponse) (ex as WebException).Response;
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                        AuthenticationErrorMessage = "Bad username or password";
+                }
                 else
                     AuthenticationErrorMessage = "Can not connect to server. " + ex.Message;
             }
