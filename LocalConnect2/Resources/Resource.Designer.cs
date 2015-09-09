@@ -261,26 +261,32 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070008
 			public const int AddMessageForm = 2131165192;
 			
-			// aapt resource value: 0x7f070014
-			public const int ErrorText = 2131165204;
+			// aapt resource value: 0x7f070017
+			public const int ErrorText = 2131165207;
 			
-			// aapt resource value: 0x7f070016
-			public const int LoadingPanel = 2131165206;
+			// aapt resource value: 0x7f070019
+			public const int LoadingPanel = 2131165209;
+			
+			// aapt resource value: 0x7f070018
+			public const int LoginButton = 2131165208;
 			
 			// aapt resource value: 0x7f070015
-			public const int LoginButton = 2131165205;
+			public const int LoginInput = 2131165205;
 			
-			// aapt resource value: 0x7f070012
-			public const int LoginInput = 2131165202;
+			// aapt resource value: 0x7f070014
+			public const int LoginPanel = 2131165204;
+			
+			// aapt resource value: 0x7f070010
+			public const int MeImage = 2131165200;
 			
 			// aapt resource value: 0x7f070011
-			public const int LoginPanel = 2131165201;
+			public const int MeName = 2131165201;
 			
 			// aapt resource value: 0x7f070007
 			public const int MessagesList = 2131165191;
 			
-			// aapt resource value: 0x7f070013
-			public const int PasswordInput = 2131165203;
+			// aapt resource value: 0x7f070016
+			public const int PasswordInput = 2131165206;
 			
 			// aapt resource value: 0x7f07000a
 			public const int SendButton = 2131165194;
@@ -294,8 +300,8 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070006
 			public const int adjust_width = 2131165190;
 			
-			// aapt resource value: 0x7f07001a
-			public const int backToList = 2131165210;
+			// aapt resource value: 0x7f07001d
+			public const int backToList = 2131165213;
 			
 			// aapt resource value: 0x7f070000
 			public const int hybrid = 2131165184;
@@ -303,14 +309,14 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f07000e
 			public const int listLayout = 2131165198;
 			
-			// aapt resource value: 0x7f070010
-			public const int listView = 2131165200;
+			// aapt resource value: 0x7f070013
+			public const int listView = 2131165203;
 			
-			// aapt resource value: 0x7f070019
-			public const int map = 2131165209;
+			// aapt resource value: 0x7f07001c
+			public const int map = 2131165212;
 			
-			// aapt resource value: 0x7f070018
-			public const int mapLayout = 2131165208;
+			// aapt resource value: 0x7f07001b
+			public const int mapLayout = 2131165211;
 			
 			// aapt resource value: 0x7f07000f
 			public const int menuLayout = 2131165199;
@@ -321,8 +327,8 @@ namespace LocalConnect2
 			// aapt resource value: 0x7f070002
 			public const int normal = 2131165186;
 			
-			// aapt resource value: 0x7f070017
-			public const int pager = 2131165207;
+			// aapt resource value: 0x7f07001a
+			public const int pager = 2131165210;
 			
 			// aapt resource value: 0x7f07000d
 			public const int personDesc = 2131165197;
@@ -338,6 +344,9 @@ namespace LocalConnect2
 			
 			// aapt resource value: 0x7f070004
 			public const int terrain = 2131165188;
+			
+			// aapt resource value: 0x7f070012
+			public const int textView2 = 2131165202;
 			
 			static Id()
 			{

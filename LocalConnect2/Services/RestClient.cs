@@ -39,7 +39,7 @@ namespace LocalConnect2.Services
                         var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
                         Console.Out.WriteLine("Response: {0}", jsonDoc);
 
-                        var authToken = jsonDoc["token"].ToString().Replace("\"", string.Empty);
+                        var authToken = jsonDoc["token"].GetValue();
                         _authenticationHeader = $"Bearer {authToken}";
 
                         return authToken;
@@ -78,6 +78,15 @@ namespace LocalConnect2.Services
             {
                 throw new ConnectionException(ex);
             }
+        }
+    }
+
+    public static class SystemJsonExtensions
+    {
+        public static string GetValue(this JsonValue jsonData, string field = null)
+        {
+            var jsonValue = field != null ? jsonData[field] : jsonData;
+            return jsonValue.ToString().Replace("\"", string.Empty);
         }
     }
 }

@@ -15,13 +15,15 @@ using LocalConnect2.ViewModel;
 
 namespace LocalConnect2.Activities
 {
-    [Activity(Label = "LoginActivity",
+    [Activity(Label = "Aplikacja Marcina",
         MainLauncher = true,
         Icon = "@drawable/icon",
         Theme = "@android:style/Theme.Black.NoTitleBar")]
     public class LoginActivity : Activity
     {
         private readonly LoginViewModel _loginViewModel;
+
+        private View _loadingPanel;
 
         public LoginActivity()
         {
@@ -34,15 +36,23 @@ namespace LocalConnect2.Activities
 
             SetContentView(Resource.Layout.Login);
 
+            _loadingPanel = FindViewById(Resource.Id.LoadingPanel);
+
             var loginButton = FindViewById<Button>(Resource.Id.LoginButton);
             loginButton.Click += Login;
         }
 
+        protected override void OnResume()
+        {
+            base.OnResume();
+
+            _loadingPanel.Visibility = ViewStates.Gone;
+        }
+
         private async void Login(object sender, EventArgs eventArgs)
         {
-            var loadingPanel = FindViewById(Resource.Id.LoadingPanel);
-            loadingPanel.Visibility = ViewStates.Visible;
-            loadingPanel.Clickable = true;
+            _loadingPanel.Visibility = ViewStates.Visible;
+            _loadingPanel.Clickable = true;
 
             var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
             errorMessage.Visibility = ViewStates.Gone;
@@ -64,9 +74,8 @@ namespace LocalConnect2.Activities
             {
                 errorMessage.Text = _loginViewModel.AuthenticationErrorMessage;
                 errorMessage.Visibility = ViewStates.Visible;
+                _loadingPanel.Visibility = ViewStates.Gone;
             }
-
-            loadingPanel.Visibility = ViewStates.Gone;
         }
 
         private void SaveAuthToken(string authToken)

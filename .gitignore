@@ -6,3 +6,4 @@
 /LCNodeBackend/.ntvs_analysis.dat
 /LCNodeBackend/node_modules
 /packages
+/run-local-mongo.bat

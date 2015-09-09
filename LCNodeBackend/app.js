@@ -10,7 +10,13 @@ var http = require('http').createServer(app);
 http.listen(process.env.OPENSHIFT_NODEJS_PORT ||1338, process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
 var mongoose = require('mongoose');
-mongoose.connect(process.env.OPENSHIFT_MONGODB_DB_URL + 'lc');
+var mongoUrl = process.env.OPENSHIFT_MONGODB_DB_URL;
+if (mongoUrl) {
+    mongoUrl += 'lc';
+} else {
+    mongoUrl = 'mongodb://localhost:27017/localConnect';
+}
+mongoose.connect(mongoUrl);
 
 var passport = require('passport');
 

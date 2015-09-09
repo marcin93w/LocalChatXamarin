@@ -20,6 +20,8 @@ namespace LocalConnect2.Activities
     {
         private readonly PeopleViewModel _peopleViewModel ;
 
+        private ViewGroup _rootView;
+
         public ListViewFragment()
         {
             _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
@@ -28,28 +30,32 @@ namespace LocalConnect2.Activities
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
         {
-            var rootView = (ViewGroup)inflater.Inflate(
+            _rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.ListViewFragment, container, false);
 
-            _peopleViewModel.OnDataLoad += (sender, eventArgs) =>
-            {
-                if (eventArgs.IsSuccesful)
-                {
-                    var list = rootView.FindViewById<ListView>(Resource.Id.listView);
-                    list.Adapter = new PeopleListAdapter(rootView.Context, 
-                        Resource.Layout.ListItem, _peopleViewModel);
-                    list.ItemClick += UserToChatSelected;
-                }
-                else
-                {
-                    if(Activity != null)
-                        Toast.MakeText(Activity, eventArgs.ErrorMessage, ToastLength.Long).Show();
-                }
-            };
+            _peopleViewModel.OnDataLoad += OnDataLoad;
             _peopleViewModel.FetchData();
 
+            return _rootView;
+        }
 
-            return rootView;
+        private void OnDataLoad(object sender, OnDataLoadEventArgs eventArgs)
+        {
+            if (eventArgs.IsSuccesful)
+            {
+                var list = _rootView.FindViewById<ListView>(Resource.Id.listView);
+                list.Adapter = new PeopleListAdapter(_rootView.Context,
+                    Resource.Layout.ListItem, _peopleViewModel);
+                list.ItemClick += UserToChatSelected;
+
+                var myName = _rootView.FindViewById<TextView>(Resource.Id.MeName);
+                myName.Text = _peopleViewModel.MyName;
+            }
+            else
+            {
+                if (Activity != null)
+                    Toast.MakeText(Activity, eventArgs.ErrorMessage, ToastLength.Long).Show();
+            }
         }
 
         private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)

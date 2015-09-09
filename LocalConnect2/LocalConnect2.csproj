@@ -130,6 +130,7 @@
     <Compile Include="Activities\Adapters\MainViewsPagerAdapter.cs" />
     <Compile Include="Activities\MapViewFragment.cs" />
     <Compile Include="Activities\Adapters\PeopleListAdapter.cs" />
+    <Compile Include="Models\MeModel.cs" />
     <Compile Include="Models\PeopleModel.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

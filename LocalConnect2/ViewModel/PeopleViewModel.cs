@@ -12,15 +12,17 @@ namespace LocalConnect2.ViewModel
     public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
     {
         private readonly PeopleModel _peopleModel;
+        private readonly MeModel _meModel;
 
         public List<Person> People { set; get; }
+        public string MyName { set; get; }
 
         public event OnDataLoadEventHandler OnDataLoad;
 
         public PeopleViewModel()
         {
             _peopleModel = new PeopleModel();
-            People = new List<Person>();
+            _meModel = new MeModel();
         }
 
         public async void FetchData()
@@ -28,9 +30,12 @@ namespace LocalConnect2.ViewModel
             string errorMsg = null;
             try
             {
-                People = (await _peopleModel.FetchPeopleList()).ToList();
+                var fetchPeopleAsync = _peopleModel.FetchPeopleList();
+                var fetchMyNameAsync = _meModel.FetchMyName();
+                People = (await fetchPeopleAsync).ToList();
+                MyName = await fetchMyNameAsync;
             }
-            catch (ConnectionException ex)
+            catch (Exception ex)
             {
                 errorMsg = ex.Message;
             }

@@ -15,4 +15,10 @@ router.route('/login').get(authController.checkCredentials,
 router.route('/people').get(authController.isAuthenticated, 
     personController.getAllPeople);
 
+router.route('/me').get(authController.isAuthenticated, 
+    personController.getMe);
+
+router.route('/me/name').get(authController.isAuthenticated, 
+    personController.getMyName);
+
 module.exports = router;
