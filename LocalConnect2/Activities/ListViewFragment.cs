@@ -34,7 +34,6 @@ namespace LocalConnect2.Activities
                     Resource.Layout.ListViewFragment, container, false);
 
             _peopleViewModel.OnDataLoad += OnDataLoad;
-            _peopleViewModel.FetchData();
 
             return _rootView;
         }
@@ -47,14 +46,6 @@ namespace LocalConnect2.Activities
                 list.Adapter = new PeopleListAdapter(_rootView.Context,
                     Resource.Layout.ListItem, _peopleViewModel);
                 list.ItemClick += UserToChatSelected;
-
-                var myName = _rootView.FindViewById<TextView>(Resource.Id.MeName);
-                myName.Text = _peopleViewModel.MyName;
-            }
-            else
-            {
-                if (Activity != null)
-                    Toast.MakeText(Activity, eventArgs.ErrorMessage, ToastLength.Long).Show();
             }
         }
 
