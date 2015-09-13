@@ -7,3 +7,4 @@
 /LCNodeBackend/node_modules
 /packages
 /run-local-mongo.bat
+/.vs/LocalConnect/v14/*.suo

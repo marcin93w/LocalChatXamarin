@@ -7,7 +7,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/chatTester', function (req, res) {
-    res.render('chat.html');
+    res.render('chat.html', { user: req.param('user') });
 });
 
 module.exports = router;

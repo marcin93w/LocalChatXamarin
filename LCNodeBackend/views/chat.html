@@ -51,23 +51,30 @@
     </style>
 </head>
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off"/><button>Send</button>
-    </form>
+<h3>Chat as <%= user %></h3>
+<ul id="messages"></ul>
+<form action="">
+    <input id="to" autocomplete="off" /><input id="m" autocomplete="off"/><button>Send</button>
+</form>
 
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-        var socket = io.connect('wss://lc-fancydesign.rhcloud.com:8443');
-        $('form').submit(function(){
-            socket.emit('chat message', $('#m').val());
-            $('#m').val('');
-            return false;
-        });
-        socket.on('chat message', function (msg) {
-            $('#messages').append($('<li>').text(msg));
-        });
-    </script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    var socket = io.connect('http://localhost:1338', { query: 'userId=<%= user %>' });
+    //var socket = io.connect('wss://lc-fancydesign.rhcloud.com:8443');
+    $('form').submit(function () {
+        var message = {
+            receiver: $('#to').val(),
+            text: $('#m').val()
+        };
+        socket.emit('chat message', message);
+        $('#messages').append($('<li>').text('ME (to: ' + message.receiver + '): ' + message.text));
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function(msg) {
+        $('#messages').append($('<li>').text(msg.sender + ': ' + msg.text));
+    });
+</script>
 </body>
 </html>

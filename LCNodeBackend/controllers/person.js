@@ -19,13 +19,26 @@
     //        res.json({ message: 'Person successfully registered!' });
     //    });
     //};
+
+    function makeLocationAnObject(collection) {
+        collection.forEach(function(element) {
+            if (Array.isArray(element.location)) {
+                element.location = {
+                    'lon': element.location[0],
+                    'lat': element.location[1]
+                };
+            }
+        });
+        return collection;
+    }    
     
     personCtrl.getAllPeople = function (req, res) {
-        Person.find({}, 'firstname surname shortDescription')
+        Person.find({}, 'firstname surname shortDescription location')
         .where("user").ne(req.user)
+        .lean()
         .exec(function (err, people) {
             if (err) res.send(err);
-            res.json(people);
+            res.json(makeLocationAnObject(people));
         });
     };
 

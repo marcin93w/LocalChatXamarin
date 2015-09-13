@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>b85838ad-cd61-4e36-92b4-facdbab0a27f</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>LocalConnect</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MeModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PeopleModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ChatClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ChatViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataFetchingViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IUiInvokableViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MessageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />
+  </ItemGroup>
+</Project>
