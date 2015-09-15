@@ -9,6 +9,6 @@ namespace LocalConnect2.ViewModel
 
     public interface IUiInvokableViewModel 
     {
-        RunOnUiThreadHandler RunOnUiThread { set; get; }
+        RunOnUiThreadHandler RunOnUiThread { set; }
     }
 }

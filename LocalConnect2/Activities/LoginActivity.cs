@@ -11,6 +11,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
+using LocalConnect.Models;
+using LocalConnect2.Services;
 using LocalConnect2.ViewModel;
 
 namespace LocalConnect2.Activities
@@ -62,14 +64,14 @@ namespace LocalConnect2.Activities
             }
             else
             {
-                var newAuthToken = await _loginViewModel.Authenticate(savedToken);
-                if (string.IsNullOrEmpty(newAuthToken))
+                var loginData = await _loginViewModel.Authenticate(savedToken);
+                if (loginData == null)
                 {
                     _initializingPanel.Visibility = ViewStates.Gone;
                 }
                 else
                 {
-                    TakeToApp(newAuthToken);
+                    TakeToApp(loginData);
                 }
             }
         }
@@ -88,10 +90,10 @@ namespace LocalConnect2.Activities
             _loginViewModel.Login = loginInput.Text;
             _loginViewModel.Password = passwordInput.Text;
 
-            var authToken = await _loginViewModel.Authenticate();
-            if (!string.IsNullOrEmpty(authToken))
+            var loginData = await _loginViewModel.Authenticate();
+            if (loginData != null)
             {
-                TakeToApp(authToken);
+                TakeToApp(loginData);
             }
             else
             {
@@ -101,9 +103,10 @@ namespace LocalConnect2.Activities
             }
         }
 
-        private void TakeToApp(string authToken)
+        private void TakeToApp(LoginData loginData)
         {
-            SaveAuthToken(authToken);
+            SaveAuthToken(loginData.Token);
+            ChatClient.Instance.Connect(loginData.UserId);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();

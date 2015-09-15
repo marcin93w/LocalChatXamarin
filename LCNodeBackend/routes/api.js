@@ -10,10 +10,10 @@ router.route('/').get(authController.isAuthenticated, function (req, res) {
 });
 
 router.route('/login').get(authController.checkCredentials, 
-    userController.getAuthToken);
+    userController.getUserData);
 
 router.route('/loginWithToken').get(authController.isAuthenticated, 
-    userController.getAuthToken);
+    userController.getUserData);
 
 router.route('/people').get(authController.isAuthenticated, 
     personController.getAllPeople);

@@ -60,8 +60,8 @@
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-    var socket = io.connect('http://localhost:1338', { query: 'userId=<%= user %>' });
-    //var socket = io.connect('wss://lc-fancydesign.rhcloud.com:8443');
+    //var socket = io.connect('http://localhost:1338', { query: 'userId=<%= user %>' });
+    var socket = io.connect('wss://lc-fancydesign.rhcloud.com:8443', { query: 'userId=<%= user %>' });
     $('form').submit(function () {
         var message = {
             receiver: $('#to').val(),

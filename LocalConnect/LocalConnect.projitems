@@ -9,7 +9,9 @@
     <Import_RootNamespace>LocalConnect</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\LoginData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MeModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\PeopleModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ChatClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
@@ -18,7 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataFetchingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IUiInvokableViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MessageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />
   </ItemGroup>
 </Project>

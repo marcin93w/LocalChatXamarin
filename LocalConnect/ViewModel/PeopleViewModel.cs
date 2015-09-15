@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Android.Gms.Common.Apis;
 using GalaSoft.MvvmLight;
+using LocalConnect.Models;
 using LocalConnect2.Models;
 using LocalConnect2.Services;
 
@@ -11,10 +12,10 @@ namespace LocalConnect2.ViewModel
 
     public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
     {
-        private readonly PeopleModel _peopleModel;
+        private readonly People _people;
         private readonly MeModel _meModel;
 
-        public List<Person> People { set; get; }
+        public List<Person> People => _people.PeopleList;
         public string MyName { set; get; }
 
         private bool _dataLoaded;
@@ -39,7 +40,7 @@ namespace LocalConnect2.ViewModel
 
         public PeopleViewModel()
         {
-            _peopleModel = new PeopleModel();
+            _people = new People();
             _meModel = new MeModel();
         }
 
@@ -48,9 +49,14 @@ namespace LocalConnect2.ViewModel
             _errorMessage = null;
             try
             {
-                var fetchPeopleAsync = _peopleModel.FetchPeopleList();
+                var fetchPeopleAsync = _people.FetchPeopleList();
                 var fetchMyNameAsync = _meModel.FetchMyName();
-                People = (await fetchPeopleAsync).ToList();
+
+                if (!await fetchPeopleAsync)
+                {
+                    _errorMessage = "People list could not be downloaded";
+                }
+
                 MyName = await fetchMyNameAsync;
             }
             catch (Exception ex)

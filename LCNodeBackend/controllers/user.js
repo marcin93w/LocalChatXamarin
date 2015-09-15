@@ -1,12 +1,15 @@
 ﻿(function (user) {
     //var User = require('../models/user');
     
-    user.getAuthToken = function (req, res) {
+    user.getUserData = function (req, res) {
         var token = 'asda';
         var user = req.user;
         user.token = token;
         user.save();
-        res.json({ token: user.token });
+        res.json({
+            token: user.token,
+            userId: user._id
+        });
     };
     
     //user.postNewUser = function (req, res) {

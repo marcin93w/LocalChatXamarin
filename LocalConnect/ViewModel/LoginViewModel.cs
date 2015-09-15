@@ -5,10 +5,12 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
+using LocalConnect.Models;
 using LocalConnect2.Services;
 
 namespace LocalConnect2.ViewModel
 {
+
     public class LoginViewModel : ViewModelBase
     {
         public string Login { set; get; }
@@ -16,26 +18,26 @@ namespace LocalConnect2.ViewModel
         
         public string AuthenticationErrorMessage { set; get; }
 
-        public async Task<string> Authenticate(string authToken = null)
+        public async Task<LoginData> Authenticate(string authToken = null)
         {
             try
             {
-                string newToken;
+                LoginData loginData;
                 if (authToken != null)
                 {
-                    newToken = await RestClient.Instance.LoginWithToken(authToken);
+                    loginData = await RestClient.Instance.LoginWithToken(authToken);
                 }
                 else
                 {
-                    newToken = await RestClient.Instance.Login(Login, Password);
+                    loginData = await RestClient.Instance.Login(Login, Password);
                 }
 
-                if (string.IsNullOrEmpty(newToken))
+                if (loginData != null)
                 {
                     AuthenticationErrorMessage = "Bad username or password";
                 }
 
-                return newToken;
+                return loginData;
             }
             catch (Exception ex)
             {

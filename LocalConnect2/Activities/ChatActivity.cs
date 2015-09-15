@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using LocalConnect2.ViewModel;
+using Message = LocalConnect.Models.Message;
 
 namespace LocalConnect2.Activities
 {
@@ -32,6 +33,9 @@ namespace LocalConnect2.Activities
 
             SetContentView(Resource.Layout.Chat);
 
+            var person = Intent.GetStringExtra("UserId");
+            _chatViewModel.InitializeChatWith();
+
             var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
             messagesList.Adapter = _chatViewModel.Messages.GetAdapter(GetMessageView);
 
@@ -44,14 +48,14 @@ namespace LocalConnect2.Activities
             };
         }
 
-        private View GetMessageView(int position, MessageViewModel message, View convertView)
+        private View GetMessageView(int position, Message message, View convertView)
         {
             if (convertView == null)
             {
                 convertView = LayoutInflater.Inflate(Android.Resource.Layout.ActivityListItem, null);
             }
             var text = convertView.FindViewById<TextView>(Android.Resource.Id.Text1);
-            text.Text = message.Content;
+            text.Text = message.Text;
             return convertView;
         }
     }

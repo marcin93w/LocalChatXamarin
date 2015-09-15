@@ -52,7 +52,8 @@ namespace LocalConnect2.Activities
         private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)
         {
             var chatActivity = new Intent(Activity.ApplicationContext, typeof(ChatActivity));
-            chatActivity.PutExtra("User", e.Id);
+            var person = _peopleViewModel.People[e.Position];
+            chatActivity.PutExtra("UserId", person.UserId);
             StartActivity(chatActivity);
         }
     }

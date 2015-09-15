@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using LocalConnect.Models;
+using LocalConnect2.ViewModel;
 
 namespace LocalConnect2.Services
 {
@@ -17,7 +19,7 @@ namespace LocalConnect2.Services
         private static RestClient _instance;
         public static RestClient Instance => _instance ?? (_instance = new RestClient());
 
-        public async Task<string> Login(string username, string password)
+        public async Task<LoginData> Login(string username, string password)
         {
             var url = Path.Combine(_url, "login");
 
@@ -29,7 +31,7 @@ namespace LocalConnect2.Services
             return await SendLoginRequest(request);
         }
 
-        public async Task<string> LoginWithToken(string authToken)
+        public async Task<LoginData> LoginWithToken(string authToken)
         {
             var url = Path.Combine(_url, "loginWithToken");
 
@@ -41,7 +43,7 @@ namespace LocalConnect2.Services
             return await SendLoginRequest(request);
         }
 
-        private async Task<string> SendLoginRequest(HttpWebRequest request)
+        private async Task<LoginData> SendLoginRequest(HttpWebRequest request)
         {
             using (var response = (HttpWebResponse)await request.GetResponseAsync())
             {
@@ -52,10 +54,11 @@ namespace LocalConnect2.Services
                         var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
                         Console.Out.WriteLine("Response: {0}", jsonDoc);
 
+                        var userId = jsonDoc["userId"].GetValue();
                         var newToken = jsonDoc["token"].GetValue();
                         _authenticationHeader = $"Bearer {newToken}";
 
-                        return newToken;
+                        return new LoginData(newToken, userId);
                     }
                 }
                 else
