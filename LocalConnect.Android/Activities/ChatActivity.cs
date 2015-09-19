@@ -21,6 +21,9 @@ namespace LocalConnect2.Activities
     public class ChatActivity : Activity
     {
         private readonly ChatViewModel _chatViewModel;
+        private string _chatUserId;
+
+        private TextView _messageTextView;
 
         public ChatActivity()
         {
@@ -33,19 +36,14 @@ namespace LocalConnect2.Activities
 
             SetContentView(Resource.Layout.Chat);
 
-            var person = Intent.GetStringExtra("UserId");
-            _chatViewModel.InitializeChatWith();
+            _chatUserId = Intent.GetStringExtra("UserId");
 
             var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
             messagesList.Adapter = _chatViewModel.Messages.GetAdapter(GetMessageView);
 
-            var messageText = FindViewById<TextView>(Resource.Id.TextInput);
+            _messageTextView = FindViewById<TextView>(Resource.Id.TextInput);
             var sendButton = FindViewById<Button>(Resource.Id.SendButton);
-            sendButton.Click += (sender, args) =>
-            {
-                _chatViewModel.SendMessage(messageText.Text);
-                messageText.Text = string.Empty;
-            };
+            sendButton.Click += SendMessageClick;
         }
 
         private View GetMessageView(int position, Message message, View convertView)
@@ -57,6 +55,36 @@ namespace LocalConnect2.Activities
             var text = convertView.FindViewById<TextView>(Android.Resource.Id.Text1);
             text.Text = message.Text;
             return convertView;
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            if (!_chatViewModel.StartChatWith(_chatUserId))
+            {
+                Finish();
+            }
+        }
+
+        protected override void OnStop()
+        {
+            _chatViewModel.EndChat();
+
+            base.OnStop();
+        }
+
+        private void SendMessageClick(object sender, EventArgs args)
+        {
+            try
+            {
+                _chatViewModel.SendMessage(_messageTextView.Text);
+                _messageTextView.Text = string.Empty;
+            }
+            catch (Exception)
+            {
+                Toast.MakeText(ApplicationContext, "Your message was not send please try again", ToastLength.Short);
+            }
         }
     }
 }

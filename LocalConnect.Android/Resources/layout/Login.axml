@@ -32,10 +32,10 @@
             android:id="@+id/ErrorText"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:textAlignment="center"
             android:gravity="center"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
+            <!--android:textAlignment="center"-->
         <Button
             android:text="Log In"
             android:layout_width="match_parent"

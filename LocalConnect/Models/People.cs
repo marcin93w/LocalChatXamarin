@@ -19,7 +19,7 @@ namespace LocalConnect2.Models
 {
     public class People
     {
-        public List<Person> PeopleList { private set; get; } 
+        public List<Person> PeopleList { private set; get; }
 
         public async Task<bool> FetchPeopleList()
         {
@@ -34,7 +34,8 @@ namespace LocalConnect2.Models
                     row["firstname"],
                     row["surname"],
                     row["shortDescription"],
-                    location);
+                    location,
+                    row["userId"]);
             }).ToList();
 
             return PeopleList != null;

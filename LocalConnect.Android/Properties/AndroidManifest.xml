@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="LocalConnect2.LocalConnect2" android:versionCode="1" android:versionName="1.0" android:installLocation="auto">
-	<uses-sdk />
+	<uses-sdk android:minSdkVersion="10" />
 	<application android:label="LocalConnect2" android:icon="@drawable/Icon">
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyARRA0CSszDIXQvLHJZoKymP0QLGl3DTqw" />
 	</application>

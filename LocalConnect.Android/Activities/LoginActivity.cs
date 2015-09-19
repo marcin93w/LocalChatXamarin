@@ -24,6 +24,7 @@ namespace LocalConnect2.Activities
     public class LoginActivity : Activity
     {
         private readonly LoginViewModel _loginViewModel;
+        private readonly ChatViewModel _chatViewModel;
 
         private View _loadingPanel;
         private View _initializingPanel;
@@ -31,6 +32,7 @@ namespace LocalConnect2.Activities
         public LoginActivity()
         {
             _loginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>();
+            _chatViewModel = ViewModelLocator.Instance.GetViewModel<ChatViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -106,7 +108,7 @@ namespace LocalConnect2.Activities
         private void TakeToApp(LoginData loginData)
         {
             SaveAuthToken(loginData.Token);
-            ChatClient.Instance.Connect(loginData.UserId);
+            _chatViewModel.Connect(loginData.UserId);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();

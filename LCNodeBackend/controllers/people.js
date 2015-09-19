@@ -1,4 +1,4 @@
-﻿(function (personCtrl) {
+﻿(function (peopleCtrl) {
 
     var _ = require('underscore');
 
@@ -20,7 +20,7 @@
     //    });
     //};
 
-    function makeLocationAnObject(collection) {
+    function beautifyPeopleCollection(collection) {
         collection.forEach(function(element) {
             if (Array.isArray(element.location)) {
                 element.location = {
@@ -28,21 +28,23 @@
                     'lat': element.location[1]
                 };
             }
+            element.userId = element.user;
+            delete element.user;
         });
         return collection;
     }    
     
-    personCtrl.getAllPeople = function (req, res) {
-        Person.find({}, 'firstname surname shortDescription location')
+    peopleCtrl.getAllPeople = function (req, res) {
+        Person.find({}, 'firstname surname shortDescription location user')
         .where("user").ne(req.user)
         .lean()
         .exec(function (err, people) {
             if (err) res.send(err);
-            res.json(makeLocationAnObject(people));
+            res.json(beautifyPeopleCollection(people));
         });
     };
 
-    personCtrl.getMe = function(req, res) {
+    peopleCtrl.getMe = function(req, res) {
         Person.find({ user: req.user }, 
             'firstname surname shortDescription longDescription',
             function(err, me) {
@@ -51,7 +53,7 @@
             });
     }
 
-    personCtrl.getMyName = function (req, res) {
+    peopleCtrl.getMyName = function (req, res) {
         Person.findOne({ user: req.user }, 
             'firstname surname',
             function (err, me) {

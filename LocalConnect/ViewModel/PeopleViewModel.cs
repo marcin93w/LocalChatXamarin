@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Android.Gms.Common.Apis;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
+using LocalConnect.Services;
 using LocalConnect2.Models;
 using LocalConnect2.Services;
 
 namespace LocalConnect2.ViewModel
 {
 
-    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
+    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel, IPeopleFinder
     {
         private readonly People _people;
         private readonly MeModel _meModel;
@@ -43,6 +45,18 @@ namespace LocalConnect2.ViewModel
             _people = new People();
             _meModel = new MeModel();
         }
+
+#region IPeopleFinder implementation
+
+        public Person GetPersonForId(string userId)
+        {
+            if(!_dataLoaded || People == null)
+                throw new InvalidAsynchronousStateException("Data has not been loaded yet");
+
+            return People.First(p => p.UserId == userId);
+        }
+
+#endregion
 
         public async void FetchData()
         {

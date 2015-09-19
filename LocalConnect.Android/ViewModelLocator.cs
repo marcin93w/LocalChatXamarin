@@ -2,9 +2,10 @@ using System;
 using Android.App;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using LocalConnect2.ViewModel;
 using Microsoft.Practices.ServiceLocation;
 
-namespace LocalConnect2.ViewModel
+namespace LocalConnect2
 {
     /// <summary>
     /// This class contains static references to all the view models in the

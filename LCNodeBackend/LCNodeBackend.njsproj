@@ -32,7 +32,7 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="controllers\authentication.js" />
-    <Compile Include="controllers\person.js" />
+    <Compile Include="controllers\people.js" />
     <Compile Include="controllers\user.js" />
     <Compile Include="models\person.js" />
     <Compile Include="models\user.js" />

@@ -15,12 +15,13 @@ namespace LocalConnect.Models
 
         public string Name => FirstName + " " + Surname;
 
-        public Person(string firstName, string surname, string description, Point location)
+        public Person(string firstName, string surname, string description, Point location, string userId)
         {
             FirstName = firstName;
             Surname = surname;
             Description = description;
             Location = location;
+            UserId = userId;
         }
     }
 }

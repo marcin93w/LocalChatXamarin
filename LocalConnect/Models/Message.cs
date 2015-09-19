@@ -19,12 +19,23 @@ namespace LocalConnect.Models
 
     public class IncomeMessage : Message
     {
-        public IncomeMessage(Person sender, string text, DateTime time) 
+        public IncomeMessage(string sender, string text, DateTime time) 
             : base(text, time)
         {
-            Sender = sender;
+            SenderId = sender;
         }
 
-        public Person Sender { get; }
+        public string SenderId { get; }
+    }
+
+    public class OutcomeMessage : Message
+    {
+        public OutcomeMessage(string receiverId, string text, DateTime time)
+            : base(text, time)
+        {
+            ReceiverId = receiverId;
+        }
+
+        public string ReceiverId { get; }
     }
 }

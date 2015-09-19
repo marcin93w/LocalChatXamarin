@@ -3,6 +3,10 @@
 /LocalConnect2/obj
 /LocalConnect2/dist
 /LocalConnect2/*.user
+/LocalConnect.Android/bin
+/LocalConnect.Android/obj
+/LocalConnect.Android/dist
+/LocalConnect.Android/*.user
 /LCNodeBackend/.ntvs_analysis.dat
 /LCNodeBackend/node_modules
 /packages
