@@ -2,7 +2,6 @@
 var router = express.Router();
 
 var authController = require('../controllers/authentication');
-var userController = require('../controllers/user');
 var peopleController = require('../controllers/people');
 
 router.route('/').get(authController.isAuthenticated, function (req, res) {
@@ -10,10 +9,10 @@ router.route('/').get(authController.isAuthenticated, function (req, res) {
 });
 
 router.route('/login').get(authController.checkCredentials, 
-    userController.getUserData);
+    authController.getUserData);
 
 router.route('/loginWithToken').get(authController.isAuthenticated, 
-    userController.getUserData);
+    authController.getUserData);
 
 router.route('/people').get(authController.isAuthenticated, 
     peopleController.getAllPeople);

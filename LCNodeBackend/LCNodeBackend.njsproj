@@ -32,8 +32,9 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="controllers\authentication.js" />
+    <Compile Include="controllers\messages.js" />
     <Compile Include="controllers\people.js" />
-    <Compile Include="controllers\user.js" />
+    <Compile Include="models\message.js" />
     <Compile Include="models\person.js" />
     <Compile Include="models\user.js" />
     <Compile Include="modules\chat.js" />

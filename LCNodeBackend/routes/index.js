@@ -7,7 +7,8 @@ router.get('/', function (req, res) {
 });
 
 router.get('/chatTester', function (req, res) {
-    res.render('chat.html', { user: req.param('user') });
+    var socketAddres = process.env.OPENSHIFT_NODEJS_IP ? 'wss://lc-fancydesign.rhcloud.com:8443' : 'http://localhost:1338';
+    res.render('chat.html', { personId: req.param('personId'), socketIoUrl: socketAddres });
 });
 
 module.exports = router;
