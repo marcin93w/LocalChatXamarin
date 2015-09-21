@@ -11,7 +11,7 @@
 
 [assembly: global::Android.Runtime.ResourceDesignerAttribute("LocalConnect2.Resource", IsApplication=true)]
 
-namespace LocalConnect2
+namespace LocalConnect.Android
 {
 	
 	
@@ -26,8 +26,8 @@ namespace LocalConnect2
 		
 		public static void UpdateIdValues()
 		{
-			global::GalaSoft.MvvmLight.Resource.String.ApplicationName = global::LocalConnect2.Resource.String.ApplicationName;
-			global::GalaSoft.MvvmLight.Resource.String.Hello = global::LocalConnect2.Resource.String.Hello;
+			global::GalaSoft.MvvmLight.Resource.String.ApplicationName = global::LocalConnect.Android.Resource.String.ApplicationName;
+			global::GalaSoft.MvvmLight.Resource.String.Hello = global::LocalConnect.Android.Resource.String.Hello;
 		}
 		
 		public partial class Attribute

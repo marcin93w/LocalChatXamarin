@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using LocalConnect2.Models;
+using LocalConnect.Android.Models;
 
 namespace LocalConnect.Models
 {

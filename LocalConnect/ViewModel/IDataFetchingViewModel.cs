@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LocalConnect2.ViewModel
+namespace LocalConnect.ViewModel
 {
     public class OnDataLoadEventArgs : EventArgs
     {

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect2.Services;
+using LocalConnect.Services;
 
-namespace LocalConnect2.ViewModel
+namespace LocalConnect.ViewModel
 {
 
     public class LoginViewModel : ViewModelBase
@@ -44,11 +44,14 @@ namespace LocalConnect2.ViewModel
                 if (ex is WebException)
                 {
                     var response = (HttpWebResponse) (ex as WebException).Response;
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (response != null && response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
                         AuthenticationErrorMessage = "Bad username or password";
+                        return null;
+                    }
                 }
-                else
-                    AuthenticationErrorMessage = "Can not connect to server. " + ex.Message;
+                
+                AuthenticationErrorMessage = "Can not connect to server. " + ex.Message;
             }
 
             return null;

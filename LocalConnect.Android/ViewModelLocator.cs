@@ -2,10 +2,11 @@ using System;
 using Android.App;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using LocalConnect2.ViewModel;
+using LocalConnect.ViewModel;
+using LocalConnect.Interfaces;
 using Microsoft.Practices.ServiceLocation;
 
-namespace LocalConnect2
+namespace LocalConnect.Android
 {
     /// <summary>
     /// This class contains static references to all the view models in the
@@ -30,11 +31,11 @@ namespace LocalConnect2
         {
             var viewModel = ServiceLocator.Current.GetInstance<T>();
 
-            if (viewModel is IUiInvokableViewModel)
+            if (viewModel is IUiInvokable)
             {
                 if (activity != null)
                 {
-                    (viewModel as IUiInvokableViewModel).RunOnUiThread = activity.RunOnUiThread;
+                    (viewModel as IUiInvokable).RunOnUiThread = activity.RunOnUiThread;
                 }
                 else
                 {

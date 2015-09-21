@@ -9,12 +9,11 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using LocalConnect2.Activities.Adapters;
-using LocalConnect2.Services;
-using LocalConnect2.ViewModel;
+using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect.Android.Activities
 {
     public class ListViewFragment : Fragment
     {
@@ -53,7 +52,7 @@ namespace LocalConnect2.Activities
         {
             var chatActivity = new Intent(Activity.ApplicationContext, typeof(ChatActivity));
             var person = _peopleViewModel.People[e.Position];
-            chatActivity.PutExtra("UserId", person.UserId);
+            chatActivity.PutExtra("UserId", person.PersonId);
             StartActivity(chatActivity);
         }
     }

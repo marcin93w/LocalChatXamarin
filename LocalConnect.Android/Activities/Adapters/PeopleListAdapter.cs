@@ -2,9 +2,9 @@ using System.Linq;
 using Android.Content;
 using Android.Views;
 using Android.Widget;
-using LocalConnect2.ViewModel;
+using LocalConnect.ViewModel;
 
-namespace LocalConnect2.Activities.Adapters
+namespace LocalConnect.Android.Activities.Adapters
 {
     public class PeopleListAdapter : ArrayAdapter<string>
     {

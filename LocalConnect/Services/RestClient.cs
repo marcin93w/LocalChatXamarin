@@ -7,9 +7,8 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using LocalConnect.Models;
-using LocalConnect2.ViewModel;
 
-namespace LocalConnect2.Services
+namespace LocalConnect.Services
 {
     public class RestClient
     {
@@ -54,11 +53,11 @@ namespace LocalConnect2.Services
                         var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
                         Console.Out.WriteLine("Response: {0}", jsonDoc);
 
-                        var userId = jsonDoc["userId"].GetValue();
+                        var personId = jsonDoc["personId"].GetValue();
                         var newToken = jsonDoc["token"].GetValue();
                         _authenticationHeader = $"Bearer {newToken}";
 
-                        return new LoginData(newToken, userId);
+                        return new LoginData(newToken, personId);
                     }
                 }
                 else

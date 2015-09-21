@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LocalConnect2.ViewModel
+namespace LocalConnect.Interfaces
 {
     public delegate void RunOnUiThreadHandler(Action action);
 
-    public interface IUiInvokableViewModel 
+    public interface IUiInvokable 
     {
         RunOnUiThreadHandler RunOnUiThread { set; }
     }

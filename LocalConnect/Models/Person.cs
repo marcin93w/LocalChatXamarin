@@ -7,7 +7,7 @@ namespace LocalConnect.Models
 {
     public class Person
     {
-        public string UserId { get; }
+        public string PersonId { get; }
         public string FirstName { get; }
         public string Surname { get; }
         public string Description { get; }
@@ -15,13 +15,13 @@ namespace LocalConnect.Models
 
         public string Name => FirstName + " " + Surname;
 
-        public Person(string firstName, string surname, string description, Point location, string userId)
+        public Person(string firstName, string surname, string description, Point location, string personId)
         {
             FirstName = firstName;
             Surname = surname;
             Description = description;
             Location = location;
-            UserId = userId;
+            PersonId = personId;
         }
     }
 }

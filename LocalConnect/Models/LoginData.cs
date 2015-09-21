@@ -6,13 +6,13 @@ namespace LocalConnect.Models
 {
     public class LoginData
     {
-        public LoginData(string token, string userId)
+        public LoginData(string token, string personId)
         {
             Token = token;
-            UserId = userId;
+            PersonId = personId;
         }
 
         public string Token { get; }
-        public string UserId { get; }
+        public string PersonId { get; }
     }
 }

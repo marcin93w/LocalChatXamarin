@@ -13,10 +13,10 @@ using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
 using Java.Lang.Reflect;
-using LocalConnect2.ViewModel;
+using LocalConnect.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect.Android.Activities
 {
     public class MapViewFragment : Fragment, IOnMapReadyCallback
     {

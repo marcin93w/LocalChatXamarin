@@ -12,14 +12,12 @@
                     'lat': element.location[1]
                 };
             }
-            element.userId = element.user;
-            delete element.user;
         });
         return collection;
     }    
     
     peopleCtrl.getAllPeople = function (req, res) {
-        Person.find({}, 'firstname surname shortDescription location user')
+        Person.find({}, 'id firstname surname shortDescription location')
         .where("user").ne(req.user)
         .lean()
         .exec(function (err, people) {

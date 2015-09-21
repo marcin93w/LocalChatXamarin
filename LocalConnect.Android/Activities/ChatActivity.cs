@@ -10,10 +10,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using LocalConnect2.ViewModel;
+using LocalConnect.ViewModel;
 using Message = LocalConnect.Models.Message;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect.Android.Activities
 {
     [Activity(Label = "ChatActivity",
         Theme = "@android:style/Theme.Black.NoTitleBar",
@@ -21,7 +21,7 @@ namespace LocalConnect2.Activities
     public class ChatActivity : Activity
     {
         private readonly ChatViewModel _chatViewModel;
-        private string _chatUserId;
+        //private string _chatUserId;
 
         private TextView _messageTextView;
 
@@ -36,7 +36,11 @@ namespace LocalConnect2.Activities
 
             SetContentView(Resource.Layout.Chat);
 
-            _chatUserId = Intent.GetStringExtra("UserId");
+            var chatUserId = Intent.GetStringExtra("UserId");
+            if (!_chatViewModel.StartChatWith(chatUserId))
+            {
+                Finish();
+            }
 
             var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
             messagesList.Adapter = _chatViewModel.Messages.GetAdapter(GetMessageView);
@@ -50,27 +54,23 @@ namespace LocalConnect2.Activities
         {
             if (convertView == null)
             {
-                convertView = LayoutInflater.Inflate(Android.Resource.Layout.ActivityListItem, null);
+                convertView = LayoutInflater.Inflate(global::Android.Resource.Layout.ActivityListItem, null);
             }
-            var text = convertView.FindViewById<TextView>(Android.Resource.Id.Text1);
+            var text = convertView.FindViewById<TextView>(global::Android.Resource.Id.Text1);
             text.Text = message.Text;
             return convertView;
         }
 
         protected override void OnStart()
         {
+            _chatViewModel.ResumeChat();
             base.OnStart();
 
-            if (!_chatViewModel.StartChatWith(_chatUserId))
-            {
-                Finish();
-            }
         }
 
         protected override void OnStop()
         {
-            _chatViewModel.EndChat();
-
+            _chatViewModel.StopChat();
             base.OnStop();
         }
 
@@ -83,7 +83,7 @@ namespace LocalConnect2.Activities
             }
             catch (Exception)
             {
-                Toast.MakeText(ApplicationContext, "Your message was not send please try again", ToastLength.Short);
+                Toast.MakeText(this, "Your message was not send please try again", ToastLength.Short);
             }
         }
     }

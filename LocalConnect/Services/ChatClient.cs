@@ -4,13 +4,12 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using LocalConnect.Models;
-using LocalConnect.Services;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using WebSocket4Net;
 
 
-namespace LocalConnect2.Services
+namespace LocalConnect.Services
 {
     public class MessageReceivedEventArgs : EventArgs
     {
@@ -38,34 +37,35 @@ namespace LocalConnect2.Services
 
         private Socket _socket;
 
-        public event MessageReceivedEventHandler MessageReceived;
+        public event MessageReceivedEventHandler OnMessageReceived;
 
-        public void Connect(string userId)
+        public void Connect(string personId)
         {
             var socketQuery = new Dictionary<string, string>();
-            socketQuery.Add("userId", userId);
+            socketQuery.Add("personId", personId);
             _socket = IO.Socket(_url, new IO.Options {Query = socketQuery}).Connect();
             _socket.On("chat message", message =>
             {
                 var msg = message as JObject;
-                if (msg != null && MessageReceived != null)
+                if (msg != null && OnMessageReceived != null)
                 {
                     var incomeMessage = new IncomeMessage(
                         msg["sender"].ToString(),
                         msg["text"].ToString(), 
                         DateTime.Now);
 
-                    MessageReceived(this, new MessageReceivedEventArgs(incomeMessage));
+                    OnMessageReceived(this, new MessageReceivedEventArgs(incomeMessage));
                 }
             });
         }
 
-        public void SendMessage(OutcomeMessage message)
+        public void SendMessage(OutcomeMessage message, int messageIndex)
         {
             var msg = new JObject
             {
                 { "receiver", message.ReceiverId },
-                { "text", message.Text }
+                { "text", message.Text },
+                { "clientMessageId", messageIndex }
             };
             _socket.Emit("chat message", msg);
         }

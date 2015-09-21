@@ -1,16 +1,14 @@
 ﻿using System;
 using Android.App;
 using Android.Content;
-using Android.Gms.Maps;
 using Android.OS;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
-using Android.Views;
 using Android.Widget;
-using LocalConnect2.Activities.Adapters;
-using LocalConnect2.ViewModel;
+using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.ViewModel;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect.Android.Activities
 {
     [Activity(Theme = "@android:style/Theme.Black.NoTitleBar")]
     public class MainActivity : FragmentActivity

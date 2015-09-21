@@ -56,10 +56,10 @@
             .then(function() {
                 return Person.findOne({ user: user }, 'id');
             })
-            .then(function(personId) {
+            .then(function(person) {
                 res.json({
                     token: user.token,
-                    personId: personId
+                    personId: person.id
                 });
             }, function (error) {
                 res.send(error);

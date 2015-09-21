@@ -12,10 +12,10 @@ using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using LocalConnect.Models;
-using LocalConnect2.Services;
-using LocalConnect2.ViewModel;
+using LocalConnect.Services;
+using LocalConnect.ViewModel;
 
-namespace LocalConnect2.Activities
+namespace LocalConnect.Android.Activities
 {
     [Activity(Label = "Aplikacja Marcina",
         MainLauncher = true,
@@ -24,7 +24,6 @@ namespace LocalConnect2.Activities
     public class LoginActivity : Activity
     {
         private readonly LoginViewModel _loginViewModel;
-        private readonly ChatViewModel _chatViewModel;
 
         private View _loadingPanel;
         private View _initializingPanel;
@@ -32,7 +31,6 @@ namespace LocalConnect2.Activities
         public LoginActivity()
         {
             _loginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>();
-            _chatViewModel = ViewModelLocator.Instance.GetViewModel<ChatViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -108,7 +106,7 @@ namespace LocalConnect2.Activities
         private void TakeToApp(LoginData loginData)
         {
             SaveAuthToken(loginData.Token);
-            _chatViewModel.Connect(loginData.UserId);
+            ChatClient.Instance.Connect(loginData.PersonId);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();

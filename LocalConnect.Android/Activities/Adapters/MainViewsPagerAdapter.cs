@@ -2,7 +2,7 @@ using Android.Support.V4.App;
 using Fragment = Android.Support.V4.App.Fragment;
 using FragmentManager = Android.Support.V4.App.FragmentManager;
 
-namespace LocalConnect2.Activities.Adapters
+namespace LocalConnect.Android.Activities.Adapters
 {
     public class MainViewsPagerAdapter : FragmentPagerAdapter
     {

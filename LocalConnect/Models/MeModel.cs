@@ -4,9 +4,9 @@ using System.Json;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LocalConnect2.Services;
+using LocalConnect.Services;
 
-namespace LocalConnect2.Models
+namespace LocalConnect.Android.Models
 {
     public class MeModel
     {

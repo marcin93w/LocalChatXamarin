@@ -2,20 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Json;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using LocalConnect.Models;
-using LocalConnect2.Services;
+using LocalConnect.Services;
 using NetTopologySuite.Geometries;
-using Org.Json;
 
-namespace LocalConnect2.Models
+namespace LocalConnect.Models
 {
     public class People
     {
@@ -35,7 +26,7 @@ namespace LocalConnect2.Models
                     row["surname"],
                     row["shortDescription"],
                     location,
-                    row["userId"]);
+                    row["_id"]);
             }).ToList();
 
             return PeopleList != null;

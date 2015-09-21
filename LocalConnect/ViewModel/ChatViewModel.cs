@@ -1,22 +1,14 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect.Services;
-using LocalConnect2.Models;
-using LocalConnect2.Services;
+using LocalConnect.Interfaces;
 
-namespace LocalConnect2.ViewModel
+namespace LocalConnect.ViewModel
 {
-    public class ChatViewModel : ViewModelBase, IUiInvokableViewModel
+    public class ChatViewModel : ViewModelBase, IUiInvokable
     {
-        private readonly ChatClient _chatService;
-        private readonly IPeopleFinder _peopleFinder;
-
-        private bool _isInitialized;
+        private Conversation _conversation;
 
 #region IUiInvokableViewModel implementation
 
@@ -24,28 +16,14 @@ namespace LocalConnect2.ViewModel
 
 #endregion
 
-        public Person Person { private set; get; }
-        public ObservableCollection<Message> Messages { private set; get; }
+        public Person Person => _conversation.Person;
+        public ObservableCollection<Message> Messages => _conversation.Messages;
 
-        public ChatViewModel()
-        {
-            Messages = new ObservableCollection<Message>();
-            _peopleFinder = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
-            _chatService = ChatClient.Instance;
-        }
-
-        public void Connect(string userId)
-        {
-            _chatService.MessageReceived += HandleMessageReceive;
-            _chatService.Connect(userId);
-        }
-
-        public bool StartChatWith(string userId)
+        public bool StartChatWith(string personId)
         {
             try
             {
-                Person = _peopleFinder.GetPersonForId(userId);
-                _isInitialized = true;
+                _conversation = new Conversation(personId, RunOnUiThread);
                 return true;
             }
             catch (InvalidAsynchronousStateException)
@@ -54,29 +32,18 @@ namespace LocalConnect2.ViewModel
             }
         }
 
-        public void EndChat()
+        public void StopChat()
         {
-            _isInitialized = false;
-            Messages = new ObservableCollection<Message>();
+            _conversation.IsHolded = true;
         }
-
-        private void HandleMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
+        public void ResumeChat()
         {
-            if (_isInitialized && Person.UserId == messageReceivedEventArgs.Message.SenderId)
-            {
-                RunOnUiThread(() => Messages.Add(messageReceivedEventArgs.Message));
-            }
+            _conversation.IsHolded = false;
         }
 
         public void SendMessage(string message)
         {
-            if(!_isInitialized)
-                throw new InvalidAsynchronousStateException("Chat is not started with any person");
-
-            var msg = new OutcomeMessage(Person.UserId, message, DateTime.Now);
-            _chatService.SendMessage(msg);
-            Messages.Add(msg);
+            _conversation.SendMessage(message);     
         }
-
     }
 }
