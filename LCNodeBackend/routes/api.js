@@ -17,6 +17,9 @@ router.route('/loginWithToken').get(authController.isAuthenticated,
 router.route('/people').get(authController.isAuthenticated, 
     peopleController.getAllPeople);
 
+router.route('/personDetails/:id').get(authController.isAuthenticated, 
+    peopleController.getPersonDetails);
+
 router.route('/me').get(authController.isAuthenticated, 
     peopleController.getMe);
 

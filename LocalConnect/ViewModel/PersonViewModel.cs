@@ -1,12 +1,15 @@
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Android.Provider;
 using GalaSoft.MvvmLight;
+using LocalConnect.Android;
 using LocalConnect.Models;
 using LocalConnect.Interfaces;
 
 namespace LocalConnect.ViewModel
 {
-    public class ChatViewModel : ViewModelBase, IUiInvokable
+    public class ChatViewModel : ViewModelBase, IUiInvokable, IDataFetchingViewModel
     {
         private Conversation _conversation;
 
@@ -16,20 +19,41 @@ namespace LocalConnect.ViewModel
 
 #endregion
 
-        public Person Person => _conversation.Person;
+        public Person Person { private set; get; }
         public ObservableCollection<Message> Messages => _conversation.Messages;
 
-        public bool StartChatWith(string personId)
+        public event OnDataLoadEventHandler OnDataLoad;
+
+        public bool Initialize(string personId)
         {
             try
             {
-                _conversation = new Conversation(personId, RunOnUiThread);
+                var peopleFinder = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
+                Person = peopleFinder.GetPersonForId(personId);
+                _conversation = new Conversation(Person, RunOnUiThread);
                 return true;
             }
             catch (InvalidAsynchronousStateException)
             {
                 return false;
             }
+        }
+
+        public async void FetchDataAsync()
+        {
+            bool dataLoaded;
+            try
+            {
+                dataLoaded = await Person.LoadDetailedData();
+            }
+            catch (Exception)
+            {
+                dataLoaded = false;
+                throw;
+            }
+
+            OnDataLoad?.Invoke(this, 
+                new OnDataLoadEventArgs(dataLoaded ? null : "Error loading person data."));
         }
 
         public void StopChat()

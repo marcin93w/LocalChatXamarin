@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@android:color/holo_green_dark">
     <RelativeLayout
         android:id="@+id/LoginPanel"
         android:layout_width="wrap_content"
@@ -14,7 +15,9 @@
             android:id="@+id/LoginInput"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:hint="Login" />
+            android:hint="Login"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
         <EditText
             android:inputType="textPassword"
             android:layout_width="match_parent"
@@ -23,7 +26,9 @@
             android:id="@+id/PasswordInput"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:hint="Password" />
+            android:hint="Password"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
         <TextView
             android:text="Text"
             android:layout_width="match_parent"
@@ -35,7 +40,7 @@
             android:gravity="center"
             android:textColor="@android:color/holo_red_dark"
             android:visibility="gone" />
-            <!--android:textAlignment="center"-->
+    <!--android:textAlignment="center" //not supported in 2.3.7-->
         <Button
             android:text="Log In"
             android:layout_width="match_parent"
@@ -43,7 +48,9 @@
             android:layout_below="@id/ErrorText"
             android:id="@+id/LoginButton"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"
@@ -63,10 +70,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:background="@android:color/black">
+        android:background="@android:color/holo_green_dark"
+        android:visibility="visible">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Initializing, please wait..." />
+            android:text="Initializing, please wait..."
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 </RelativeLayout>

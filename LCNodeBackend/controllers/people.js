@@ -25,6 +25,16 @@
             res.json(beautifyPeopleCollection(people));
         });
     };
+    
+    peopleCtrl.getPersonDetails = function(req, res) {
+        Person.findOne({ _id: req.params.id }, 
+            'longDescription',
+            function (err, personDetails) {
+                if (err) res.send(err);
+                res.json(personDetails);
+            }
+        );
+    }
 
     peopleCtrl.getMe = function(req, res) {
         Person.find({ user: req.user }, 

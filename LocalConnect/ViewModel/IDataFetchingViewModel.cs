@@ -11,7 +11,7 @@ namespace LocalConnect.ViewModel
 
         public string ErrorMessage { get; }
 
-        public OnDataLoadEventArgs(string errorMessage)
+        public OnDataLoadEventArgs(string errorMessage = null)
         {
             ErrorMessage = errorMessage;
             IsSuccesful = string.IsNullOrEmpty(errorMessage);
@@ -27,7 +27,7 @@ namespace LocalConnect.ViewModel
 
         event OnDataLoadEventHandler OnDataLoad;
 
-        void FetchData();
+        void FetchDataAsync();
     }
 
     //public static class DataFetchingViewModelExtensions

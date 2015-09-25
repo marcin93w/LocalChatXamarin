@@ -19,10 +19,9 @@ namespace LocalConnect.Models
 
         public bool IsHolded { set; get; }
 
-        public Conversation(string personId, RunOnUiThreadHandler uiThreadHandler)
+        public Conversation(Person person, RunOnUiThreadHandler uiThreadHandler)
         {
-            var peopleFinder = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
-            Person = peopleFinder.GetPersonForId(personId);
+            Person = person;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
             ChatClient.Instance.OnMessageReceived += HandleOnMessageReceive;
         }

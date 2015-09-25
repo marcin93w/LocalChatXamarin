@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="bottom">
+    <RelativeLayout
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout2"
+        android:background="@android:color/holo_green_dark">
+        <ImageView
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/PersonImage" />
+        <Button
+            android:text="more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/MoreButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="false" />
+        <TextView
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/PersonImage"
+            android:id="@+id/PersonName"
+            android:layout_toLeftOf="@id/MoreButton"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp" />
+        <TextView
+            android:text="Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/PersonImage"
+            android:layout_below="@id/PersonName"
+            android:id="@+id/ShortDescription"
+            android:layout_toLeftOf="@id/MoreButton" />
+        <TextView
+            android:text=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PersonImage"
+            android:id="@+id/LongDescription"
+            android:layout_margin="3dp"
+            android:paddingTop="5dp"
+            android:visibility="gone" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/LongDescription"
+            android:id="@+id/ActionsPanel"
+            android:visibility="gone">
+            <Button
+                android:text="Show on map"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/button2" />
+            <Button
+                android:text="Observe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button3" />
+        </LinearLayout>
+    </RelativeLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/MessagesList"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:transcriptMode="alwaysScroll"
+        android:listSelector="@android:color/transparent" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/AddMessageForm">
+        <EditText
+            android:inputType="textMultiLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/TextInput"
+            android:layout_weight="1" />
+        <Button
+            android:text="Send"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/SendButton" />
+    </LinearLayout>
+</LinearLayout>

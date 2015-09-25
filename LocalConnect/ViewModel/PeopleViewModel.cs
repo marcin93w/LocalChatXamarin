@@ -5,10 +5,11 @@ using System.Linq;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
 using LocalConnect.Android.Models;
+using LocalConnect.Interfaces;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel//, IPeopleFinder
+    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel, IPeopleFinder
     {
         private readonly People _people;
         private readonly MeModel _meModel;
@@ -54,7 +55,7 @@ namespace LocalConnect.ViewModel
 
 #endregion
 
-        public async void FetchData()
+        public async void FetchDataAsync()
         {
             _errorMessage = null;
             try

@@ -21,7 +21,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\ChatClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ChatViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataFetchingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />

@@ -13,7 +13,7 @@ namespace LocalConnect.Android.Activities
     [Activity(Theme = "@android:style/Theme.Black.NoTitleBar")]
     public class MainActivity : FragmentActivity
     {
-        private PeopleViewModel _peopleViewModel;
+        private readonly PeopleViewModel _peopleViewModel;
 
         public MainActivity()
         {
@@ -27,7 +27,7 @@ namespace LocalConnect.Android.Activities
             SetContentView(Resource.Layout.Main);
 
             _peopleViewModel.OnDataLoad += OnDataLoad;
-            _peopleViewModel.FetchData();
+            _peopleViewModel.FetchDataAsync();
 
             var viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,

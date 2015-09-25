@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using LocalConnect.Services;
 using NetTopologySuite.Geometries;
 
 namespace LocalConnect.Models
@@ -13,6 +15,8 @@ namespace LocalConnect.Models
         public string Description { get; }
         public Point Location { get; }
 
+        public string LongDescription { private set; get; }
+
         public string Name => FirstName + " " + Surname;
 
         public Person(string firstName, string surname, string description, Point location, string personId)
@@ -22,6 +26,15 @@ namespace LocalConnect.Models
             Description = description;
             Location = location;
             PersonId = personId;
+        }
+
+        public async Task<bool> LoadDetailedData()
+        {
+            var personData = await RestClient.Instance.FetchDataAsync($"personDetails/{PersonId}");
+
+            LongDescription = personData.GetValue("longDescription");
+
+            return LongDescription != null;
         }
     }
 }

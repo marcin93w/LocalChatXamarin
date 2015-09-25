@@ -50,7 +50,7 @@ namespace LocalConnect.Android.Activities
 
         private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var chatActivity = new Intent(Activity.ApplicationContext, typeof(ChatActivity));
+            var chatActivity = new Intent(Activity.ApplicationContext, typeof(PersonActivity));
             var person = _peopleViewModel.People[e.Position];
             chatActivity.PutExtra("UserId", person.PersonId);
             StartActivity(chatActivity);

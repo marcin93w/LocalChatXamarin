@@ -10,7 +10,8 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/MenuLayout">
+        android:id="@+id/MenuLayout"
+        android:background="@android:color/holo_green_dark">
         <ImageView
             android:src="@android:drawable/ic_menu_gallery"
             android:layout_width="60dp"
