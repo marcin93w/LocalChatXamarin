@@ -2,8 +2,13 @@
 
     var q = require("q");
 
-    messagesCtrl.saveMessage = function (message) {
+    var ObjectId = require('mongoose').Types.ObjectId; 
+    var Message = require('../models/message');
+    var Person = require('../models/person');
 
+    var messagesFetchCount = 10;
+
+    messagesCtrl.saveMessage = function (message) {
         var saveResultPromise = q.defer();
 
         message.save(function (err) {
@@ -16,6 +21,30 @@
         });
 
         return saveResultPromise.promise;
+    };
+
+    messagesCtrl.getLastMessagesWith = function(req, res) {
+        Person
+            .findOne({ user: req.user }, 'id')
+            .then(function(person) {
+                return Message
+                    .find({
+                            $or: [
+                                { sender: person.id, receiver: new ObjectId(req.params.personId) }, 
+                                { receiver: person.id, sender: new ObjectId(req.params.personId) }
+                            ]
+                        }, 
+                        'sender text dateTime status'
+                    )
+                    .sort('-dateTime')
+                    .limit(messagesFetchCount)
+                    .exec();
+            })
+            .then(function (messages) {
+                res.json(messages);
+            }, function(error) {
+                res.send(error);
+            });
     };
 
 })(module.exports);

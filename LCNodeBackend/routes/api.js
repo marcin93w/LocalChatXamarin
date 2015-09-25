@@ -3,6 +3,7 @@ var router = express.Router();
 
 var authController = require('../controllers/authentication');
 var peopleController = require('../controllers/people');
+var messagesCtrl = require('../controllers/messages');
 
 router.route('/').get(authController.isAuthenticated, function (req, res) {
     res.json({ welcomeMsg: 'Welcome to Local Connect!' });
@@ -19,6 +20,9 @@ router.route('/people').get(authController.isAuthenticated,
 
 router.route('/personDetails/:id').get(authController.isAuthenticated, 
     peopleController.getPersonDetails);
+
+router.route('/lastMessagesWith/:personId').get(authController.isAuthenticated, 
+    messagesCtrl.getLastMessagesWith);
 
 router.route('/me').get(authController.isAuthenticated, 
     peopleController.getMe);

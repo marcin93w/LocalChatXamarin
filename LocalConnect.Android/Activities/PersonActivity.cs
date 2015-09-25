@@ -28,7 +28,6 @@ namespace LocalConnect.Android.Activities
         private bool _moreInfoDisplayed;
 
         private TextView _messageTextView;
-        private View _incomeMassageView, _outcomeMessageView;
 
         public PersonActivity()
         {

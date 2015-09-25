@@ -42,18 +42,21 @@ namespace LocalConnect.ViewModel
         public async void FetchDataAsync()
         {
             bool dataLoaded;
+            string errorMsg = String.Empty;
             try
             {
-                dataLoaded = await Person.LoadDetailedData();
+                var personDataLoading = Person.LoadDetailedData();
+                await _conversation.FetchLastMessages();
+                dataLoaded = await personDataLoading;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 dataLoaded = false;
-                throw;
+                errorMsg = ex.Message;
             }
 
             OnDataLoad?.Invoke(this, 
-                new OnDataLoadEventArgs(dataLoaded ? null : "Error loading person data."));
+                new OnDataLoadEventArgs(dataLoaded ? null : "Error loading person data. " + errorMsg));
         }
 
         public void StopChat()

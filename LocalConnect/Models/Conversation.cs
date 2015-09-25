@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Json;
 using System.Text;
+using System.Threading.Tasks;
 using LocalConnect.Helpers;
 using LocalConnect.Android;
 using LocalConnect.Services;
@@ -42,6 +44,26 @@ namespace LocalConnect.Models
             var msg = new OutcomeMessage(Person.PersonId, message, DateTime.Now);
             Messages.Add(msg);
             ChatClient.Instance.SendMessage(msg, Messages.IndexOf(msg));
+        }
+
+        public async Task FetchLastMessages()
+        {
+            var lastMessages = await RestClient.Instance.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
+
+            foreach (JsonValue message in lastMessages)
+            {
+                Message msg;
+                if (message.GetValue("sender") == Person.PersonId)
+                {
+                    msg = new IncomeMessage(Person.PersonId, message.GetValue("text"), DateTime.Parse(message.GetValue("dateTime")));
+                }
+                else
+                {
+                    msg = new OutcomeMessage(Person.PersonId, message.GetValue("text"), DateTime.Parse(message.GetValue("dateTime")));
+                }
+            
+                Messages.Insert(0, msg);            
+            }
         }
     }
 }
