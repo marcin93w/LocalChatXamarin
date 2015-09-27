@@ -10,10 +10,12 @@ using LocalConnect.ViewModel;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity(Theme = "@android:style/Theme.Black.NoTitleBar")]
+    [Activity]
     public class MainActivity : FragmentActivity
     {
         private readonly PeopleViewModel _peopleViewModel;
+
+        public ViewPager ViewPager { private set; get; }
 
         public MainActivity()
         {
@@ -29,9 +31,9 @@ namespace LocalConnect.Android.Activities
             _peopleViewModel.OnDataLoad += OnDataLoad;
             _peopleViewModel.FetchDataAsync();
 
-            var viewPager = FindViewById<ViewPager>(Resource.Id.pager);
-            viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
-                new ListViewFragment(), new MapViewFragment(viewPager));
+            ViewPager = FindViewById<ViewPager>(Resource.Id.pager);
+            ViewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
+                new ListViewFragment(), new MapViewFragment());
         }
 
         private void OnDataLoad(object sender, OnDataLoadEventArgs e)

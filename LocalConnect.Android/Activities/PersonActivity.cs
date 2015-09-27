@@ -19,7 +19,6 @@ using Message = LocalConnect.Models.Message;
 namespace LocalConnect.Android.Activities
 {
     [Activity(Label = "ChatActivity",
-        Theme = "@android:style/Theme.Black.NoTitleBar",
         WindowSoftInputMode = SoftInput.AdjustResize)]
     public class PersonActivity : Activity
     {
@@ -113,7 +112,7 @@ namespace LocalConnect.Android.Activities
             messagesList.ItemClick += ToggleMessageInfo;
 
             _messageTextView = FindViewById<TextView>(Resource.Id.TextInput);
-            var sendButton = FindViewById<Button>(Resource.Id.SendButton);
+            var sendButton = FindViewById<View>(Resource.Id.SendButton);
             sendButton.Click += SendMessageClick;
         }
 

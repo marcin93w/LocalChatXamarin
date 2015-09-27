@@ -20,13 +20,11 @@ namespace LocalConnect.Android.Activities
 {
     public class MapViewFragment : Fragment, IOnMapReadyCallback
     {
-        private readonly ViewPager _viewPager;
         private readonly PeopleViewModel _peopleViewModel;
         private GoogleMap _map;
 
-        public MapViewFragment(ViewPager viewPager)
+        public MapViewFragment()
         {
-            _viewPager = viewPager;
             _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
         }
 
@@ -40,7 +38,7 @@ namespace LocalConnect.Android.Activities
             mapFragment.GetMapAsync(this);
 
             var backToListButton = rootView.FindViewById<Button>(Resource.Id.backToList);
-            backToListButton.Click += (sender, args) => _viewPager.SetCurrentItem(0, true);
+            backToListButton.Click += (sender, args) => (Activity as MainActivity)?.ViewPager.SetCurrentItem(0, true);
 
             return rootView;
         }

@@ -153,6 +153,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
     <AndroidResource Include="Resources\layout\ListItem.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
@@ -182,9 +183,6 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\Icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +190,23 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Colors.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\ButtonSelector.xml" />
+    <AndroidResource Include="Resources\drawable\AppStyle.xml" />
+    <Content Include="Resources\drawable\drawable-hdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-ldrtl-hdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-ldrtl-mdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-ldrtl-xhdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-ldrtl-xxhdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-ldrtl-xxxhdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-mdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-xhdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-xxhdpi\ic_send_black_24dp.png" />
+    <Content Include="Resources\drawable\drawable-xxxhdpi\ic_send_black_24dp.png" />
+    <AndroidResource Include="Resources\values\Styles.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="..\LocalConnect\LocalConnect.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

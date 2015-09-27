@@ -91,10 +91,12 @@
             android:layout_height="match_parent"
             android:id="@+id/TextInput"
             android:layout_weight="1" />
-        <Button
-            android:text="Send"
+        <ImageButton
+            android:src="@android:drawable/ic_menu_send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/SendButton" />
+            android:id="@+id/SendButton"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
     </LinearLayout>
 </LinearLayout>

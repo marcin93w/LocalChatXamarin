@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="LocalConnect.Android" android:versionCode="1" android:versionName="1.0" android:installLocation="auto">
 	<uses-sdk />
-	<application android:label="LocalConnect" android:icon="@drawable/Icon">
+	<application android:label="LocalConnect" android:icon="@drawable/Icon" android:theme="@style/AppStyle">
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyARRA0CSszDIXQvLHJZoKymP0QLGl3DTqw" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

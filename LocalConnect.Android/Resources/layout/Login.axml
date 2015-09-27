@@ -16,8 +16,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:hint="Login"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp" />
         <EditText
             android:inputType="textPassword"
             android:layout_width="match_parent"
@@ -27,8 +27,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:hint="Password"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp" />
         <TextView
             android:text="Text"
             android:layout_width="match_parent"
@@ -49,8 +49,8 @@
             android:id="@+id/LoginButton"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"

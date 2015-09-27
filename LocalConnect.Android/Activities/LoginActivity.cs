@@ -17,10 +17,9 @@ using LocalConnect.ViewModel;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity(Label = "Aplikacja Marcina",
+    [Activity(Label = "LC Android",
         MainLauncher = true,
-        Icon = "@drawable/icon",
-        Theme = "@android:style/Theme.Black.NoTitleBar")]
+        Icon = "@drawable/icon")]
     public class LoginActivity : Activity
     {
         private readonly LoginViewModel _loginViewModel;
