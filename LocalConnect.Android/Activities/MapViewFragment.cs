@@ -37,9 +37,6 @@ namespace LocalConnect.Android.Activities
             var mapFragment = (SupportMapFragment) ChildFragmentManager.FindFragmentById(Resource.Id.map);
             mapFragment.GetMapAsync(this);
 
-            var backToListButton = rootView.FindViewById<Button>(Resource.Id.backToList);
-            backToListButton.Click += (sender, args) => (Activity as MainActivity)?.ViewPager.SetCurrentItem(0, true);
-
             return rootView;
         }
 
@@ -59,7 +56,7 @@ namespace LocalConnect.Android.Activities
                 foreach (var person in peopleWithLocation)
                 {
                     var markerOptions = new MarkerOptions();
-                    var point = new LatLng(person.Location.Y, person.Location.X);
+                    var point = new LatLng(person.Location.Lat, person.Location.Lon);
                     markerOptions.SetPosition(point);
                     markerOptions.SetTitle(person.Name);
                     _map.AddMarker(markerOptions);

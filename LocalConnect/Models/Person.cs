@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using LocalConnect.Services;
-using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 
 namespace LocalConnect.Models
 {
+    [Serializable]
     public class Person
     {
         public string PersonId { get; }
@@ -14,6 +16,7 @@ namespace LocalConnect.Models
         public string Surname { get; }
         public string Description { get; }
         public Point Location { get; }
+
 
         public string LongDescription { private set; get; }
 

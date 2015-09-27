@@ -24,19 +24,10 @@ namespace LocalConnect.ViewModel
 
         public event OnDataLoadEventHandler OnDataLoad;
 
-        public bool Initialize(string personId)
+        public void Initialize(Person person)
         {
-            try
-            {
-                var peopleFinder = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
-                Person = peopleFinder.GetPersonForId(personId);
-                _conversation = new Conversation(Person, RunOnUiThread);
-                return true;
-            }
-            catch (InvalidAsynchronousStateException)
-            {
-                return false;
-            }
+            Person = person;
+            _conversation = new Conversation(Person, RunOnUiThread);
         }
 
         public async void FetchDataAsync()

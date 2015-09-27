@@ -11,6 +11,7 @@ using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
 using LocalConnect.ViewModel;
+using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace LocalConnect.Android.Activities
@@ -52,7 +53,7 @@ namespace LocalConnect.Android.Activities
         {
             var chatActivity = new Intent(Activity.ApplicationContext, typeof(PersonActivity));
             var person = _peopleViewModel.People[e.Position];
-            chatActivity.PutExtra("UserId", person.PersonId);
+            chatActivity.PutExtra("Person", JsonConvert.SerializeObject(person));
             StartActivity(chatActivity);
         }
     }

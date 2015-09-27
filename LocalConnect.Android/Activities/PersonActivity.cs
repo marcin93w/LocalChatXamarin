@@ -14,6 +14,7 @@ using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using LocalConnect.Models;
 using LocalConnect.ViewModel;
+using Newtonsoft.Json;
 using Message = LocalConnect.Models.Message;
 
 namespace LocalConnect.Android.Activities
@@ -39,11 +40,15 @@ namespace LocalConnect.Android.Activities
 
             SetContentView(Resource.Layout.Person);
 
-
-            var personUserId = Intent.GetStringExtra("UserId");
-            if (!_personViewModel.Initialize(personUserId))
+            try
             {
-                Finish();
+                var person = JsonConvert.DeserializeObject<Person>(Intent.GetStringExtra("Person"));
+                _personViewModel.Initialize(person);
+            }
+            catch (Exception)
+            {
+                Toast.MakeText(this, "Wrong Intent data", ToastLength.Long);
+                return;
             }
 
             var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
@@ -67,7 +72,7 @@ namespace LocalConnect.Android.Activities
             var personShortDescription = FindViewById<TextView>(Resource.Id.ShortDescription);
             personShortDescription.Text = _personViewModel.Person.Description;
 
-            var moreButton = FindViewById<Button>(Resource.Id.MoreButton);
+            var moreButton = FindViewById<ImageButton>(Resource.Id.MoreButton);
             moreButton.Click += ToggleMoreLessInfo;
 
             InitializeChat();
@@ -84,15 +89,15 @@ namespace LocalConnect.Android.Activities
             var personImageLayoutParams = personImage.LayoutParameters;
             var longDescription = FindViewById(Resource.Id.LongDescription);
             var actionsPanel = FindViewById(Resource.Id.ActionsPanel);
-            var moreButton = FindViewById<Button>(Resource.Id.MoreButton);
+            var moreButton = FindViewById<ImageButton>(Resource.Id.MoreButton);
             if (_moreInfoDisplayed)
             {
                 personImageLayoutParams.Width = personImageLayoutParams.Height = ConvertDpToPx(50);
                 personImage.LayoutParameters = personImageLayoutParams;
                 longDescription.Visibility = ViewStates.Gone;
                 actionsPanel.Visibility = ViewStates.Gone;
-                moreButton.Text = "more";
                 _moreInfoDisplayed = false;
+                moreButton.Rotation = 0;
             }
             else
             {
@@ -100,9 +105,12 @@ namespace LocalConnect.Android.Activities
                 personImage.LayoutParameters = personImageLayoutParams;
                 longDescription.Visibility = ViewStates.Visible;
                 actionsPanel.Visibility = ViewStates.Visible;
-                moreButton.Text = "less";
                 _moreInfoDisplayed = true;
+                moreButton.Rotation = 180;
             }
+
+            var messagesList = FindViewById(Resource.Id.MessagesList);
+            messagesList.PostInvalidate();
         }
 
         private void InitializeChat()

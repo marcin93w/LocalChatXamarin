@@ -10,14 +10,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPeopleFinder.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LoginData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\MeModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Message.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\People.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Person.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Point.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ChatClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />

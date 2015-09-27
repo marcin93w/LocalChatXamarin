@@ -4,18 +4,15 @@ using System.ComponentModel;
 using System.Linq;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect.Android.Models;
 using LocalConnect.Interfaces;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel, IPeopleFinder
+    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
     {
         private readonly People _people;
-        private readonly MeModel _meModel;
 
         public List<Person> People => _people.PeopleList;
-        public string MyName { set; get; }
 
         private bool _dataLoaded;
         private string _errorMessage;
@@ -40,20 +37,7 @@ namespace LocalConnect.ViewModel
         public PeopleViewModel()
         {
             _people = new People();
-            _meModel = new MeModel();
         }
-
-#region IPeopleFinder implementation
-
-        public Person GetPersonForId(string personId)
-        {
-            if(!_dataLoaded || People == null)
-                throw new InvalidAsynchronousStateException("Data has not been loaded yet");
-
-            return People.First(p => p.PersonId == personId);
-        }
-
-#endregion
 
         public async void FetchDataAsync()
         {
@@ -61,14 +45,11 @@ namespace LocalConnect.ViewModel
             try
             {
                 var fetchPeopleAsync = _people.FetchPeopleList();
-                var fetchMyNameAsync = _meModel.FetchMyName();
 
                 if (!await fetchPeopleAsync)
                 {
                     _errorMessage = "People list could not be downloaded";
                 }
-
-                MyName = await fetchMyNameAsync;
             }
             catch (Exception ex)
             {

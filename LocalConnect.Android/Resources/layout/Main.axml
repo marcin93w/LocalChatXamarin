@@ -18,21 +18,27 @@
             android:layout_height="60dp"
             android:id="@+id/MeImage"
             android:layout_marginRight="10dp" />
-        <TextView
-            android:textAppearance="?android:attr/textAppearanceMedium"
+        <ImageButton
+            android:src="@android:drawable/ic_dialog_map"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/SwitchViewButton"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+        <ImageButton
+            android:src="@android:drawable/ic_menu_manage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/MeImage"
-            android:id="@+id/MeName"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="5dp" />
-        <TextView
-            android:text="View your profile"
+            android:layout_toLeftOf="@id/SwitchViewButton"
+            android:id="@+id/MenuButton"
+            android:layout_centerVertical="true" />
+        <ImageButton
+            android:src="@android:drawable/ic_menu_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/MeImage"
-            android:layout_below="@id/MeName"
-            android:id="@+id/textView2" />
+            android:layout_toLeftOf="@id/MenuButton"
+            android:id="@+id/SearchButton"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

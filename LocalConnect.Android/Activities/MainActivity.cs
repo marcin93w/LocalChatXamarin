@@ -7,6 +7,7 @@ using Android.Support.V4.View;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
 using LocalConnect.ViewModel;
+using AndroidRes = Android.Resource;
 
 namespace LocalConnect.Android.Activities
 {
@@ -15,7 +16,7 @@ namespace LocalConnect.Android.Activities
     {
         private readonly PeopleViewModel _peopleViewModel;
 
-        public ViewPager ViewPager { private set; get; }
+        private ViewPager _viewPager;
 
         public MainActivity()
         {
@@ -31,21 +32,36 @@ namespace LocalConnect.Android.Activities
             _peopleViewModel.OnDataLoad += OnDataLoad;
             _peopleViewModel.FetchDataAsync();
 
-            ViewPager = FindViewById<ViewPager>(Resource.Id.pager);
-            ViewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
+            _viewPager = FindViewById<ViewPager>(Resource.Id.pager);
+            _viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
                 new ListViewFragment(), new MapViewFragment());
+
+            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
+            switchViewButton.Click += OnSwitchViewCicked;
         }
 
         private void OnDataLoad(object sender, OnDataLoadEventArgs e)
         {
-            if (e.IsSuccesful)
+            if (!e.IsSuccesful)
             {
-                var myName = FindViewById<TextView>(Resource.Id.MeName);
-                myName.Text = _peopleViewModel.MyName;
+                Toast.MakeText(this, e.ErrorMessage, ToastLength.Long).Show();
+            }
+        }
+
+        private void OnSwitchViewCicked(object sender, EventArgs e)
+        {
+            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
+            if (_viewPager.CurrentItem == 0)
+            {
+                //is on list view
+                _viewPager.SetCurrentItem(1, true);
+                switchViewButton.SetImageResource(Resource.Drawable.ic_view_list_white_36dp);
             }
             else
             {
-                Toast.MakeText(this, e.ErrorMessage, ToastLength.Long).Show();
+                //is on map view
+                _viewPager.SetCurrentItem(0, true);
+                switchViewButton.SetImageResource(AndroidRes.Drawable.IcDialogMap);
             }
         }
 

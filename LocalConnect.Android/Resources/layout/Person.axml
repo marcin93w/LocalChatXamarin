@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/PersonRootView"
     android:gravity="bottom">
     <RelativeLayout
         android:minWidth="25px"
@@ -16,13 +17,14 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/PersonImage" />
-        <Button
+        <ImageButton
             android:text="more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/MoreButton"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="false" />
+            android:layout_alignParentBottom="false"
+            android:src="@android:drawable/ic_menu_more" />
         <TextView
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -90,7 +92,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/TextInput"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/edittextgreen" />
         <ImageButton
             android:src="@android:drawable/ic_menu_send"
             android:layout_width="wrap_content"

@@ -6,7 +6,7 @@
     android:background="@android:color/holo_green_dark">
     <RelativeLayout
         android:id="@+id/LoginPanel"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp">
         <AutoCompleteTextView
@@ -17,7 +17,9 @@
             android:layout_marginTop="10dp"
             android:hint="Login"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="15dp"
+            android:textColorHint="@color/LowContrastFontOnGreenBkg"
+            android:background="@drawable/edittextwhite" />
         <EditText
             android:inputType="textPassword"
             android:layout_width="match_parent"
@@ -28,7 +30,9 @@
             android:layout_marginTop="10dp"
             android:hint="Password"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="15dp"
+            android:textColorHint="@color/LowContrastFontOnGreenBkg"
+            android:background="@drawable/edittextwhite" />
         <TextView
             android:text="Text"
             android:layout_width="match_parent"
@@ -39,7 +43,11 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:textColor="@android:color/holo_red_dark"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:padding="3dp"
+            android:background="@android:color/holo_green_light"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp" />
     <!--android:textAlignment="center" //not supported in 2.3.7-->
         <Button
             android:text="Log In"
@@ -50,7 +58,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:alpha="0.5" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"
