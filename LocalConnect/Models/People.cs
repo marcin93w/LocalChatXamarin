@@ -12,9 +12,9 @@ namespace LocalConnect.Models
     {
         public List<Person> PeopleList { private set; get; }
 
-        public async Task<bool> FetchPeopleList()
+        public async Task FetchPeopleList(IDataProvider dataProvider)
         {
-            var jsonData = await RestClient.Instance.FetchDataAsync("people");
+            var jsonData = await dataProvider.FetchDataAsync("people");
 
             PeopleList = jsonData.Cast<JsonValue>().Select(row =>
             {
@@ -28,8 +28,6 @@ namespace LocalConnect.Models
                     location,
                     row["_id"]);
             }).ToList();
-
-            return PeopleList != null;
         }
     }
 }

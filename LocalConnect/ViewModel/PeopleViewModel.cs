@@ -5,6 +5,7 @@ using System.Linq;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
 using LocalConnect.Interfaces;
+using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
@@ -18,6 +19,8 @@ namespace LocalConnect.ViewModel
         private string _errorMessage;
 
         private OnDataLoadEventHandler _onDataLoad;
+        public IDataProvider DataProvider { private get; set; }
+
         public event OnDataLoadEventHandler OnDataLoad
         {
             add
@@ -42,25 +45,22 @@ namespace LocalConnect.ViewModel
         public async void FetchDataAsync()
         {
             _errorMessage = null;
+            bool authTokenMissing = false;
             try
             {
-                var fetchPeopleAsync = _people.FetchPeopleList();
-
-                if (!await fetchPeopleAsync)
-                {
-                    _errorMessage = "People list could not be downloaded";
-                }
+                await _people.FetchPeopleList(DataProvider);
             }
             catch (Exception ex)
             {
                 _errorMessage = ex.Message;
+                authTokenMissing = ex is MissingAuthenticationTokenException;
             }
             finally
             {
                 _dataLoaded = true;
                 if (_onDataLoad != null)
                 {
-                    _onDataLoad(this, new OnDataLoadEventArgs(_errorMessage));
+                    _onDataLoad(this, new OnDataLoadEventArgs(_errorMessage, authTokenMissing));
                 }
             }
         }

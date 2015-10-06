@@ -6,6 +6,7 @@ using GalaSoft.MvvmLight;
 using LocalConnect.Android;
 using LocalConnect.Models;
 using LocalConnect.Interfaces;
+using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
@@ -22,6 +23,7 @@ namespace LocalConnect.ViewModel
         public Person Person { private set; get; }
         public ObservableCollection<Message> Messages => _conversation.Messages;
 
+        public IDataProvider DataProvider { private get; set; }
         public event OnDataLoadEventHandler OnDataLoad;
 
         public void Initialize(Person person)
@@ -36,9 +38,9 @@ namespace LocalConnect.ViewModel
             string errorMsg = String.Empty;
             try
             {
-                var personDataLoading = Person.LoadDetailedData();
-                await _conversation.FetchLastMessages();
-                dataLoaded = await personDataLoading;
+                await Person.LoadDetailedData(DataProvider);
+                await _conversation.FetchLastMessages(DataProvider);
+                dataLoaded = true;
             }
             catch (Exception ex)
             {

@@ -25,10 +25,10 @@ namespace LocalConnect.Models
         {
             Person = person;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
-            ChatClient.Instance.OnMessageReceived += HandleOnMessageReceive;
+            ChatClient.Instance.OnMessageReceived += HandleMessageReceive;
         }
 
-        private void HandleOnMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
+        private void HandleMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
         {
             if (!IsHolded && messageReceivedEventArgs.Message.SenderId == Person.PersonId)
             {
@@ -46,9 +46,9 @@ namespace LocalConnect.Models
             ChatClient.Instance.SendMessage(msg, Messages.IndexOf(msg));
         }
 
-        public async Task FetchLastMessages()
+        public async Task FetchLastMessages(IDataProvider dataProvider)
         {
-            var lastMessages = await RestClient.Instance.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
+            var lastMessages = await dataProvider.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
 
             foreach (JsonValue message in lastMessages)
             {

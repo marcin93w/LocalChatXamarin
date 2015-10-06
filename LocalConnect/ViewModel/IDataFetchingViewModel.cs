@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
@@ -11,10 +12,25 @@ namespace LocalConnect.ViewModel
 
         public string ErrorMessage { get; }
 
-        public OnDataLoadEventArgs(string errorMessage = null)
+        public bool ApplicationNotInitialized { get; }
+
+        public OnDataLoadEventArgs()
+        {
+            IsSuccesful = true;
+        }
+
+        public OnDataLoadEventArgs(string errorMessage, bool appNotInitialized = false)
         {
             ErrorMessage = errorMessage;
             IsSuccesful = string.IsNullOrEmpty(errorMessage);
+            ApplicationNotInitialized = appNotInitialized;
+        }
+
+        public OnDataLoadEventArgs(Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            ApplicationNotInitialized = ex is MissingAuthenticationTokenException;
+            IsSuccesful = false;
         }
     }
 
@@ -24,6 +40,8 @@ namespace LocalConnect.ViewModel
     {
         //string ErrorMessage { get; }
         //bool IsLoaded { get; }
+
+        IDataProvider DataProvider { set; }
 
         event OnDataLoadEventHandler OnDataLoad;
 

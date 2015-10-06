@@ -18,6 +18,8 @@ namespace LocalConnect.ViewModel
         
         public string AuthenticationErrorMessage { set; get; }
 
+        public IDataProvider DataProvider { private get; set; }
+
         public async Task<LoginData> Authenticate(string authToken = null)
         {
             try
@@ -25,11 +27,11 @@ namespace LocalConnect.ViewModel
                 LoginData loginData;
                 if (authToken != null)
                 {
-                    loginData = await RestClient.Instance.LoginWithToken(authToken);
+                    loginData = await DataProvider.LoginWithToken(authToken);
                 }
                 else
                 {
-                    loginData = await RestClient.Instance.Login(Login, Password);
+                    loginData = await DataProvider.Login(Login, Password);
                 }
 
                 if (loginData != null)

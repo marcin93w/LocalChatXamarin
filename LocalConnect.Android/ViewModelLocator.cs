@@ -4,6 +4,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using LocalConnect.ViewModel;
 using LocalConnect.Interfaces;
+using LocalConnect.Services;
 using Microsoft.Practices.ServiceLocation;
 
 namespace LocalConnect.Android
@@ -14,6 +15,8 @@ namespace LocalConnect.Android
     /// </summary>
     public class ViewModelLocator
     {
+        private readonly IDataProvider _dataProvider;
+
         private static ViewModelLocator _instance;
 
         public static ViewModelLocator Instance => _instance ?? (_instance = new ViewModelLocator());
@@ -25,6 +28,8 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<ChatViewModel>();
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+
+            _dataProvider = new RestClient();
         }
 
         public T GetViewModel<T>(Activity activity = null) where T: ViewModelBase
@@ -41,6 +46,16 @@ namespace LocalConnect.Android
                 {
                     throw new Exception("You must pass Activity object to initialize UiInvokableViewModel");
                 }
+            }
+
+            if (viewModel is IDataFetchingViewModel)
+            {
+                (viewModel as IDataFetchingViewModel).DataProvider = _dataProvider;
+            }
+
+            if (viewModel is LoginViewModel)
+            {
+                (viewModel as LoginViewModel).DataProvider = _dataProvider;
             }
 
             return viewModel;

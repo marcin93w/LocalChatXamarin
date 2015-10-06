@@ -35,13 +35,33 @@ namespace LocalConnect.Android.Activities
             _viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             _viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
                 new ListViewFragment(), new MapViewFragment());
+            _viewPager.PageSelected += OnViewChanged;
 
             var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
             switchViewButton.Click += OnSwitchViewCicked;
         }
 
+        private void OnViewChanged(object sender, ViewPager.PageSelectedEventArgs e)
+        {
+            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
+            if (_viewPager.CurrentItem == 1)
+            {
+                //is on map view
+                switchViewButton.SetImageResource(Resource.Drawable.ic_view_list_white_36dp);
+            }
+            else
+            {
+                //is on list view
+                switchViewButton.SetImageResource(AndroidRes.Drawable.IcDialogMap);
+            }
+        }
+
         private void OnDataLoad(object sender, OnDataLoadEventArgs e)
         {
+            if (e.ApplicationNotInitialized)
+            {
+                OpenLoginActivity();
+            }
             if (!e.IsSuccesful)
             {
                 Toast.MakeText(this, e.ErrorMessage, ToastLength.Long).Show();
@@ -50,18 +70,15 @@ namespace LocalConnect.Android.Activities
 
         private void OnSwitchViewCicked(object sender, EventArgs e)
         {
-            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
             if (_viewPager.CurrentItem == 0)
             {
                 //is on list view
                 _viewPager.SetCurrentItem(1, true);
-                switchViewButton.SetImageResource(Resource.Drawable.ic_view_list_white_36dp);
             }
             else
             {
                 //is on map view
                 _viewPager.SetCurrentItem(0, true);
-                switchViewButton.SetImageResource(AndroidRes.Drawable.IcDialogMap);
             }
         }
 

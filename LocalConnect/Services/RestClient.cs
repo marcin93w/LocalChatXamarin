@@ -10,13 +10,10 @@ using LocalConnect.Models;
 
 namespace LocalConnect.Services
 {
-    public class RestClient
+    public class RestClient : IDataProvider
     {
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
-
-        private static RestClient _instance;
-        public static RestClient Instance => _instance ?? (_instance = new RestClient());
 
         public async Task<LoginData> Login(string username, string password)
         {
@@ -69,6 +66,11 @@ namespace LocalConnect.Services
 
         public async Task<JsonValue> FetchDataAsync(string method)
         {
+            if (string.IsNullOrEmpty(_authenticationHeader))
+            {
+                throw new MissingAuthenticationTokenException();
+            }
+
             var url = Path.Combine(_url, method);
 
             try
