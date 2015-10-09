@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Json;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using LocalConnect.Models;
+using Newtonsoft.Json;
 
 namespace LocalConnect.Services
 {
@@ -47,14 +46,10 @@ namespace LocalConnect.Services
                 {
                     using (var stream = response.GetResponseStream())
                     {
-                        var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
-                        Console.Out.WriteLine("Response: {0}", jsonDoc);
+                        var loginData = await DeserializeFromStream<LoginData>(stream);
+                        _authenticationHeader = $"Bearer {loginData.Token}";
 
-                        var personId = jsonDoc["personId"].GetValue();
-                        var newToken = jsonDoc["token"].GetValue();
-                        _authenticationHeader = $"Bearer {newToken}";
-
-                        return new LoginData(newToken, personId);
+                        return loginData;
                     }
                 }
                 else
@@ -62,9 +57,14 @@ namespace LocalConnect.Services
                     return null;
                 }
             }
-        } 
+        }
 
-        public async Task<JsonValue> FetchDataAsync(string method)
+        public async Task<object> FetchDataAsync(string method)
+        {
+            return await FetchDataAsync<object>(method);
+        }
+
+        public async Task<T> FetchDataAsync<T>(string method)
         {
             if (string.IsNullOrEmpty(_authenticationHeader))
             {
@@ -84,10 +84,7 @@ namespace LocalConnect.Services
                 {
                     using (var stream = response.GetResponseStream())
                     {
-                        var jsonDoc = await Task.Run(() => JsonValue.Load(stream));
-                        Console.Out.WriteLine("Response: {0}", jsonDoc);
-
-                        return jsonDoc;
+                        return await DeserializeFromStream<T>(stream);
                     }
                 }
             }
@@ -96,14 +93,16 @@ namespace LocalConnect.Services
                 throw new ConnectionException(ex);
             }
         }
-    }
 
-    public static class SystemJsonExtensions
-    {
-        public static string GetValue(this JsonValue jsonData, string field = null)
+        public async Task<T> DeserializeFromStream<T>(Stream stream)
         {
-            var jsonValue = field != null ? jsonData[field] : jsonData;
-            return jsonValue.ToString().Replace("\"", string.Empty);
+            var serializer = new JsonSerializer();
+
+            using (var sr = new StreamReader(stream))
+            using (var jsonTextReader = new JsonTextReader(sr))
+            {
+                return await Task.Run(() => serializer.Deserialize<T>(jsonTextReader));
+            }
         }
     }
 }

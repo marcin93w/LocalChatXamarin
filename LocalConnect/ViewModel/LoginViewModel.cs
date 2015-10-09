@@ -11,7 +11,7 @@ using LocalConnect.Services;
 namespace LocalConnect.ViewModel
 {
 
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : ViewModelBase, IChatClientUsingViewModel
     {
         public string Login { set; get; }
         public string Password { set; get; }
@@ -19,6 +19,7 @@ namespace LocalConnect.ViewModel
         public string AuthenticationErrorMessage { set; get; }
 
         public IDataProvider DataProvider { private get; set; }
+        public IChatClient ChatClient { private get; set; }
 
         public async Task<LoginData> Authenticate(string authToken = null)
         {
@@ -34,9 +35,13 @@ namespace LocalConnect.ViewModel
                     loginData = await DataProvider.Login(Login, Password);
                 }
 
-                if (loginData != null)
+                if (loginData == null)
                 {
                     AuthenticationErrorMessage = "Bad username or password";
+                }
+                else
+                {
+                    ChatClient.Connect(loginData.PersonId);
                 }
 
                 return loginData;

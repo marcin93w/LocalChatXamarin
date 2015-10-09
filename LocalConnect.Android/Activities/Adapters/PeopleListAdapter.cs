@@ -27,7 +27,7 @@ namespace LocalConnect.Android.Activities.Adapters
             var desc = listItemView.FindViewById<TextView>(Resource.Id.personDesc);
 
             name.Text = _peopleViewModel.People[position].Name;
-            desc.Text = _peopleViewModel.People[position].Description;
+            desc.Text = _peopleViewModel.People[position].ShortDescription;
 
             return listItemView;
         }

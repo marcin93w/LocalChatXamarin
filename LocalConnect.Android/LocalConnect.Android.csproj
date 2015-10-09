@@ -84,6 +84,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Android" />
+    <Reference Include="Mono.CSharp" />
     <Reference Include="mscorlib" />
     <Reference Include="NetTopologySuite, Version=1.13.3.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
       <HintPath>..\packages\NetTopologySuite.1.13.3.2\lib\portable-net403+sl5+netcore45+wp8+MonoAndroid1+MonoTouch1\NetTopologySuite.dll</HintPath>

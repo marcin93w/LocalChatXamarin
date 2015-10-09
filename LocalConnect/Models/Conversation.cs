@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,21 +12,25 @@ using LocalConnect.Android;
 using LocalConnect.Services;
 using LocalConnect.ViewModel;
 using LocalConnect.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace LocalConnect.Models
 {
     public class Conversation
     {
+        private readonly IChatClient _chatClient;
+
         public ObservableInvokableCollection<Message> Messages { get; }
         public Person Person { get; }
 
         public bool IsHolded { set; get; }
 
-        public Conversation(Person person, RunOnUiThreadHandler uiThreadHandler)
+        public Conversation(Person person, IChatClient chatClient, RunOnUiThreadHandler uiThreadHandler)
         {
+            _chatClient = chatClient;
             Person = person;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
-            ChatClient.Instance.OnMessageReceived += HandleMessageReceive;
+            chatClient.OnMessageReceived += HandleMessageReceive;
         }
 
         private void HandleMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
@@ -43,26 +48,26 @@ namespace LocalConnect.Models
 
             var msg = new OutcomeMessage(Person.PersonId, message, DateTime.Now);
             Messages.Add(msg);
-            ChatClient.Instance.SendMessage(msg, Messages.IndexOf(msg));
+            _chatClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
         public async Task FetchLastMessages(IDataProvider dataProvider)
         {
             var lastMessages = await dataProvider.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
 
-            foreach (JsonValue message in lastMessages)
+            foreach (JContainer message in (IEnumerable)lastMessages)
             {
                 Message msg;
-                if (message.GetValue("sender") == Person.PersonId)
+                if (message.Value<string>("sender") == Person.PersonId)
                 {
-                    msg = new IncomeMessage(Person.PersonId, message.GetValue("text"), DateTime.Parse(message.GetValue("dateTime")));
+                    msg = new IncomeMessage(Person.PersonId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
                 }
                 else
                 {
-                    msg = new OutcomeMessage(Person.PersonId, message.GetValue("text"), DateTime.Parse(message.GetValue("dateTime")));
+                    msg = new OutcomeMessage(Person.PersonId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
                 }
-            
-                Messages.Insert(0, msg);            
+
+                Messages.Insert(0, msg);
             }
         }
     }

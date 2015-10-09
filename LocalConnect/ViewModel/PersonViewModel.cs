@@ -10,7 +10,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class ChatViewModel : ViewModelBase, IUiInvokable, IDataFetchingViewModel
+    public class ChatViewModel : ViewModelBase, IUiInvokable, IDataFetchingViewModel, IChatClientUsingViewModel
     {
         private Conversation _conversation;
 
@@ -23,13 +23,15 @@ namespace LocalConnect.ViewModel
         public Person Person { private set; get; }
         public ObservableCollection<Message> Messages => _conversation.Messages;
 
+        public IChatClient ChatClient { private get; set; }
         public IDataProvider DataProvider { private get; set; }
+
         public event OnDataLoadEventHandler OnDataLoad;
 
         public void Initialize(Person person)
         {
             Person = person;
-            _conversation = new Conversation(Person, RunOnUiThread);
+            _conversation = new Conversation(Person, ChatClient, RunOnUiThread);
         }
 
         public async void FetchDataAsync()

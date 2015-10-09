@@ -105,7 +105,6 @@ namespace LocalConnect.Android.Activities
         private void TakeToApp(LoginData loginData)
         {
             SaveAuthToken(loginData.Token);
-            ChatClient.Instance.Connect(loginData.PersonId);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();

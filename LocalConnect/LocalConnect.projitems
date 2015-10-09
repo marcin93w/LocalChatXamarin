@@ -19,9 +19,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Point.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ChatClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IChatClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IDataProvider.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\MissingAuthenticationTokenException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IChatClientUsingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataFetchingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />

@@ -6,22 +6,22 @@ namespace LocalConnect.Models
 {
     public class Message
     {
-        public Message(string text, DateTime time)
+        public Message(string text, DateTime dateTime)
         {
             Text = text;
-            Time = time;
+            DateTime = dateTime;
         }
 
         public string Text { get; }
-        public DateTime Time { get; }
+        public DateTime DateTime { get; }
     }
 
     public class IncomeMessage : Message
     {
-        public IncomeMessage(string sender, string text, DateTime time) 
-            : base(text, time)
+        public IncomeMessage(string senderId, string text, DateTime dateTime) 
+            : base(text, dateTime)
         {
-            SenderId = sender;
+            SenderId = senderId;
         }
 
         public string SenderId { get; }
@@ -29,8 +29,8 @@ namespace LocalConnect.Models
 
     public class OutcomeMessage : Message
     {
-        public OutcomeMessage(string receiverId, string text, DateTime time)
-            : base(text, time)
+        public OutcomeMessage(string receiverId, string text, DateTime dateTime)
+            : base(text, dateTime)
         {
             ReceiverId = receiverId;
         }

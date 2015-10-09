@@ -5,16 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using LocalConnect.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LocalConnect.Models
 {
     [Serializable]
     public class Person
     {
+        [JsonProperty("_id")]
         public string PersonId { get; }
         public string FirstName { get; }
         public string Surname { get; }
-        public string Description { get; }
+        public string ShortDescription { get; }
         public Point Location { get; }
 
 
@@ -22,19 +24,19 @@ namespace LocalConnect.Models
 
         public string Name => FirstName + " " + Surname;
 
-        public Person(string firstName, string surname, string description, Point location, string personId)
+        public Person(string firstName, string surname, string shortDescription, Point location, string personId)
         {
             FirstName = firstName;
             Surname = surname;
-            Description = description;
+            ShortDescription = shortDescription;
             Location = location;
             PersonId = personId;
         }
 
         public async Task LoadDetailedData(IDataProvider dataProvider)
         {
-            var personData = await dataProvider.FetchDataAsync($"personDetails/{PersonId}");
-            LongDescription = personData.GetValue("longDescription");
+            var personData = (JContainer) await dataProvider.FetchDataAsync($"personDetails/{PersonId}");
+            LongDescription = personData.Value<string>("longDescription");
         }
     }
 }

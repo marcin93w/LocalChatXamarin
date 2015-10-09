@@ -9,7 +9,8 @@ namespace LocalConnect.Services
 {
     public interface IDataProvider
     {
-        Task<JsonValue> FetchDataAsync(string method);
+        Task<T> FetchDataAsync<T>(string method);
+        Task<object> FetchDataAsync(string method);
         Task<LoginData> Login(string username, string password);
         Task<LoginData> LoginWithToken(string authToken);
     }

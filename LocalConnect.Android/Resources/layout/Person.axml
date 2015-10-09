@@ -17,14 +17,16 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/PersonImage" />
-        <ImageButton
+        <ImageView
             android:text="more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/MoreButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="false"
-            android:src="@android:drawable/ic_menu_more" />
+            android:src="@android:drawable/ic_menu_more"
+            android:layout_centerVertical="false"
+            android:layout_margin="9dp" />
         <TextView
             android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceMedium"

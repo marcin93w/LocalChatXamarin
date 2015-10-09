@@ -16,6 +16,7 @@ namespace LocalConnect.Android
     public class ViewModelLocator
     {
         private readonly IDataProvider _dataProvider;
+        private readonly ChatClient _chatClient;
 
         private static ViewModelLocator _instance;
 
@@ -30,6 +31,7 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<LoginViewModel>();
 
             _dataProvider = new RestClient();
+            _chatClient = new ChatClient();
         }
 
         public T GetViewModel<T>(Activity activity = null) where T: ViewModelBase
@@ -56,6 +58,11 @@ namespace LocalConnect.Android
             if (viewModel is LoginViewModel)
             {
                 (viewModel as LoginViewModel).DataProvider = _dataProvider;
+            }
+
+            if (viewModel is IChatClientUsingViewModel)
+            {
+                (viewModel as IChatClientUsingViewModel).ChatClient = _chatClient;
             }
 
             return viewModel;

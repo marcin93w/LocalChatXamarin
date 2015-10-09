@@ -70,9 +70,9 @@ namespace LocalConnect.Android.Activities
             personName.Text = _personViewModel.Person.Name;
 
             var personShortDescription = FindViewById<TextView>(Resource.Id.ShortDescription);
-            personShortDescription.Text = _personViewModel.Person.Description;
+            personShortDescription.Text = _personViewModel.Person.ShortDescription;
 
-            var moreButton = FindViewById<ImageButton>(Resource.Id.MoreButton);
+            var moreButton = FindViewById<ImageView>(Resource.Id.MoreButton);
             moreButton.Click += ToggleMoreLessInfo;
 
             InitializeChat();
@@ -89,7 +89,7 @@ namespace LocalConnect.Android.Activities
             var personImageLayoutParams = personImage.LayoutParameters;
             var longDescription = FindViewById(Resource.Id.LongDescription);
             var actionsPanel = FindViewById(Resource.Id.ActionsPanel);
-            var moreButton = FindViewById<ImageButton>(Resource.Id.MoreButton);
+            var moreButton = FindViewById<ImageView>(Resource.Id.MoreButton);
             if (_moreInfoDisplayed)
             {
                 personImageLayoutParams.Width = personImageLayoutParams.Height = ConvertDpToPx(50);
@@ -137,7 +137,7 @@ namespace LocalConnect.Android.Activities
             var text = convertView.FindViewById<TextView>(Resource.Id.MessageText);
             text.Text = message.Text;
             var dateTime = convertView.FindViewById<TextView>(Resource.Id.MessageDateTime);
-            dateTime.Text = message.Time.ToString("G");
+            dateTime.Text = message.DateTime.ToString("G");
             var status = convertView.FindViewById<TextView>(Resource.Id.MessageStatus);
 
             return convertView;
