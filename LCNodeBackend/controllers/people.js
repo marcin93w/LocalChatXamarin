@@ -1,8 +1,7 @@
 ﻿(function (peopleCtrl) {
 
-    var _ = require('underscore');
-
     var Person = require('../models/person');
+    var User = require('../models/user');
 
     function beautifyPeopleCollection(collection) {
         collection.forEach(function(element) {
@@ -35,23 +34,74 @@
             }
         );
     }
-
-    peopleCtrl.getMe = function(req, res) {
-        Person.find({ user: req.user }, 
-            'firstname surname shortDescription longDescription',
-            function(err, me) {
-                if (err) res.send(err);
-                res.json(me);
+    
+    function makeSureThatUserNotExists(name) {
+        return new Promise(function(resolve, reject) {
+            User.findOne({ username: name })
+            .then(function(user) {
+                if (user != null) {
+                    reject({ "errorCode": 1, "errorMsg": "User already exsists" });
+                } else {
+                    resolve();
+                }
+            }, function(error) {
+                reject(error);
             });
-    }
-
-    peopleCtrl.getMyName = function (req, res) {
-        Person.findOne({ user: req.user }, 
-            'firstname surname',
-            function (err, me) {
-            if (err) res.send(err);
-            res.json(me);
         });
     }
+
+    peopleCtrl.postRegisterUser = function (req, res) {
+        var user = new User({
+            username: req.body.username,
+            password: req.body.password
+        });
+        var person = new Person({
+            user: user,
+            firstname: req.body.firstname,
+            surname: req.body.surname,
+            shortDescription: req.body.shortDescription,
+            longDescription: req.body.longDescription
+        });
+        
+        makeSureThatUserNotExists(user.username)
+        .then(function () {
+            return user.save();
+        })
+        .then(function() {
+            return person.save();
+        })
+        .then(function () {
+            res.json({
+                registered: true,
+                token: user.token,
+                personId: person.id
+            });
+        })
+        .catch(function (err) {
+            res.json({
+                registered: false,
+                errorMsg: err.errorMsg || err,
+                errorCode: err.errorCode
+            });
+        });
+    };
+
+    //peopleCtrl.getMe = function(req, res) {
+    //    Person.find({ user: req.user }, 
+    //        'firstname surname shortDescription longDescription',
+    //        function(err, me) {
+    //            if (err) res.send(err);
+    //            res.json(me);
+    //        });
+    //}
+
+    //peopleCtrl.getMyName = function (req, res) {
+    //    Person.findOne({ user: req.user }, 
+    //        'firstname surname',
+    //        function (err, me) {
+    //        if (err) res.send(err);
+    //        res.json(me);
+    //    });
+    //}
 
 })(module.exports);

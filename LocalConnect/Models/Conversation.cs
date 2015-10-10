@@ -1,16 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Json;
-using System.Text;
 using System.Threading.Tasks;
 using LocalConnect.Helpers;
-using LocalConnect.Android;
 using LocalConnect.Services;
-using LocalConnect.ViewModel;
 using LocalConnect.Interfaces;
 using Newtonsoft.Json.Linq;
 

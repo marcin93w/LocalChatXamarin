@@ -49,9 +49,8 @@
     auth.isAuthenticated = passport.authenticate('bearer', { session : false });
 
     auth.getUserData = function (req, res) {
-        var token = 'asda';
         var user = req.user;
-        user.token = token;
+        user.token = user.username;
         user.save()
             .then(function() {
                 return Person.findOne({ user: user }, 'id');

@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
 using LocalConnect.Models;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
-using WebSocket4Net;
 
 
 namespace LocalConnect.Services

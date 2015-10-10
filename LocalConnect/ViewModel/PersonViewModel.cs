@@ -1,9 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using Android.Provider;
 using GalaSoft.MvvmLight;
-using LocalConnect.Android;
 using LocalConnect.Models;
 using LocalConnect.Interfaces;
 using LocalConnect.Services;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LocalConnect.Models;
+﻿using LocalConnect.Models;
 
 namespace LocalConnect.Services
 {
