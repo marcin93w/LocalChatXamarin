@@ -42,5 +42,22 @@ namespace LocalConnectTest.ViewModelTests
 
             Assert.IsNull(loginData);
         }
+
+        [Test]
+        public async Task ExistingUserRegisterOnServerTest()
+        {
+            var loginViewModel = new LoginViewModel();
+            loginViewModel.DataProvider = new RestClient();
+            loginViewModel.ChatClient = _chatClient;
+
+            loginViewModel.Login = string.Empty;
+            loginViewModel.Password = FakeDataProvider.CorrectPassword;
+            loginViewModel.RepeatedPassword = FakeDataProvider.CorrectPassword;
+            loginViewModel.FirstName = "asd";
+            loginViewModel.Surname = "qwe";
+
+            var loginData = await loginViewModel.Register();
+            Assert.IsNull(loginData);
+        }
     }
 }

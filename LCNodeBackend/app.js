@@ -9,6 +9,8 @@ var app = express();
 var http = require('http').createServer(app);
 http.listen(process.env.OPENSHIFT_NODEJS_PORT ||1338, process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1');
 
+require('es6-promise').polyfill();
+
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 var mongoUrl = process.env.OPENSHIFT_MONGODB_DB_URL;

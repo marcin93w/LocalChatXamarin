@@ -14,4 +14,9 @@ userSchema.methods.verifyToken = function (token, callback) {
     callback(null, this.token === token);
 };
 
+userSchema.methods.generateNewToken = function () {
+    this.token = this.username;
+    return this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);

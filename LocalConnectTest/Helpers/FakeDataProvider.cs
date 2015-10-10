@@ -24,17 +24,22 @@ namespace LocalConnectTest.Helpers
             throw new NotImplementedException();
         }
 
+        public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<object> FetchDataAsync(string method)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<LoginData> Login(string username, string password)
+        public async Task<SessionInfo> Login(string username, string password)
         {
             if (username == CorrectUsername && password == CorrectPassword)
             {
                 _authToken = "zxc";
-                return new LoginData(_authToken, CorrectPersonId);
+                return new SessionInfo(_authToken, CorrectPersonId);
             }
             else
             {
@@ -42,7 +47,7 @@ namespace LocalConnectTest.Helpers
             }
         }
 
-        public async Task<LoginData> LoginWithToken(string authToken)
+        public async Task<SessionInfo> LoginWithToken(string authToken)
         {
             throw new NotImplementedException();
         }

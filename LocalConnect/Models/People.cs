@@ -10,6 +10,11 @@ namespace LocalConnect.Models
     {
         public List<Person> PeopleList { private set; get; }
 
+        public People()
+        {
+            PeopleList = new List<Person>();
+        }
+
         public async Task FetchPeopleList(IDataProvider dataProvider)
         {
             PeopleList = await dataProvider.FetchDataAsync<List<Person>>("people");

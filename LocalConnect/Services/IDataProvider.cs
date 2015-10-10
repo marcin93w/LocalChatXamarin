@@ -10,8 +10,10 @@ namespace LocalConnect.Services
     public interface IDataProvider
     {
         Task<T> FetchDataAsync<T>(string method);
+        Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData);
         Task<object> FetchDataAsync(string method);
-        Task<LoginData> Login(string username, string password);
-        Task<LoginData> LoginWithToken(string authToken);
+        Task<SessionInfo> Login(string username, string password);
+        Task<SessionInfo> LoginWithToken(string authToken);
+        void UpdateAuthToken(string token);
     }
 }

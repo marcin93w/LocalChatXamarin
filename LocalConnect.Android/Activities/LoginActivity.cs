@@ -17,19 +17,25 @@ using LocalConnect.ViewModel;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity(Label = "LC Android",
-        MainLauncher = true,
-        Icon = "@drawable/icon")]
+    [Activity(MainLauncher = true)]
     public class LoginActivity : Activity
     {
-        private readonly LoginViewModel _loginViewModel;
+        private LoginViewModel LoginViewModel { get; }
+
+        private bool _isOnRegisterView;
 
         private View _loadingPanel;
         private View _initializingPanel;
 
+        private Binding<string, string> _loginBinding;
+        private Binding<string, string> _passwordBinding;
+        private Binding<string, string> _repeatPasswordBinding;
+        private Binding<string, string> _nameBinding;
+        private Binding<string, string> _surnameBinding;
+
         public LoginActivity()
         {
-            _loginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>();
+            LoginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>();
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -42,9 +48,53 @@ namespace LocalConnect.Android.Activities
             _initializingPanel = FindViewById(Resource.Id.InitializingPanel);
 
             var loginButton = FindViewById<Button>(Resource.Id.LoginButton);
-            loginButton.Click += Login;
+            loginButton.Click += LoginOrRegister;
+            var registerToggleButton = FindViewById<Button>(Resource.Id.ToogleRegisterButton);
+            registerToggleButton.Click += ToggleRegisterView;
+
+            CreateBindings();
 
             CheckSavedAuthToken();
+        }
+
+        private void CreateBindings()
+        {
+            var loginInput = FindViewById<TextView>(Resource.Id.LoginInput);
+            var passwordInput = FindViewById<TextView>(Resource.Id.PasswordInput);
+            var repeatPasswordInput = FindViewById<TextView>(Resource.Id.repeatedPassword);
+            //var mailInput = FindViewById<TextView>(Resource.Id.Mail);
+            var nameInput = FindViewById<TextView>(Resource.Id.Name);
+            var surnameInput = FindViewById<TextView>(Resource.Id.Surname);
+
+            _loginBinding = this.SetBinding(
+              () => LoginViewModel.Login,
+              loginInput, () => loginInput.Text, 
+              BindingMode.TwoWay);
+
+            _passwordBinding = this.SetBinding(
+              () => LoginViewModel.Password,
+              passwordInput, () => passwordInput.Text,
+              BindingMode.TwoWay);
+
+            _repeatPasswordBinding = this.SetBinding(
+              () => LoginViewModel.RepeatedPassword,
+              repeatPasswordInput, () => repeatPasswordInput.Text,
+              BindingMode.TwoWay);
+
+            //_mailBinding = this.SetBinding(
+            //  () => LoginViewModel.,
+            //  mailInput, () => mailInput.Text,
+            //  BindingMode.TwoWay);
+
+            _nameBinding = this.SetBinding(
+              () => LoginViewModel.FirstName,
+              nameInput, () => nameInput.Text,
+              BindingMode.TwoWay);
+
+            _surnameBinding = this.SetBinding(
+              () => LoginViewModel.Surname,
+              surnameInput, () => surnameInput.Text,
+              BindingMode.TwoWay);
         }
 
         protected override void OnResume()
@@ -63,7 +113,7 @@ namespace LocalConnect.Android.Activities
             }
             else
             {
-                var loginData = await _loginViewModel.Authenticate(savedToken);
+                var loginData = await LoginViewModel.Authenticate(savedToken);
                 if (loginData == null)
                 {
                     _initializingPanel.Visibility = ViewStates.Gone;
@@ -75,36 +125,56 @@ namespace LocalConnect.Android.Activities
             }
         }
 
-        private async void Login(object sender, EventArgs eventArgs)
+        private void ToggleRegisterView(object sender, EventArgs e)
         {
-            _loadingPanel.Visibility = ViewStates.Visible;
-            _loadingPanel.Clickable = true;
+            var logInButton = FindViewById<Button>(Resource.Id.LoginButton);
+            var registerToggleButton = FindViewById<Button>(Resource.Id.ToogleRegisterButton);
+            var registerPanel = FindViewById<ViewGroup>(Resource.Id.RegistrationInfoPanel);
 
-            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
-            errorMessage.Visibility = ViewStates.Gone;
-
-            var loginInput = FindViewById<TextView>(Resource.Id.LoginInput);
-            var passwordInput = FindViewById<TextView>(Resource.Id.PasswordInput);
-
-            _loginViewModel.Login = loginInput.Text;
-            _loginViewModel.Password = passwordInput.Text;
-
-            var loginData = await _loginViewModel.Authenticate();
-            if (loginData != null)
+            if (_isOnRegisterView)
             {
-                TakeToApp(loginData);
+                logInButton.Text = "Sign in";
+                registerToggleButton.Text = "Register";
+                registerPanel.Visibility = ViewStates.Gone;
+                _isOnRegisterView = false;
             }
             else
             {
-                errorMessage.Text = _loginViewModel.AuthenticationErrorMessage;
+                logInButton.Text = "Sign up";
+                registerToggleButton.Text = "Log in";
+                registerPanel.Visibility = ViewStates.Visible;
+                _isOnRegisterView = true;
+            }
+
+            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
+            errorMessage.Visibility = ViewStates.Gone;
+        }
+
+        private async void LoginOrRegister(object sender, EventArgs eventArgs)
+        {
+            _loadingPanel.Visibility = ViewStates.Visible;
+            _loadingPanel.Clickable = true;
+            
+            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
+            errorMessage.Visibility = ViewStates.Gone;
+
+            var sessionInfo = await (_isOnRegisterView ? LoginViewModel.Register() : LoginViewModel.Authenticate());
+
+            if (sessionInfo != null)
+            {
+                TakeToApp(sessionInfo);
+            }
+            else
+            {
+                errorMessage.Text = LoginViewModel.ErrorMessage;
                 errorMessage.Visibility = ViewStates.Visible;
                 _loadingPanel.Visibility = ViewStates.Gone;
             }
         }
 
-        private void TakeToApp(LoginData loginData)
+        private void TakeToApp(SessionInfo sessionInfo)
         {
-            SaveAuthToken(loginData.Token);
+            SaveAuthToken(sessionInfo.Token);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();

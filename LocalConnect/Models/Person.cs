@@ -13,16 +13,20 @@ namespace LocalConnect.Models
     public class Person
     {
         [JsonProperty("_id")]
-        public string PersonId { get; }
-        public string FirstName { get; }
-        public string Surname { get; }
-        public string ShortDescription { get; }
-        public Point Location { get; }
+        public string PersonId { set; get; }
+        public string FirstName { set; get; }
+        public string Surname { set; get; }
+        public string ShortDescription { set; get; }
+        public Point Location { set; get; }
 
 
         public string LongDescription { private set; get; }
 
         public string Name => FirstName + " " + Surname;
+
+        public Person()
+        {
+        }
 
         public Person(string firstName, string surname, string shortDescription, Point location, string personId)
         {

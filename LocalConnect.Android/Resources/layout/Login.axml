@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp">
+    <!--android:textAlignment="center" //not supported in 2.3.7-->
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,11 +34,61 @@
             android:layout_marginRight="15dp"
             android:textColorHint="@color/LowContrastFontOnGreenBkg"
             android:background="@drawable/edittextwhite" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/PasswordInput"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/RegistrationInfoPanel"
+            android:visibility="gone">
+            <EditText
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Repeat password"
+                android:id="@+id/repeatedPassword"
+                android:textColorHint="@color/LowContrastFontOnGreenBkg"
+                android:background="@drawable/edittextwhite" />
+            <EditText
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="e-mail"
+                android:id="@+id/Mail"
+                android:textColorHint="@color/LowContrastFontOnGreenBkg"
+                android:background="@drawable/edittextwhite" />
+            <EditText
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Name"
+                android:id="@+id/Name"
+                android:textColorHint="@color/LowContrastFontOnGreenBkg"
+                android:background="@drawable/edittextwhite" />
+            <EditText
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Surname"
+                android:id="@+id/Surname"
+                android:textColorHint="@color/LowContrastFontOnGreenBkg"
+                android:background="@drawable/edittextwhite" />
+        </LinearLayout>
         <TextView
             android:text="Text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/PasswordInput"
+            android:layout_below="@id/RegistrationInfoPanel"
             android:id="@+id/ErrorText"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
@@ -48,18 +99,37 @@
             android:background="@android:color/holo_green_light"
             android:layout_marginRight="15dp"
             android:layout_marginLeft="15dp" />
-    <!--android:textAlignment="center" //not supported in 2.3.7-->
-        <Button
-            android:text="Log In"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:minWidth="25px"
+            android:minHeight="25px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ErrorText"
-            android:id="@+id/LoginButton"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp"
-            android:alpha="0.5" />
+            android:id="@+id/linearLayout1">
+            <Button
+                android:text="Register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:alpha="0.5"
+                android:id="@+id/ToogleRegisterButton"
+                android:layout_weight="1" />
+            <Button
+                android:text="Sign In"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/LoginButton"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:alpha="0.5"
+                android:layout_weight="1" />
+        </LinearLayout>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"

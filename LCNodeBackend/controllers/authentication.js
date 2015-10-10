@@ -50,8 +50,7 @@
 
     auth.getUserData = function (req, res) {
         var user = req.user;
-        user.token = user.username;
-        user.save()
+        user.generateNewToken()
             .then(function() {
                 return Person.findOne({ user: user }, 'id');
             })

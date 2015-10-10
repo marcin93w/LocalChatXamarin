@@ -53,7 +53,7 @@ namespace LocalConnect.ViewModel
             catch (Exception ex)
             {
                 _errorMessage = ex.Message;
-                authTokenMissing = ex is MissingAuthenticationTokenException;
+                authTokenMissing = (ex as ConnectionException)?.IsAuthTokenMissing ?? false;
             }
             finally
             {

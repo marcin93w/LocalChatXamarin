@@ -11,5 +11,6 @@ namespace LocalConnect.Services
         {
         }
 
+        public bool IsAuthTokenMissing => InnerException is MissingAuthenticationTokenException;
     }
 }

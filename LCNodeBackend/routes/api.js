@@ -9,6 +9,8 @@ router.route('/').get(authController.isAuthenticated, function (req, res) {
     res.json({ welcomeMsg: 'Welcome to Local Connect!' });
 });
 
+router.route('/register/').post(peopleController.postRegisterUser);
+
 router.route('/login').get(authController.checkCredentials, 
     authController.getUserData);
 
@@ -24,12 +26,9 @@ router.route('/personDetails/:id').get(authController.isAuthenticated,
 router.route('/lastMessagesWith/:personId').get(authController.isAuthenticated, 
     messagesCtrl.getLastMessagesWith);
 
-router.route('/register/').post(authController.isAuthenticated, 
-    peopleController.postRegisterUser);
-
 
 //router.route('/me').get(authController.isAuthenticated, 
-//    peopleController.getMe);
+//    peopleController.getMe); 
 
 //router.route('/me/name').get(authController.isAuthenticated, 
 //    peopleController.getMyName);

@@ -52,15 +52,15 @@
 
     peopleCtrl.postRegisterUser = function (req, res) {
         var user = new User({
-            username: req.body.username,
-            password: req.body.password
+            username: req.body.Username,
+            password: req.body.Password
         });
         var person = new Person({
             user: user,
-            firstname: req.body.firstname,
-            surname: req.body.surname,
-            shortDescription: req.body.shortDescription,
-            longDescription: req.body.longDescription
+            firstname: req.body.Person.FirstName,
+            surname: req.body.Person.Surname,
+            shortDescription: req.body.Person.ShortDescription,
+            longDescription: req.body.Person.LongDescription
         });
         
         makeSureThatUserNotExists(user.username)
@@ -70,11 +70,16 @@
         .then(function() {
             return person.save();
         })
+        .then(function() {
+            return user.generateNewToken();
+        })
         .then(function () {
             res.json({
                 registered: true,
-                token: user.token,
-                personId: person.id
+                sessionInfo: {
+                    token: user.token,
+                    personId: person.id
+                }
             });
         })
         .catch(function (err) {

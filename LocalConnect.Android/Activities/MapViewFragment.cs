@@ -62,7 +62,8 @@ namespace LocalConnect.Android.Activities
                     _map.AddMarker(markerOptions);
                     bounds.Include(point);
                 }
-                _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
+                if(peopleWithLocation.Any())
+                    _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
             }
         }
     }

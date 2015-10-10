@@ -4,15 +4,15 @@ using System.Text;
 
 namespace LocalConnect.Models
 {
-    public class LoginData
+    public class SessionInfo
     {
-        public LoginData(string token, string personId)
+        public SessionInfo(string token, string personId)
         {
             Token = token;
             PersonId = personId;
         }
 
-        public string Token { get; }
-        public string PersonId { get; }
+        public string Token { set; get; }
+        public string PersonId { set; get; }
     }
 }

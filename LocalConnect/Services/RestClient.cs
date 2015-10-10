@@ -14,7 +14,7 @@ namespace LocalConnect.Services
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
 
-        public async Task<LoginData> Login(string username, string password)
+        public async Task<SessionInfo> Login(string username, string password)
         {
             var url = Path.Combine(_url, "login");
 
@@ -26,19 +26,24 @@ namespace LocalConnect.Services
             return await SendLoginRequest(request);
         }
 
-        public async Task<LoginData> LoginWithToken(string authToken)
+        public async Task<SessionInfo> LoginWithToken(string authToken)
         {
             var url = Path.Combine(_url, "loginWithToken");
 
             var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
             request.ContentType = "application/json";
             request.Method = "GET";
-            request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}"; ;
+            request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}";
 
             return await SendLoginRequest(request);
         }
 
-        private async Task<LoginData> SendLoginRequest(HttpWebRequest request)
+        public void UpdateAuthToken(string token)
+        {
+            _authenticationHeader = $"Bearer {token}";
+        }
+
+        private async Task<SessionInfo> SendLoginRequest(HttpWebRequest request)
         {
             using (var response = (HttpWebResponse)await request.GetResponseAsync())
             {
@@ -46,10 +51,7 @@ namespace LocalConnect.Services
                 {
                     using (var stream = response.GetResponseStream())
                     {
-                        var loginData = await DeserializeFromStream<LoginData>(stream);
-                        _authenticationHeader = $"Bearer {loginData.Token}";
-
-                        return loginData;
+                        return await DeserializeFromStream<SessionInfo>(stream);
                     }
                 }
                 else
@@ -66,31 +68,67 @@ namespace LocalConnect.Services
 
         public async Task<T> FetchDataAsync<T>(string method)
         {
-            if (string.IsNullOrEmpty(_authenticationHeader))
+            try
+            {
+                var request = PrepareRequest(method);
+                request.Method = "GET";
+
+                return await ExecuteRequestAsync<T>(request);
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectionException(ex);
+            }
+        }
+
+        public async Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
+        {
+            try
+            {
+                var request = PrepareRequest(method);
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
+                {
+                    var serializer = new JsonSerializer();
+                    serializer.Serialize(streamWriter, postData);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                return await ExecuteRequestAsync<TReturnType>(request);
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectionException(ex);
+            }
+        }
+
+        private WebRequest PrepareRequest(string method)
+        {
+            if (string.IsNullOrEmpty(_authenticationHeader) && method != "register")
             {
                 throw new MissingAuthenticationTokenException();
             }
 
             var url = Path.Combine(_url, method);
-
-            try
-            {
-                var request = (HttpWebRequest) WebRequest.Create(new Uri(url));
-                request.ContentType = "application/json";
-                request.Method = "GET";
+            
+            var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            request.ContentType = "application/json";
+            if(method != "register")
                 request.Headers[HttpRequestHeader.Authorization] = _authenticationHeader;
 
-                using (var response = await request.GetResponseAsync())
-                {
-                    using (var stream = response.GetResponseStream())
-                    {
-                        return await DeserializeFromStream<T>(stream);
-                    }
-                }
-            }
-            catch (Exception ex)
+            return request;
+        } 
+
+        private async Task<T> ExecuteRequestAsync<T>(WebRequest request)
+        {
+            using (var response = await request.GetResponseAsync())
             {
-                throw new ConnectionException(ex);
+                using (var stream = response.GetResponseStream())
+                {
+                    return await DeserializeFromStream<T>(stream);
+                }
             }
         }
 
