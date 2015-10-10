@@ -51,5 +51,10 @@ namespace LocalConnectTest.Helpers
         {
             throw new NotImplementedException();
         }
+
+        public void UpdateAuthToken(string token)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

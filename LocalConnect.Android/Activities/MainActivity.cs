@@ -2,11 +2,14 @@
 using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Preferences;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
+using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
 using LocalConnect.ViewModel;
+using Org.Apache.Http.Impl.Conn;
 using AndroidRes = Android.Resource;
 
 namespace LocalConnect.Android.Activities
@@ -39,6 +42,8 @@ namespace LocalConnect.Android.Activities
 
             var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
             switchViewButton.Click += OnSwitchViewCicked;
+            var settingsButton = FindViewById<ImageButton>(Resource.Id.MenuButton);
+            settingsButton.Click += (sender, e) => OnSettingsClick(settingsButton);
         }
 
         private void OnViewChanged(object sender, ViewPager.PageSelectedEventArgs e)
@@ -80,6 +85,38 @@ namespace LocalConnect.Android.Activities
                 //is on map view
                 _viewPager.SetCurrentItem(0, true);
             }
+        }
+
+        public void OnSettingsClick(View v)
+        {
+            PopupMenu popup = new PopupMenu(this, v);
+            popup.MenuItemClick += PopupOnMenuItemClick;
+            popup.MenuInflater.Inflate(Resource.Menu.SettingsMenu, popup.Menu);
+            popup.Show();
+        }
+
+        private void PopupOnMenuItemClick(object sender, PopupMenu.MenuItemClickEventArgs menuItemClickEventArgs)
+        {
+            switch (menuItemClickEventArgs.Item.ItemId)
+            {
+                case Resource.Id.logout:
+                    Logout();
+                    break;
+            }
+        }
+
+        private void Logout()
+        {
+            DeleteAuthToken();
+            OpenLoginActivity();
+        }
+
+        private void DeleteAuthToken()
+        {
+            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
+            var editor = prefs.Edit();
+            editor.Remove("auth_token");
+            editor.Apply();
         }
 
         private void OpenLoginActivity()
