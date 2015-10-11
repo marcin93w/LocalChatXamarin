@@ -34,10 +34,10 @@ namespace LocalConnect.Android
             _chatClient = new ChatClient();
         }
 
-        public T GetViewModel<T>(Activity activity = null) where T: ViewModelBase
+        public T GetViewModel<T>(Activity activity = null, bool requestNewInstance = false) where T: ViewModelBase, new()
         {
-            var viewModel = ServiceLocator.Current.GetInstance<T>();
-
+            var viewModel = requestNewInstance ? new T() : ServiceLocator.Current.GetInstance<T>();
+            
             if (viewModel is IUiInvokable)
             {
                 if (activity != null)
@@ -66,8 +66,15 @@ namespace LocalConnect.Android
             }
 
             return viewModel;
-        } 
-        
+        }
+
+        public void ResetViewModel<T>() where T : ViewModelBase
+        {
+            if (SimpleIoc.Default.IsRegistered<T>())
+                SimpleIoc.Default.Unregister<T>();
+            SimpleIoc.Default.Register<T>();
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

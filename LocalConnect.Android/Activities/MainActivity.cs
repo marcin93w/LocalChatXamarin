@@ -108,6 +108,7 @@ namespace LocalConnect.Android.Activities
         private void Logout()
         {
             DeleteAuthToken();
+            ViewModelLocator.Instance.ResetViewModel<PeopleViewModel>();
             OpenLoginActivity();
         }
 
