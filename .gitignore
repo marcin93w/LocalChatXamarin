@@ -16,3 +16,4 @@
 /packages
 /run-local-mongo.bat
 /.vs/LocalConnect/v14/*.suo
+/Components

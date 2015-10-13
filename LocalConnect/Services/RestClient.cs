@@ -14,6 +14,11 @@ namespace LocalConnect.Services
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
 
+        public Task<object> FetchDataAsync(string method, bool noAuthorization = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<SessionInfo> Login(string username, string password)
         {
             var url = Path.Combine(_url, "login");
@@ -26,17 +31,17 @@ namespace LocalConnect.Services
             return await SendLoginRequest(request);
         }
 
-        public async Task<SessionInfo> LoginWithToken(string authToken)
-        {
-            var url = Path.Combine(_url, "loginWithToken");
+        //public async Task<SessionInfo> LoginWithToken(string authToken)
+        //{
+        //    var url = Path.Combine(_url, "loginWithToken");
 
-            var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-            request.ContentType = "application/json";
-            request.Method = "GET";
-            request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}";
+        //    var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
+        //    request.ContentType = "application/json";
+        //    request.Method = "GET";
+        //    request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}";
 
-            return await SendLoginRequest(request);
-        }
+        //    return await SendLoginRequest(request);
+        //}
 
         public void UpdateAuthToken(string token)
         {
@@ -66,11 +71,11 @@ namespace LocalConnect.Services
             return await FetchDataAsync<object>(method);
         }
 
-        public async Task<T> FetchDataAsync<T>(string method)
+        public async Task<T> FetchDataAsync<T>(string method, bool noAuthorization = false)
         {
             try
             {
-                var request = PrepareRequest(method);
+                var request = PrepareRequest(method, noAuthorization);
                 request.Method = "GET";
 
                 return await ExecuteRequestAsync<T>(request);
@@ -81,11 +86,11 @@ namespace LocalConnect.Services
             }
         }
 
-        public async Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
+        public async Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false)
         {
             try
             {
-                var request = PrepareRequest(method);
+                var request = PrepareRequest(method, noAuthorization);
                 request.Method = "POST";
 
                 using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
@@ -104,9 +109,9 @@ namespace LocalConnect.Services
             }
         }
 
-        private WebRequest PrepareRequest(string method)
+        private WebRequest PrepareRequest(string method, bool noAuthorization)
         {
-            if (string.IsNullOrEmpty(_authenticationHeader) && method != "register")
+            if (string.IsNullOrEmpty(_authenticationHeader) && !noAuthorization)
             {
                 throw new MissingAuthenticationTokenException();
             }
@@ -115,7 +120,7 @@ namespace LocalConnect.Services
             
             var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
             request.ContentType = "application/json";
-            if(method != "register")
+            if(!noAuthorization)
                 request.Headers[HttpRequestHeader.Authorization] = _authenticationHeader;
 
             return request;

@@ -44,19 +44,11 @@ namespace LocalConnect.ViewModel
         public IChatClient ChatClient { private get; set; }
 
 
-        public async Task<SessionInfo> Authenticate(string authToken = null)
+        public async Task<SessionInfo> Authenticate(string authToken = null, bool isFacebookToken = false)
         {
             try
             {
-                SessionInfo sessionInfo;
-                if (authToken != null)
-                {
-                    sessionInfo = await DataProvider.LoginWithToken(authToken);
-                }
-                else
-                {
-                    sessionInfo = await DataProvider.Login(Login, Password);
-                }
+                var sessionInfo = await _user.Login(DataProvider, authToken, isFacebookToken);
 
                 if (sessionInfo == null)
                 {
@@ -118,6 +110,11 @@ namespace LocalConnect.ViewModel
             }
 
             return null;
+        }
+
+        public async Task<SessionInfo> LoginFromFacebook(string facebookToken)
+        {
+            return await Authenticate(facebookToken, true);
         }
     }
 }

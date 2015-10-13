@@ -3,6 +3,11 @@
 	<uses-sdk />
 	<application android:label="LocalConnect" android:icon="@drawable/Icon" android:theme="@style/AppStyle">
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyARRA0CSszDIXQvLHJZoKymP0QLGl3DTqw" />
+    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="fb1665708853676567"/>
+    <activity android:name="com.facebook.FacebookActivity"
+          android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+          android:theme="@android:style/Theme.Translucent.NoTitleBar"
+          android:label="Local Connect" />
 	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

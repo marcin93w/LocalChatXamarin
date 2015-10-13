@@ -3,7 +3,8 @@
 var userSchema = new mongoose.Schema({
     username: String,
     password: String,
-    token: String
+    token: String,
+    facebookId: String
 });
 
 userSchema.methods.verifyPassword = function (password, callback) {
@@ -15,7 +16,7 @@ userSchema.methods.verifyToken = function (token, callback) {
 };
 
 userSchema.methods.generateNewToken = function () {
-    this.token = this.username;
+    this.token = this.username || this.facebookId;
     return this.save();
 };
 

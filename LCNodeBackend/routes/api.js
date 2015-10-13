@@ -17,6 +17,9 @@ router.route('/login').get(authController.checkCredentials,
 router.route('/loginWithToken').get(authController.isAuthenticated, 
     authController.getUserData);
 
+router.route('/loginWithFacebook').get(authController.facebookAuthenticate, 
+    authController.getUserData);
+
 router.route('/people').get(authController.isAuthenticated, 
     peopleController.getAllPeople);
 

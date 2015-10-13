@@ -14,6 +14,11 @@ using GalaSoft.MvvmLight.Helpers;
 using LocalConnect.Models;
 using LocalConnect.Services;
 using LocalConnect.ViewModel;
+using Xamarin.Facebook;
+using Xamarin.Facebook.AppEvents;
+using Xamarin.Facebook.Login;
+using Xamarin.Facebook.Login.Widget;
+using Object = Java.Lang.Object;
 
 namespace LocalConnect.Android.Activities
 {
@@ -23,15 +28,18 @@ namespace LocalConnect.Android.Activities
         private LoginViewModel LoginViewModel { get; }
 
         private bool _isOnRegisterView;
+        private bool _isReturningFromFacebookLogin;
 
         private View _loadingPanel;
         private View _initializingPanel;
+        private TextView _errorMessage;
 
         private Binding<string, string> _loginBinding;
         private Binding<string, string> _passwordBinding;
         private Binding<string, string> _repeatPasswordBinding;
         private Binding<string, string> _nameBinding;
         private Binding<string, string> _surnameBinding;
+        private ICallbackManager _callbackManager;
 
         public LoginActivity()
         {
@@ -41,20 +49,30 @@ namespace LocalConnect.Android.Activities
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
+            FacebookSdk.SdkInitialize(ApplicationContext);
 
             SetContentView(Resource.Layout.Login);
 
             _loadingPanel = FindViewById(Resource.Id.LoadingPanel);
             _initializingPanel = FindViewById(Resource.Id.InitializingPanel);
+            _errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
 
             var loginButton = FindViewById<Button>(Resource.Id.LoginButton);
             loginButton.Click += LoginOrRegister;
             var registerToggleButton = FindViewById<Button>(Resource.Id.ToogleRegisterButton);
             registerToggleButton.Click += ToggleRegisterView;
 
+            SetUpFacebookLogin();
+
             CreateBindings();
 
             CheckSavedAuthToken();
+        }
+        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+
+            _callbackManager.OnActivityResult(requestCode, (int)resultCode, data);
         }
 
         private void CreateBindings()
@@ -97,9 +115,47 @@ namespace LocalConnect.Android.Activities
               BindingMode.TwoWay);
         }
 
-        protected override void OnResume()
+        private void SetUpFacebookLogin()
+        {
+            _callbackManager = CallbackManagerFactory.Create();
+
+            var fbLoginButton = FindViewById<LoginButton>(Resource.Id.FacebookLoginButton);
+            fbLoginButton.SetReadPermissions("user_friends");
+            fbLoginButton.Click += (sender, args) => _isReturningFromFacebookLogin = true;
+        }
+
+        protected override void OnPause()
+        {
+            base.OnPause();
+            AppEventsLogger.DeactivateApp(this);
+        }
+
+        protected override async void OnResume()
         {
             base.OnResume();
+
+            AppEventsLogger.ActivateApp(this);
+
+            if (_isReturningFromFacebookLogin)
+            {
+                var facebookToken = AccessToken.CurrentAccessToken;
+                if (!string.IsNullOrEmpty(facebookToken?.Token))
+                {
+                    _loadingPanel.Visibility = ViewStates.Visible;
+                    var sessionInfo = await LoginViewModel.LoginFromFacebook(facebookToken.Token);
+                    if (string.IsNullOrEmpty(sessionInfo?.Token))
+                    {
+                        _errorMessage.Text = "Error, could not retreive login token";
+                        _errorMessage.Visibility = ViewStates.Visible;
+                        _loadingPanel.Visibility = ViewStates.Gone;
+                    }
+                    else
+                    {
+                        TakeToApp(sessionInfo);
+                    }
+                }
+                _isReturningFromFacebookLogin = false;
+            }
 
             _loadingPanel.Visibility = ViewStates.Gone;
         }
@@ -146,17 +202,15 @@ namespace LocalConnect.Android.Activities
                 _isOnRegisterView = true;
             }
 
-            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
-            errorMessage.Visibility = ViewStates.Gone;
+            _errorMessage.Visibility = ViewStates.Gone;
         }
 
         private async void LoginOrRegister(object sender, EventArgs eventArgs)
         {
             _loadingPanel.Visibility = ViewStates.Visible;
             _loadingPanel.Clickable = true;
-            
-            var errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
-            errorMessage.Visibility = ViewStates.Gone;
+
+            _errorMessage.Visibility = ViewStates.Gone;
 
             var sessionInfo = await (_isOnRegisterView ? LoginViewModel.Register() : LoginViewModel.Authenticate());
 
@@ -166,8 +220,8 @@ namespace LocalConnect.Android.Activities
             }
             else
             {
-                errorMessage.Text = LoginViewModel.ErrorMessage;
-                errorMessage.Visibility = ViewStates.Visible;
+                _errorMessage.Text = LoginViewModel.ErrorMessage;
+                _errorMessage.Visibility = ViewStates.Visible;
                 _loadingPanel.Visibility = ViewStates.Gone;
             }
         }

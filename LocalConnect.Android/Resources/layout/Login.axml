@@ -130,6 +130,13 @@
                 android:alpha="0.5"
                 android:layout_weight="1" />
         </LinearLayout>
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/FacebookLoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linearLayout1"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"
