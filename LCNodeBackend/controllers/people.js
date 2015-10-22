@@ -16,7 +16,7 @@
     }    
     
     peopleCtrl.getAllPeople = function (req, res) {
-        Person.find({}, 'id firstname surname shortDescription location')
+        Person.find({}, 'id firstname surname shortDescription location avatar')
         .where("user").ne(req.user)
         .lean()
         .exec(function (err, people) {

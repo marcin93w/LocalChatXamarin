@@ -8,6 +8,7 @@ using Android.Content;
 using Android.OS;
 using Android.Preferences;
 using Android.Runtime;
+using Android.Service.Textservice;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
@@ -18,7 +19,6 @@ using Xamarin.Facebook;
 using Xamarin.Facebook.AppEvents;
 using Xamarin.Facebook.Login;
 using Xamarin.Facebook.Login.Widget;
-using Object = Java.Lang.Object;
 
 namespace LocalConnect.Android.Activities
 {
@@ -136,28 +136,33 @@ namespace LocalConnect.Android.Activities
 
             AppEventsLogger.ActivateApp(this);
 
-            if (_isReturningFromFacebookLogin)
+            var facebookToken = AccessToken.CurrentAccessToken;
+            if (!string.IsNullOrEmpty(facebookToken?.Token))
             {
-                var facebookToken = AccessToken.CurrentAccessToken;
-                if (!string.IsNullOrEmpty(facebookToken?.Token))
+                if (_isReturningFromFacebookLogin)
                 {
                     _loadingPanel.Visibility = ViewStates.Visible;
                     var sessionInfo = await LoginViewModel.LoginFromFacebook(facebookToken.Token);
-                    if (string.IsNullOrEmpty(sessionInfo?.Token))
-                    {
-                        _errorMessage.Text = "Error, could not retreive login token";
-                        _errorMessage.Visibility = ViewStates.Visible;
-                        _loadingPanel.Visibility = ViewStates.Gone;
-                    }
-                    else
-                    {
-                        TakeToApp(sessionInfo);
-                    }
+                    _isReturningFromFacebookLogin = false;
+                    _loadingPanel.Visibility = ViewStates.Gone;
+                    TakeToApp(sessionInfo);
                 }
-                _isReturningFromFacebookLogin = false;
+                else
+                {
+                    LoginManager.Instance.LogOut();
+                }
+            }
+            else
+            {
+                if (_isReturningFromFacebookLogin)
+                {
+                    _errorMessage.Text = "Error, could not retreive login token";
+                    _errorMessage.Visibility = ViewStates.Visible;
+                    _loadingPanel.Visibility = ViewStates.Gone;
+                    _isReturningFromFacebookLogin = false;
+                }
             }
 
-            _loadingPanel.Visibility = ViewStates.Gone;
         }
 
         private async void CheckSavedAuthToken()

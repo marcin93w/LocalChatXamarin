@@ -9,7 +9,8 @@ var personSchema = new mongoose.Schema({
     location: {
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
-    }
+    },
+    avatar: String
 });
 
 module.exports = mongoose.model('Person', personSchema);

@@ -125,8 +125,8 @@
                 android:id="@+id/LoginButton"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp"
                 android:alpha="0.5"
                 android:layout_weight="1" />
         </LinearLayout>
@@ -136,7 +136,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/linearLayout1"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:alpha="0.8"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/LoadingPanel"

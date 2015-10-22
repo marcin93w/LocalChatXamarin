@@ -9,7 +9,8 @@
         android:src="@android:drawable/ic_menu_gallery"
         android:layout_width="100dp"
         android:layout_height="fill_parent"
-        android:id="@+id/personImage" />
+        android:id="@+id/personImage"
+        android:layout_margin="5dp" />
     <TextView
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceMedium"

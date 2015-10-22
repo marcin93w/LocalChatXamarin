@@ -1,8 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using LocalConnect.Services;
 using LocalConnect.ViewModel;
 using LocalConnectTest.Helpers;
+using Moq;
 using NUnit.Framework;
 
 namespace LocalConnectTest.ViewModelTests
@@ -44,20 +46,36 @@ namespace LocalConnectTest.ViewModelTests
         }
 
         [Test]
-        public async Task ExistingUserRegisterOnServerTest()
+        public async Task ErrorDuringAuthenticationTest()
         {
-            var loginViewModel = new LoginViewModel();
-            loginViewModel.DataProvider = new RestClient();
-            loginViewModel.ChatClient = _chatClient;
+            var mockDataProvider = new Mock<IDataProvider>();
+            mockDataProvider
+                .Setup(e => e.Login(FakeDataProvider.CorrectUsername, FakeDataProvider.CorrectPassword))
+                .ThrowsAsync(new Exception());
 
-            loginViewModel.Login = string.Empty;
-            loginViewModel.Password = FakeDataProvider.CorrectPassword;
-            loginViewModel.RepeatedPassword = FakeDataProvider.CorrectPassword;
-            loginViewModel.FirstName = "asd";
-            loginViewModel.Surname = "qwe";
+            _loginViewModel.DataProvider = mockDataProvider.Object;
+            _loginViewModel.Login = FakeDataProvider.CorrectUsername;
+            _loginViewModel.Password = FakeDataProvider.CorrectPassword;
+            var loginData = await _loginViewModel.Authenticate();
 
-            var loginData = await loginViewModel.Register();
             Assert.IsNull(loginData);
         }
+
+        //[Test]
+        //public async Task ExistingUserRegisterOnServerTest()
+        //{
+        //    var loginViewModel = new LoginViewModel();
+        //    loginViewModel.DataProvider = new RestClient();
+        //    loginViewModel.ChatClient = _chatClient;
+
+        //    loginViewModel.Login = string.Empty;
+        //    loginViewModel.Password = FakeDataProvider.CorrectPassword;
+        //    loginViewModel.RepeatedPassword = FakeDataProvider.CorrectPassword;
+        //    loginViewModel.FirstName = "asd";
+        //    loginViewModel.Surname = "qwe";
+
+        //    var loginData = await loginViewModel.Register();
+        //    Assert.IsNull(loginData);
+        //}
     }
 }

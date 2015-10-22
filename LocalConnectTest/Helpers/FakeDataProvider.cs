@@ -19,12 +19,12 @@ namespace LocalConnectTest.Helpers
 
         private string _authToken;
 
-        public async Task<T> FetchDataAsync<T>(string method)
+        public Task<T> FetchDataAsync<T>(string method, bool noAuthorization = false)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
+        public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false)
         {
             throw new NotImplementedException();
         }

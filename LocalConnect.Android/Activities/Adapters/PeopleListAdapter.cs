@@ -1,5 +1,9 @@
+using System;
 using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Android.Content;
+using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.ViewModel;
@@ -29,7 +33,32 @@ namespace LocalConnect.Android.Activities.Adapters
             name.Text = _peopleViewModel.People[position].Name;
             desc.Text = _peopleViewModel.People[position].ShortDescription;
 
+            if(!string.IsNullOrEmpty(_peopleViewModel.People[position].Avatar))
+                LoadUserAvatar(image, _peopleViewModel.People[position].Avatar);
+
             return listItemView;
+        }
+
+        private async void LoadUserAvatar(ImageView image, string imageUrl)
+        {
+            var imageBitmap = GetImageBitmapFromUrl(imageUrl);
+            image.SetImageBitmap(await imageBitmap);
+        }
+
+        private async Task<Bitmap> GetImageBitmapFromUrl(string url)
+        {
+            Bitmap imageBitmap = null;
+
+            using (var webClient = new WebClient())
+            {
+                var imageBytes = await webClient.DownloadDataTaskAsync(url);
+                if (imageBytes != null && imageBytes.Length > 0)
+                {
+                    imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
+                }
+            }
+
+            return imageBitmap;
         }
     }
 }

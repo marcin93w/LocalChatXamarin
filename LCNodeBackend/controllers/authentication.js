@@ -1,4 +1,6 @@
 ﻿(function (auth) {
+    var _ = require('underscore');
+
     var config = require('../config');
 
     var passport = require('passport');
@@ -68,8 +70,9 @@
                     user: user,
                     firstname: profile.name.givenName,
                     surname: profile.name.familyName,
-                    shortDescription: 'Facebook user'
-                });
+                    shortDescription: 'Facebook user',
+                    avatar: _.first(profile.photos) && _.first(profile.photos).value
+            });
 
                 user.save()
                 .then(function () {

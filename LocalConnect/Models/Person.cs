@@ -18,6 +18,7 @@ namespace LocalConnect.Models
         public string Surname { set; get; }
         public string ShortDescription { set; get; }
         public Point Location { set; get; }
+        public string Avatar { set; get; }
 
 
         public string LongDescription { private set; get; }
