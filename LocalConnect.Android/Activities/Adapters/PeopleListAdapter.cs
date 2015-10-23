@@ -3,10 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Android.Content;
-using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.ViewModel;
+using Square.Picasso;
 
 namespace LocalConnect.Android.Activities.Adapters
 {
@@ -39,26 +39,11 @@ namespace LocalConnect.Android.Activities.Adapters
             return listItemView;
         }
 
-        private async void LoadUserAvatar(ImageView image, string imageUrl)
+        private void LoadUserAvatar(ImageView image, string imageUrl)
         {
-            var imageBitmap = GetImageBitmapFromUrl(imageUrl);
-            image.SetImageBitmap(await imageBitmap);
-        }
-
-        private async Task<Bitmap> GetImageBitmapFromUrl(string url)
-        {
-            Bitmap imageBitmap = null;
-
-            using (var webClient = new WebClient())
-            {
-                var imageBytes = await webClient.DownloadDataTaskAsync(url);
-                if (imageBytes != null && imageBytes.Length > 0)
-                {
-                    imageBitmap = BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length);
-                }
-            }
-
-            return imageBitmap;
+            Picasso.With(Context)
+               .Load(imageUrl)
+               .Into(image);
         }
     }
 }

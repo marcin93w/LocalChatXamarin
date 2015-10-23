@@ -15,6 +15,7 @@ using GalaSoft.MvvmLight.Helpers;
 using LocalConnect.Models;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
+using Square.Picasso;
 using Message = LocalConnect.Models.Message;
 
 namespace LocalConnect.Android.Activities
@@ -71,6 +72,14 @@ namespace LocalConnect.Android.Activities
 
             var personShortDescription = FindViewById<TextView>(Resource.Id.ShortDescription);
             personShortDescription.Text = _personViewModel.Person.ShortDescription;
+
+            if (!string.IsNullOrEmpty(_personViewModel.Person.Avatar))
+            {
+                var personAvatar = FindViewById<ImageView>(Resource.Id.PersonImage);
+                Picasso.With(this)
+                    .Load(_personViewModel.Person.Avatar)
+                    .Into(personAvatar);
+            }
 
             var moreButton = FindViewById<ImageView>(Resource.Id.MoreButton);
             moreButton.Click += ToggleMoreLessInfo;

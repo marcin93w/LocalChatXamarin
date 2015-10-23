@@ -103,7 +103,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Square.OkHttp, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Square.OkHttp.2.4.0.0\lib\MonoAndroid\Square.OkHttp.dll</HintPath>
+      <HintPath>..\packages\Square.OkHttp.2.4.0.1\lib\MonoAndroid\Square.OkHttp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Square.OkHttp.WS, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -112,6 +112,10 @@
     </Reference>
     <Reference Include="Square.OkIO, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Square.OkIO.1.5.0.0\lib\MonoAndroid\Square.OkIO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Square.Picasso, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Square.Picasso.2.5.2.1\lib\MonoAndroid\Square.Picasso.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -347,6 +351,10 @@
     <XamarinComponentReference Include="facebookandroid">
       <Visible>False</Visible>
       <Version>4.6.0.0</Version>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="square.picasso">
+      <Visible>False</Visible>
+      <Version>2.5.2.2</Version>
     </XamarinComponentReference>
   </ItemGroup>
   <Import Project="..\LocalConnect\LocalConnect.projitems" Label="Shared" />

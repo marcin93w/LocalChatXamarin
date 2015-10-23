@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Me.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SessionInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Message.cs" />

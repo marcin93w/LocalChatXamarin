@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayout2"
-        android:background="@android:color/holo_green_dark">
+        android:background="@android:color/holo_green_dark"
+        android:padding="5dp">
         <ImageView
             android:src="@android:drawable/ic_menu_gallery"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/PersonImage" />
+            android:id="@+id/PersonImage"
+            android:layout_marginRight="5dp" />
         <ImageView
             android:text="more"
             android:layout_width="wrap_content"

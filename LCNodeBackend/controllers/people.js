@@ -91,22 +91,13 @@
         });
     };
 
-    //peopleCtrl.getMe = function(req, res) {
-    //    Person.find({ user: req.user }, 
-    //        'firstname surname shortDescription longDescription',
-    //        function(err, me) {
-    //            if (err) res.send(err);
-    //            res.json(me);
-    //        });
-    //}
-
-    //peopleCtrl.getMyName = function (req, res) {
-    //    Person.findOne({ user: req.user }, 
-    //        'firstname surname',
-    //        function (err, me) {
-    //        if (err) res.send(err);
-    //        res.json(me);
-    //    });
-    //}
+    peopleCtrl.getMe = function(req, res) {
+        Person.findOne({ user: req.user }, 
+            'firstname surname shortDescription avatar',
+            function(err, me) {
+                if (err) res.send(err);
+                res.json(me);
+            });
+    }
 
 })(module.exports);

@@ -10,6 +10,7 @@ using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
 using LocalConnect.ViewModel;
 using Org.Apache.Http.Impl.Conn;
+using Square.Picasso;
 using AndroidRes = Android.Resource;
 
 namespace LocalConnect.Android.Activities
@@ -70,6 +71,16 @@ namespace LocalConnect.Android.Activities
             if (!e.IsSuccesful)
             {
                 Toast.MakeText(this, e.ErrorMessage, ToastLength.Long).Show();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(_peopleViewModel.Me.Avatar))
+                {
+                    var meImage = FindViewById<ImageView>(Resource.Id.MeImage);
+                    Picasso.With(this)
+                        .Load(_peopleViewModel.Me.Avatar)
+                        .Into(meImage);
+                }
             }
         }
 

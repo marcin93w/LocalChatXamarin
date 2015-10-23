@@ -29,11 +29,7 @@ router.route('/personDetails/:id').get(authController.isAuthenticated,
 router.route('/lastMessagesWith/:personId').get(authController.isAuthenticated, 
     messagesCtrl.getLastMessagesWith);
 
-
-//router.route('/me').get(authController.isAuthenticated, 
-//    peopleController.getMe); 
-
-//router.route('/me/name').get(authController.isAuthenticated, 
-//    peopleController.getMyName);
+router.route('/me').get(authController.isAuthenticated, 
+    peopleController.getMe); 
 
 module.exports = router;

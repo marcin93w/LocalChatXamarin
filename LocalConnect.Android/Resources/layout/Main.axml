@@ -11,11 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/MenuLayout"
-        android:background="@android:color/holo_green_dark">
+        android:background="@android:color/holo_green_dark"
+        android:padding="5dp">
         <ImageView
             android:src="@android:drawable/ic_menu_gallery"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:id="@+id/MeImage"
             android:layout_marginRight="10dp" />
         <ImageButton
