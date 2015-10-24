@@ -2,10 +2,11 @@
 
 namespace LocalConnect.Services
 {
-    public interface IChatClient
+    public interface ISocketClient
     {
         void Connect(string personId);
         event MessageReceivedEventHandler OnMessageReceived;
         void SendMessage(OutcomeMessage message, int messageIndex);
+        void UpdateMyLocation(Location location);
     }
 }

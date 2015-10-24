@@ -100,4 +100,12 @@
             });
     }
 
+    peopleCtrl.updateMyLocation = function(personId, location) {
+        return Person.findOne({ _id: personId })
+            .then(function(person) {
+                person.location = [location.lon, location.lat];
+                return person.save();
+            });
+    }
+
 })(module.exports);

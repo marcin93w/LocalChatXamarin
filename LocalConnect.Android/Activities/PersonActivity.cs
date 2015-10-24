@@ -24,7 +24,7 @@ namespace LocalConnect.Android.Activities
         WindowSoftInputMode = SoftInput.AdjustResize)]
     public class PersonActivity : Activity
     {
-        private readonly ChatViewModel _personViewModel;
+        private readonly PersonViewModel _personViewModel;
 
         private bool _moreInfoDisplayed;
 
@@ -32,7 +32,7 @@ namespace LocalConnect.Android.Activities
 
         public PersonActivity()
         {
-            _personViewModel = ViewModelLocator.Instance.GetViewModel<ChatViewModel>(this);
+            _personViewModel = ViewModelLocator.Instance.GetViewModel<PersonViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)

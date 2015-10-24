@@ -19,7 +19,7 @@ namespace LocalConnect.Services
 
     public delegate void MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 
-    public class ChatClient : IChatClient
+    public class SocketClient : ISocketClient
     {
         private readonly string _url = "wss://lc-fancydesign.rhcloud.com:8443";
 
@@ -56,6 +56,17 @@ namespace LocalConnect.Services
                 { "clientMessageId", messageIndex }
             };
             _socket.Emit("chat message", msg);
+        }
+
+        public void UpdateMyLocation(Location location)
+        {
+            var jLocation = new JObject
+            {
+                { "dateTime", DateTime.Now },
+                { "lon", location.Lon },
+                { "lat", location.Lat }
+            };
+            _socket.Emit("location update", jLocation);
         }
     }
 }

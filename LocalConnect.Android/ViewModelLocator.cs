@@ -16,7 +16,7 @@ namespace LocalConnect.Android
     public class ViewModelLocator
     {
         private readonly IDataProvider _dataProvider;
-        private readonly ChatClient _chatClient;
+        private readonly SocketClient _socketClient;
 
         private static ViewModelLocator _instance;
 
@@ -26,12 +26,12 @@ namespace LocalConnect.Android
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register<ChatViewModel>();
+            SimpleIoc.Default.Register<PersonViewModel>();
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
 
             _dataProvider = new RestClient();
-            _chatClient = new ChatClient();
+            _socketClient = new SocketClient();
         }
 
         public T GetViewModel<T>(Activity activity = null, bool requestNewInstance = false) where T: ViewModelBase, new()
@@ -60,9 +60,9 @@ namespace LocalConnect.Android
                 (viewModel as LoginViewModel).DataProvider = _dataProvider;
             }
 
-            if (viewModel is IChatClientUsingViewModel)
+            if (viewModel is ISocketClientUsingViewModel)
             {
-                (viewModel as IChatClientUsingViewModel).ChatClient = _chatClient;
+                (viewModel as ISocketClientUsingViewModel).SocketClient = _socketClient;
             }
 
             return viewModel;

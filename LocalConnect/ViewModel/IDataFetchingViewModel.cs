@@ -38,22 +38,11 @@ namespace LocalConnect.ViewModel
 
     public interface IDataFetchingViewModel
     {
-        //string ErrorMessage { get; }
-        //bool IsLoaded { get; }
-
         IDataProvider DataProvider { set; }
 
         event OnDataLoadEventHandler OnDataLoad;
 
         void FetchDataAsync();
     }
-
-    //public static class DataFetchingViewModelExtensions
-    //{
-    //    public static bool HasLoadingErrors(this IDataFetchingViewModel viewModel)
-    //    {
-    //        return viewModel.IsLoaded && !string.IsNullOrEmpty(viewModel.ErrorMessage);
-    //    }
-    //}
 
 }

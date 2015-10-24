@@ -12,7 +12,7 @@ namespace LocalConnectTest.ViewModelTests
     [TestFixture]
     public class LoginViewModelTest
     {
-        private readonly FakeChatClient _chatClient = new FakeChatClient();
+        private readonly FakeSocketClient _socketClient = new FakeSocketClient();
         private readonly FakeDataProvider _dataProvider = new FakeDataProvider();
 
         private LoginViewModel _loginViewModel;
@@ -21,7 +21,7 @@ namespace LocalConnectTest.ViewModelTests
         public void SetUp()
         {
             _loginViewModel = new LoginViewModel();
-            _loginViewModel.ChatClient = _chatClient;
+            _loginViewModel.SocketClient = _socketClient;
             _loginViewModel.DataProvider = _dataProvider;
         }
 

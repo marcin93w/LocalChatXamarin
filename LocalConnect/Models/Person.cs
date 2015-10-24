@@ -17,7 +17,7 @@ namespace LocalConnect.Models
         public string FirstName { set; get; }
         public string Surname { set; get; }
         public string ShortDescription { set; get; }
-        public Point Location { set; get; }
+        public Location Location { set; get; }
         public string Avatar { set; get; }
 
 
@@ -29,7 +29,7 @@ namespace LocalConnect.Models
         {
         }
 
-        public Person(string firstName, string surname, string shortDescription, Point location, string personId)
+        public Person(string firstName, string surname, string shortDescription, Location location, string personId)
         {
             FirstName = firstName;
             Surname = surname;

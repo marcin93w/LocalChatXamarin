@@ -11,19 +11,19 @@ namespace LocalConnect.Models
 {
     public class Conversation
     {
-        private readonly IChatClient _chatClient;
+        private readonly ISocketClient _socketClient;
 
         public ObservableInvokableCollection<Message> Messages { get; }
         public Person Person { get; }
 
         public bool IsHolded { set; get; }
 
-        public Conversation(Person person, IChatClient chatClient, RunOnUiThreadHandler uiThreadHandler)
+        public Conversation(Person person, ISocketClient socketClient, RunOnUiThreadHandler uiThreadHandler)
         {
-            _chatClient = chatClient;
+            _socketClient = socketClient;
             Person = person;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
-            chatClient.OnMessageReceived += HandleMessageReceive;
+            socketClient.OnMessageReceived += HandleMessageReceive;
         }
 
         private void HandleMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
@@ -41,7 +41,7 @@ namespace LocalConnect.Models
 
             var msg = new OutcomeMessage(Person.PersonId, message, DateTime.Now);
             Messages.Add(msg);
-            _chatClient.SendMessage(msg, Messages.IndexOf(msg));
+            _socketClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
         public async Task FetchLastMessages(IDataProvider dataProvider)

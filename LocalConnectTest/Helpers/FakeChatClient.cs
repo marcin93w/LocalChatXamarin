@@ -8,9 +8,9 @@ using LocalConnect.Services;
 
 namespace LocalConnectTest.Helpers
 {
-    class FakeChatClient : IChatClient
+    class FakeSocketClient : ISocketClient
     {
-        public FakeChatClient()
+        public FakeSocketClient()
         {
             SentMessages = new List<OutcomeMessage>();
         }
@@ -31,6 +31,11 @@ namespace LocalConnectTest.Helpers
         public void SendMessage(OutcomeMessage message, int messageIndex)
         {
             SentMessages.Add(message);
+        }
+
+        public void UpdateMyLocation(Location location)
+        {
+            throw new NotImplementedException();
         }
     }
 }

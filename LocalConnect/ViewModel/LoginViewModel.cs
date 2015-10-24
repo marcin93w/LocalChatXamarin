@@ -11,7 +11,7 @@ using LocalConnect.Services;
 namespace LocalConnect.ViewModel
 {
 
-    public class LoginViewModel : ViewModelBase, IChatClientUsingViewModel
+    public class LoginViewModel : ViewModelBase, ISocketClientUsingViewModel
     {
         private readonly User _user = new User();
 
@@ -41,7 +41,7 @@ namespace LocalConnect.ViewModel
         public string ErrorMessage { set; get; }
 
         public IDataProvider DataProvider { private get; set; }
-        public IChatClient ChatClient { private get; set; }
+        public ISocketClient SocketClient { private get; set; }
 
 
         public async Task<SessionInfo> Authenticate(string authToken = null, bool isFacebookToken = false)
@@ -56,7 +56,7 @@ namespace LocalConnect.ViewModel
                 }
                 else
                 {
-                    ChatClient.Connect(sessionInfo.PersonId);
+                    SocketClient.Connect(sessionInfo.PersonId);
                     DataProvider.UpdateAuthToken(sessionInfo.Token);
                 }
 
@@ -98,7 +98,7 @@ namespace LocalConnect.ViewModel
                 }
                 else
                 {
-                    ChatClient.Connect(response.SessionInfo.PersonId);
+                    SocketClient.Connect(response.SessionInfo.PersonId);
                     DataProvider.UpdateAuthToken(response.SessionInfo.Token);
                 }
 

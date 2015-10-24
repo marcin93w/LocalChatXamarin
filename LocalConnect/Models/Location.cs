@@ -4,9 +4,9 @@ using System.Text;
 
 namespace LocalConnect.Models
 {
-    public class Point
+    public class Location
     {
-        public Point(double lon, double lat)
+        public Location(double lon, double lat)
         {
             Lon = lon;
             Lat = lat;

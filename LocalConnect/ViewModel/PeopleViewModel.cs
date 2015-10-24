@@ -10,7 +10,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel
+    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel, ISocketClientUsingViewModel
     {
         private readonly People _people;
         private readonly Me _me;
@@ -23,6 +23,7 @@ namespace LocalConnect.ViewModel
 
         private OnDataLoadEventHandler _onDataLoad;
         public IDataProvider DataProvider { private get; set; }
+        public ISocketClient SocketClient { private get; set; }
 
         public event OnDataLoadEventHandler OnDataLoad
         {
@@ -54,7 +55,12 @@ namespace LocalConnect.ViewModel
             {
                 var fetchPeopleTask = _people.FetchPeopleList(DataProvider);
                 var fetchMeTask = _me.FetchData(DataProvider);
+
                 await Task.WhenAll(fetchPeopleTask, fetchMeTask);
+
+
+                //TODO move location update elsewhere
+                _me.UpdateLocation(SocketClient, new Location(50, 20));
             }
             catch (Exception ex)
             {
@@ -70,5 +76,6 @@ namespace LocalConnect.ViewModel
                 }
             }
         }
+
     }
 }

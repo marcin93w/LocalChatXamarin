@@ -2,6 +2,7 @@
     var io = require('socket.io')(http);
 
     var messagesCtrl = require('../controllers/messages');
+    var peopleCtrl = require('../controllers/people');
     var Message = require('../models/message');
 
     console.log('starting chat');
@@ -10,6 +11,7 @@
         var personId = socket.handshake.query.personId;
         console.log(personId + ' connected');
         socket.join(personId);
+        
         socket.on('chat message', function (msg) {
             console.log('message: ' + JSON.stringify(msg));
             var message = new Message({
@@ -24,6 +26,16 @@
                 }, function(err) {
                     io.to(personId).emit('message error', { clientMessageId: msg.clientMessageId, error: err });
                 });
+        });
+
+        socket.on('location update', function(location) {
+            peopleCtrl.updateMyLocation(personId, location)
+            .then(function() {
+                console.log('Location for user ' + personId + ' updated');
+            })
+            .catch(function(error) {
+                console.log('Error: Location for user ' + personId + ' NOT updated. ' + error); 
+            });
         });
     });
 };

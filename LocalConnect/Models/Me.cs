@@ -14,5 +14,11 @@ namespace LocalConnect.Models
         {
             Person = await dataProvider.FetchDataAsync<Person>("me");
         }
+
+        public void UpdateLocation(ISocketClient socketClient, Location location)
+        {
+            Person.Location = location;
+            socketClient.UpdateMyLocation(location);
+        }
     }
 }
