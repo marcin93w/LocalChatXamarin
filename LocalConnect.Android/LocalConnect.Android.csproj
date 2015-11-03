@@ -148,6 +148,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\Services\LocationUpdateService.cs" />
     <Compile Include="Activities\PersonActivity.cs" />
     <Compile Include="Activities\ListViewFragment.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="Activities\Adapters\MainViewsPagerAdapter.cs" />
     <Compile Include="Activities\MapViewFragment.cs" />
     <Compile Include="Activities\Adapters\PeopleListAdapter.cs" />
+    <Compile Include="Activities\Services\LocationUpdateServiceBinder.cs" />
+    <Compile Include="Activities\Services\LocationUpdateServiceConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="ViewModelLocator.cs" />

@@ -14,9 +14,10 @@ namespace LocalConnect.Services
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
 
-        public Task<object> FetchDataAsync(string method, bool noAuthorization = false)
+        public string AuthToken
         {
-            throw new NotImplementedException();
+            get { return _authenticationHeader.Replace("Bearer ", string.Empty); }
+            set { _authenticationHeader = $"Bearer {value}"; }
         }
 
         public async Task<SessionInfo> Login(string username, string password)
@@ -29,23 +30,6 @@ namespace LocalConnect.Services
             request.Credentials = new NetworkCredential(username, password);
 
             return await SendLoginRequest(request);
-        }
-
-        //public async Task<SessionInfo> LoginWithToken(string authToken)
-        //{
-        //    var url = Path.Combine(_url, "loginWithToken");
-
-        //    var request = (HttpWebRequest)WebRequest.Create(new Uri(url));
-        //    request.ContentType = "application/json";
-        //    request.Method = "GET";
-        //    request.Headers[HttpRequestHeader.Authorization] = $"Bearer {authToken}";
-
-        //    return await SendLoginRequest(request);
-        //}
-
-        public void UpdateAuthToken(string token)
-        {
-            _authenticationHeader = $"Bearer {token}";
         }
 
         private async Task<SessionInfo> SendLoginRequest(HttpWebRequest request)
@@ -79,6 +63,29 @@ namespace LocalConnect.Services
                 request.Method = "GET";
 
                 return await ExecuteRequestAsync<T>(request);
+            }
+            catch (Exception ex)
+            {
+                throw new ConnectionException(ex);
+            }
+        }
+
+        public async Task PostDataAsync<TPostType>(string method, TPostType postData, bool noAuthorization = false)
+        {
+            try
+            {
+                var request = PrepareRequest(method, noAuthorization);
+                request.Method = "POST";
+
+                using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
+                {
+                    var serializer = new JsonSerializer();
+                    serializer.Serialize(streamWriter, postData);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                await request.GetResponseAsync();
             }
             catch (Exception ex)
             {

@@ -60,3 +60,17 @@
     //        res.json({ message: 'Person successfully registered!' });
     //    });
     //};
+
+
+
+    
+
+        //socket.on('location update', function(location) {
+        //    peopleCtrl.updateMyLocation(personId, location)
+        //    .then(function() {
+        //        console.log('Location for user ' + personId + ' updated');
+        //    })
+        //    .catch(function(error) {
+        //        console.log('Error: Location for user ' + personId + ' NOT updated. ' + error); 
+        //    });
+        //});

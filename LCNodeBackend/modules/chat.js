@@ -27,15 +27,5 @@
                     io.to(personId).emit('message error', { clientMessageId: msg.clientMessageId, error: err });
                 });
         });
-
-        socket.on('location update', function(location) {
-            peopleCtrl.updateMyLocation(personId, location)
-            .then(function() {
-                console.log('Location for user ' + personId + ' updated');
-            })
-            .catch(function(error) {
-                console.log('Error: Location for user ' + personId + ' NOT updated. ' + error); 
-            });
-        });
     });
 };

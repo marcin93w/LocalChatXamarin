@@ -57,7 +57,7 @@ namespace LocalConnect.ViewModel
                 else
                 {
                     SocketClient.Connect(sessionInfo.PersonId);
-                    DataProvider.UpdateAuthToken(sessionInfo.Token);
+                    DataProvider.AuthToken = sessionInfo.Token;
                 }
 
                 return sessionInfo;
@@ -99,7 +99,7 @@ namespace LocalConnect.ViewModel
                 else
                 {
                     SocketClient.Connect(response.SessionInfo.PersonId);
-                    DataProvider.UpdateAuthToken(response.SessionInfo.Token);
+                    DataProvider.AuthToken = response.SessionInfo.Token;
                 }
 
                 return response.SessionInfo;

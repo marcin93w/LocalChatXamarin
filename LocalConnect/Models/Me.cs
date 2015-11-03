@@ -8,17 +8,11 @@ namespace LocalConnect.Models
 {
     public class Me
     {
-        public Person Person { private set; get; }
+        public Person Person { set; get; }
 
         public async Task FetchData(IDataProvider dataProvider)
         {
             Person = await dataProvider.FetchDataAsync<Person>("me");
-        }
-
-        public void UpdateLocation(ISocketClient socketClient, Location location)
-        {
-            Person.Location = location;
-            socketClient.UpdateMyLocation(location);
         }
     }
 }

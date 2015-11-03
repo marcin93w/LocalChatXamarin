@@ -57,16 +57,5 @@ namespace LocalConnect.Services
             };
             _socket.Emit("chat message", msg);
         }
-
-        public void UpdateMyLocation(Location location)
-        {
-            var jLocation = new JObject
-            {
-                { "dateTime", DateTime.Now },
-                { "lon", location.Lon },
-                { "lat", location.Lat }
-            };
-            _socket.Emit("location update", jLocation);
-        }
     }
 }

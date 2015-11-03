@@ -22,7 +22,7 @@ namespace LocalConnect.ViewModel
         private string _errorMessage;
 
         private OnDataLoadEventHandler _onDataLoad;
-        public IDataProvider DataProvider { private get; set; }
+        public IDataProvider DataProvider { get; set; }
         public ISocketClient SocketClient { private get; set; }
 
         public event OnDataLoadEventHandler OnDataLoad
@@ -57,10 +57,6 @@ namespace LocalConnect.ViewModel
                 var fetchMeTask = _me.FetchData(DataProvider);
 
                 await Task.WhenAll(fetchPeopleTask, fetchMeTask);
-
-
-                //TODO move location update elsewhere
-                _me.UpdateLocation(SocketClient, new Location(50, 20));
             }
             catch (Exception ex)
             {

@@ -100,11 +100,21 @@
             });
     }
 
-    peopleCtrl.updateMyLocation = function(personId, location) {
-        return Person.findOne({ _id: personId })
+    peopleCtrl.updateMyLocation = function(req, res) {
+        if (isNaN(req.body.Lon) || isNaN(req.body.Lat)) {
+            res.send(400);
+            return;
+        }
+        Person.findOne({ user: req.user })
             .then(function(person) {
-                person.location = [location.lon, location.lat];
-                return person.save();
+                person.location = [req.body.Lon, req.body.Lat];
+                person.save(function () {
+                    console.log('Location updated for user ' + person.name + '(' + person._id + ') at ' + (new Date()));
+                    res.send(200);
+                });
+            })
+            .catch(function(err) {
+                res.send(err);
             });
     }
 

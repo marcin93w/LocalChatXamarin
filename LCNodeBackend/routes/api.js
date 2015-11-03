@@ -30,6 +30,9 @@ router.route('/lastMessagesWith/:personId').get(authController.isAuthenticated,
     messagesCtrl.getLastMessagesWith);
 
 router.route('/me').get(authController.isAuthenticated, 
-    peopleController.getMe); 
+    peopleController.getMe);
+
+router.route('/me/updateLocation').post(authController.isAuthenticated, 
+    peopleController.updateMyLocation);
 
 module.exports = router;

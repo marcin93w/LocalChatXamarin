@@ -7,6 +7,5 @@ namespace LocalConnect.Services
         void Connect(string personId);
         event MessageReceivedEventHandler OnMessageReceived;
         void SendMessage(OutcomeMessage message, int messageIndex);
-        void UpdateMyLocation(Location location);
     }
 }

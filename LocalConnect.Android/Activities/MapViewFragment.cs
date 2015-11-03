@@ -13,7 +13,10 @@ using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
 using Java.Lang.Reflect;
+using LocalConnect.Android.Activities.Services;
+using LocalConnect.Models;
 using LocalConnect.ViewModel;
+using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;
 
 namespace LocalConnect.Android.Activities
@@ -22,10 +25,14 @@ namespace LocalConnect.Android.Activities
     {
         private readonly PeopleViewModel _peopleViewModel;
         private GoogleMap _map;
+        private LocationUpdateServiceConnection _locationUpdateServiceConnection;
+
+        private Dictionary<Person, Marker> _markers;
 
         public MapViewFragment()
         {
             _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
+            _markers = new Dictionary<Person, Marker>();
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,12 +66,65 @@ namespace LocalConnect.Android.Activities
                     var point = new LatLng(person.Location.Lat, person.Location.Lon);
                     markerOptions.SetPosition(point);
                     markerOptions.SetTitle(person.Name);
-                    _map.AddMarker(markerOptions);
+                    var marker = _map.AddMarker(markerOptions);
+                    _markers[person] = marker;
                     bounds.Include(point);
                 }
                 if(peopleWithLocation.Any())
                     _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
+
+                BindToLocationUpdateService();
             }
+        }
+
+        public override void OnDestroyView()
+        {
+            if (_locationUpdateServiceConnection != null)
+                Activity.UnbindService(_locationUpdateServiceConnection);
+            base.OnDestroyView();
+        }
+
+        private void BindToLocationUpdateService()
+        {
+            if (_locationUpdateServiceConnection == null || !_locationUpdateServiceConnection.IsConnected)
+            {
+                var startLocationUpdateServiceIntent = new Intent(Activity, typeof (LocationUpdateService));
+                startLocationUpdateServiceIntent.PutExtra("DataProvider",
+                    JsonConvert.SerializeObject(_peopleViewModel.DataProvider));
+
+                _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
+                _locationUpdateServiceConnection.ServiceConnected +=
+                    (sender, args) =>
+                    {
+                        args.ServiceBinder.Service.LocationChanged += OnLocationChanged;
+                        if (args.ServiceBinder.Service.Location != null)
+                            AddOrChangeMyLocation(args.ServiceBinder.Service.Location);
+                    };
+                Activity.BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
+            }
+        }
+
+        private void OnLocationChanged(object sender, CurrentLocationChangedEventArgs args)
+        {
+            AddOrChangeMyLocation(args.Location);
+        }
+
+        private void AddOrChangeMyLocation(Location location)
+        {
+            _peopleViewModel.Me.Location = location;
+
+            var markerOptions = new MarkerOptions();
+            var point = new LatLng(location.Lat, location.Lon);
+            markerOptions.SetPosition(point);
+            markerOptions.SetTitle(_peopleViewModel.Me.Name); 
+            var marker = _map.AddMarker(markerOptions);
+
+            if (_markers.ContainsKey(_peopleViewModel.Me))
+            {
+                _markers[_peopleViewModel.Me].Remove();
+            }
+
+            _markers[_peopleViewModel.Me] = marker;
         }
     }
 }

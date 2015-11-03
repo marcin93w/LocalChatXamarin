@@ -28,7 +28,7 @@ namespace LocalConnect.Models
         public Person()
         {
         }
-
+        
         public Person(string firstName, string surname, string shortDescription, Location location, string personId)
         {
             FirstName = firstName;

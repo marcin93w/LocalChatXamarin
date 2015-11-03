@@ -24,6 +24,11 @@ namespace LocalConnectTest.Helpers
             throw new NotImplementedException();
         }
 
+        public Task PostDataAsync<TPostType>(string method, TPostType postData, bool noAuthorization = false)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false)
         {
             throw new NotImplementedException();

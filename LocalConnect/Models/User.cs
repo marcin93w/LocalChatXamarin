@@ -34,7 +34,7 @@ namespace LocalConnect.Models
                 }
                 else
                 {
-                    dataProvider.UpdateAuthToken(authToken);
+                    dataProvider.AuthToken = authToken;
                     return await dataProvider.FetchDataAsync<SessionInfo>("loginWithToken");
                 }
             }

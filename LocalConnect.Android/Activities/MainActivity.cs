@@ -8,7 +8,9 @@ using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.Android.Activities.Services;
 using LocalConnect.ViewModel;
+using Newtonsoft.Json;
 using Org.Apache.Http.Impl.Conn;
 using Square.Picasso;
 using AndroidRes = Android.Resource;
@@ -74,6 +76,8 @@ namespace LocalConnect.Android.Activities
             }
             else
             {
+                CreateLocationUpdateService();
+
                 if (!string.IsNullOrEmpty(_peopleViewModel.Me.Avatar))
                 {
                     var meImage = FindViewById<ImageView>(Resource.Id.MeImage);
@@ -82,6 +86,13 @@ namespace LocalConnect.Android.Activities
                         .Into(meImage);
                 }
             }
+        }
+
+        private void CreateLocationUpdateService()
+        {
+            var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
+            startLocationUpdateServiceIntent.PutExtra("DataProvider", JsonConvert.SerializeObject(_peopleViewModel.DataProvider));
+            StartService(startLocationUpdateServiceIntent);
         }
 
         private void OnSwitchViewCicked(object sender, EventArgs e)
