@@ -9,8 +9,9 @@
     <Import_RootNamespace>LocalConnect</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IAuthTokenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Me.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationInfo.cs" />

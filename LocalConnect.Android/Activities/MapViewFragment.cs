@@ -31,7 +31,7 @@ namespace LocalConnect.Android.Activities
 
         public MapViewFragment()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(Activity);
             _markers = new Dictionary<Person, Marker>();
         }
 

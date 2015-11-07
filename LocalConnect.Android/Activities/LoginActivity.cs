@@ -22,7 +22,7 @@ using Xamarin.Facebook.Login.Widget;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity(MainLauncher = true)]
+    [Activity]
     public class LoginActivity : Activity
     {
         private LoginViewModel LoginViewModel { get; }
@@ -31,7 +31,6 @@ namespace LocalConnect.Android.Activities
         private bool _isReturningFromFacebookLogin;
 
         private View _loadingPanel;
-        private View _initializingPanel;
         private TextView _errorMessage;
 
         private Binding<string, string> _loginBinding;
@@ -43,7 +42,7 @@ namespace LocalConnect.Android.Activities
 
         public LoginActivity()
         {
-            LoginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>();
+            LoginViewModel = ViewModelLocator.Instance.GetViewModel<LoginViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -54,7 +53,6 @@ namespace LocalConnect.Android.Activities
             SetContentView(Resource.Layout.Login);
 
             _loadingPanel = FindViewById(Resource.Id.LoadingPanel);
-            _initializingPanel = FindViewById(Resource.Id.InitializingPanel);
             _errorMessage = FindViewById<TextView>(Resource.Id.ErrorText);
 
             var loginButton = FindViewById<Button>(Resource.Id.LoginButton);
@@ -65,9 +63,8 @@ namespace LocalConnect.Android.Activities
             SetUpFacebookLogin();
 
             CreateBindings();
-
-            CheckSavedAuthToken();
         }
+
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
@@ -124,68 +121,6 @@ namespace LocalConnect.Android.Activities
             fbLoginButton.Click += (sender, args) => _isReturningFromFacebookLogin = true;
         }
 
-        protected override void OnPause()
-        {
-            base.OnPause();
-            AppEventsLogger.DeactivateApp(this);
-        }
-
-        protected override async void OnResume()
-        {
-            base.OnResume();
-
-            AppEventsLogger.ActivateApp(this);
-
-            var facebookToken = AccessToken.CurrentAccessToken;
-            if (!string.IsNullOrEmpty(facebookToken?.Token))
-            {
-                if (_isReturningFromFacebookLogin)
-                {
-                    _loadingPanel.Visibility = ViewStates.Visible;
-                    var sessionInfo = await LoginViewModel.LoginFromFacebook(facebookToken.Token);
-                    _isReturningFromFacebookLogin = false;
-                    _loadingPanel.Visibility = ViewStates.Gone;
-                    TakeToApp(sessionInfo);
-                }
-                else
-                {
-                    LoginManager.Instance.LogOut();
-                }
-            }
-            else
-            {
-                if (_isReturningFromFacebookLogin)
-                {
-                    _errorMessage.Text = "Error, could not retreive login token";
-                    _errorMessage.Visibility = ViewStates.Visible;
-                    _loadingPanel.Visibility = ViewStates.Gone;
-                    _isReturningFromFacebookLogin = false;
-                }
-            }
-
-        }
-
-        private async void CheckSavedAuthToken()
-        {
-            var savedToken = ReadAuthToken();
-            if (savedToken == null)
-            {
-                _initializingPanel.Visibility = ViewStates.Gone;
-            }
-            else
-            {
-                var loginData = await LoginViewModel.Authenticate(savedToken);
-                if (loginData == null)
-                {
-                    _initializingPanel.Visibility = ViewStates.Gone;
-                }
-                else
-                {
-                    TakeToApp(loginData);
-                }
-            }
-        }
-
         private void ToggleRegisterView(object sender, EventArgs e)
         {
             var logInButton = FindViewById<Button>(Resource.Id.LoginButton);
@@ -210,6 +145,55 @@ namespace LocalConnect.Android.Activities
             _errorMessage.Visibility = ViewStates.Gone;
         }
 
+        protected override void OnPause()
+        {
+            base.OnPause();
+            AppEventsLogger.DeactivateApp(this);
+        }
+
+        protected override async void OnResume()
+        {
+            base.OnResume();
+
+            AppEventsLogger.ActivateApp(this);
+
+            var facebookToken = AccessToken.CurrentAccessToken;
+            if (!string.IsNullOrEmpty(facebookToken?.Token))
+            {
+                if (_isReturningFromFacebookLogin)
+                {
+                    _loadingPanel.Visibility = ViewStates.Visible;
+                    var sessionInfo = await LoginViewModel.LoginFromFacebook(facebookToken.Token);
+                    _isReturningFromFacebookLogin = false;
+                    _loadingPanel.Visibility = ViewStates.Gone;
+                    if (sessionInfo != null)
+                    {
+                        TakeToApp();
+                    }
+                    else
+                    {
+                        _errorMessage.Text = "Error, could not authenticate";
+                        _errorMessage.Visibility = ViewStates.Visible;
+                    }
+                }
+                else
+                {
+                    LoginManager.Instance.LogOut();
+                }
+            }
+            else
+            {
+                if (_isReturningFromFacebookLogin)
+                {
+                    _errorMessage.Text = "Error, could not retreive login token";
+                    _errorMessage.Visibility = ViewStates.Visible;
+                    _loadingPanel.Visibility = ViewStates.Gone;
+                    _isReturningFromFacebookLogin = false;
+                }
+            }
+
+        }
+
         private async void LoginOrRegister(object sender, EventArgs eventArgs)
         {
             _loadingPanel.Visibility = ViewStates.Visible;
@@ -221,7 +205,7 @@ namespace LocalConnect.Android.Activities
 
             if (sessionInfo != null)
             {
-                TakeToApp(sessionInfo);
+                TakeToApp();
             }
             else
             {
@@ -231,26 +215,12 @@ namespace LocalConnect.Android.Activities
             }
         }
 
-        private void TakeToApp(SessionInfo sessionInfo)
+        private void TakeToApp()
         {
-            SaveAuthToken(sessionInfo.Token);
             var mainActivity = new Intent(ApplicationContext, typeof(MainActivity));
             StartActivity(mainActivity);
             Finish();
         }
 
-        private void SaveAuthToken(string authToken)
-        {
-            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
-            var editor = prefs.Edit();
-            editor.PutString("auth_token", authToken);
-            editor.Apply();
-        }
-
-        private string ReadAuthToken()
-        {
-            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
-            return prefs.GetString("auth_token", null);
-        }
     }
 }

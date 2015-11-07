@@ -24,7 +24,7 @@ namespace LocalConnect.Android.Activities
 
         public ListViewFragment()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(Activity);
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,

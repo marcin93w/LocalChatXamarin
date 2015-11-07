@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using LocalConnect.Helpers;
 using LocalConnect.Models;
 using Newtonsoft.Json;
 
@@ -13,11 +14,11 @@ namespace LocalConnect.Services
     {
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
+        private readonly IAuthTokenManager _authTokenManager;
 
-        public string AuthToken
+        public RestClient(IAuthTokenManager authTokenManager)
         {
-            get { return _authenticationHeader.Replace("Bearer ", string.Empty); }
-            set { _authenticationHeader = $"Bearer {value}"; }
+            _authTokenManager = authTokenManager;
         }
 
         public async Task<SessionInfo> Login(string username, string password)
@@ -29,18 +30,14 @@ namespace LocalConnect.Services
             request.Method = "GET";
             request.Credentials = new NetworkCredential(username, password);
 
-            return await SendLoginRequest(request);
-        }
-
-        private async Task<SessionInfo> SendLoginRequest(HttpWebRequest request)
-        {
+            SessionInfo sessionInfo;
             using (var response = (HttpWebResponse)await request.GetResponseAsync())
             {
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     using (var stream = response.GetResponseStream())
                     {
-                        return await DeserializeFromStream<SessionInfo>(stream);
+                        sessionInfo = await DeserializeFromStream<SessionInfo>(stream);
                     }
                 }
                 else
@@ -48,6 +45,50 @@ namespace LocalConnect.Services
                     return null;
                 }
             }
+
+            _authenticationHeader = $"Bearer {sessionInfo.Token}";
+            _authTokenManager.SaveAuthToken(sessionInfo.Token);
+
+            return sessionInfo;
+        }
+
+        public async Task<RegistrationInfo> Register(User user)
+        {
+            var request = PrepareRequest("register", true);
+            await PostRequestAsync(request, user);
+            var registrationInfo = await ExecuteRequestAsync<RegistrationInfo>(request);
+
+            _authenticationHeader = $"Bearer {registrationInfo.SessionInfo.Token}";
+            _authTokenManager.SaveAuthToken(registrationInfo.SessionInfo.Token);
+
+            return registrationInfo;
+        }
+
+        public async Task<SessionInfo> LoginWithFacebook(string facebookToken)
+        {
+            var request = PrepareRequest($"loginWithFacebook?access_token={facebookToken}", true);
+            request.Method = "GET";
+
+            var sessionInfo = await ExecuteRequestAsync<SessionInfo>(request);
+
+            _authenticationHeader = $"Bearer {sessionInfo.Token}";
+            _authTokenManager.SaveAuthToken(sessionInfo.Token);
+
+            return sessionInfo;
+        }
+
+        public bool IsAuthenticated()
+        {
+            if (string.IsNullOrEmpty(_authenticationHeader))
+            {
+                _authenticationHeader = "Bearer " + _authTokenManager.ReadAuthToken();
+                if (string.IsNullOrEmpty(_authenticationHeader))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public async Task<object> FetchDataAsync(string method)
@@ -55,72 +96,36 @@ namespace LocalConnect.Services
             return await FetchDataAsync<object>(method);
         }
 
-        public async Task<T> FetchDataAsync<T>(string method, bool noAuthorization = false)
+        public async Task<T> FetchDataAsync<T>(string method)
         {
-            try
-            {
-                var request = PrepareRequest(method, noAuthorization);
-                request.Method = "GET";
+            var request = PrepareRequest(method);
+            request.Method = "GET";
 
-                return await ExecuteRequestAsync<T>(request);
-            }
-            catch (Exception ex)
-            {
-                throw new ConnectionException(ex);
-            }
+            return await ExecuteRequestAsync<T>(request);
         }
 
-        public async Task PostDataAsync<TPostType>(string method, TPostType postData, bool noAuthorization = false)
+        public async Task PostDataAsync<TPostType>(string method, TPostType postData)
         {
-            try
-            {
-                var request = PrepareRequest(method, noAuthorization);
-                request.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
-                {
-                    var serializer = new JsonSerializer();
-                    serializer.Serialize(streamWriter, postData);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                await request.GetResponseAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new ConnectionException(ex);
-            }
+            var request = PrepareRequest(method);
+            await PostRequestAsync(request, postData);
+            await request.GetResponseAsync();
         }
 
-        public async Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false)
+        public async Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
         {
-            try
-            {
-                var request = PrepareRequest(method, noAuthorization);
-                request.Method = "POST";
-
-                using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
-                {
-                    var serializer = new JsonSerializer();
-                    serializer.Serialize(streamWriter, postData);
-                    streamWriter.Flush();
-                    streamWriter.Close();
-                }
-
-                return await ExecuteRequestAsync<TReturnType>(request);
-            }
-            catch (Exception ex)
-            {
-                throw new ConnectionException(ex);
-            }
+            var request = PrepareRequest(method);
+            await PostRequestAsync(request, postData);
+            return await ExecuteRequestAsync<TReturnType>(request);
         }
 
-        private WebRequest PrepareRequest(string method, bool noAuthorization)
+        private WebRequest PrepareRequest(string method, bool noAuthorization = false)
         {
             if (string.IsNullOrEmpty(_authenticationHeader) && !noAuthorization)
             {
-                throw new MissingAuthenticationTokenException();
+                _authenticationHeader = "Bearer " + _authTokenManager.ReadAuthToken();
+
+                if (string.IsNullOrEmpty(_authenticationHeader))
+                    throw new MissingAuthenticationTokenException();
             }
 
             var url = Path.Combine(_url, method);
@@ -131,7 +136,19 @@ namespace LocalConnect.Services
                 request.Headers[HttpRequestHeader.Authorization] = _authenticationHeader;
 
             return request;
-        } 
+        }
+
+        private async Task PostRequestAsync<T>(WebRequest request, T postData)
+        {
+            request.Method = "POST";
+            using (var streamWriter = new StreamWriter(await request.GetRequestStreamAsync()))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(streamWriter, postData);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+        }
 
         private async Task<T> ExecuteRequestAsync<T>(WebRequest request)
         {

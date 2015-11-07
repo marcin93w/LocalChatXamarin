@@ -5,6 +5,7 @@ using System.Text;
 
 namespace LocalConnect.Services
 {
+    //TODO wyjebac
     public class ConnectionException : Exception
     {
         public ConnectionException(Exception reason) : base("Connection to server failed", reason)

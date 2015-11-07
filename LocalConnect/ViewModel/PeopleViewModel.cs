@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect.Interfaces;
+using LocalConnect.Helpers;
 using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel

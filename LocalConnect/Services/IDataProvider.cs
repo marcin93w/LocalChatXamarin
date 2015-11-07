@@ -9,11 +9,13 @@ namespace LocalConnect.Services
 {
     public interface IDataProvider
     {
-        Task<T> FetchDataAsync<T>(string method, bool noAuthorization = false);
-        Task PostDataAsync<TPostType>(string method, TPostType postData, bool noAuthorization = false);
-        Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false);
+        Task<T> FetchDataAsync<T>(string method);
+        Task PostDataAsync<TPostType>(string method, TPostType postData);
+        Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData);
         Task<object> FetchDataAsync(string method);
         Task<SessionInfo> Login(string username, string password);
-        string AuthToken { set; }
+        Task<RegistrationInfo> Register(User user);
+        Task<SessionInfo> LoginWithFacebook(string facebookToken);
+        bool IsAuthenticated();
     }
 }

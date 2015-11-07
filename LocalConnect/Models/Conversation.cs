@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using LocalConnect.Helpers;
 using LocalConnect.Services;
-using LocalConnect.Interfaces;
 using Newtonsoft.Json.Linq;
 
 namespace LocalConnect.Models

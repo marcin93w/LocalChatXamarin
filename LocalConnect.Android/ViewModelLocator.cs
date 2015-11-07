@@ -1,9 +1,11 @@
 using System;
 using Android.App;
+using Android.Content;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
+using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.ViewModel;
-using LocalConnect.Interfaces;
+using LocalConnect.Helpers;
 using LocalConnect.Services;
 using Microsoft.Practices.ServiceLocation;
 
@@ -15,7 +17,7 @@ namespace LocalConnect.Android
     /// </summary>
     public class ViewModelLocator
     {
-        private readonly IDataProvider _dataProvider;
+        private IDataProvider _dataProvider;
         private readonly SocketClient _socketClient;
 
         private static ViewModelLocator _instance;
@@ -30,34 +32,37 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
 
-            _dataProvider = new RestClient();
             _socketClient = new SocketClient();
         }
 
-        public T GetViewModel<T>(Activity activity = null, bool requestNewInstance = false) where T: ViewModelBase, new()
+        public T GetUiInvokableViewModel<T>(Activity activity) where T : ViewModelBase, IUiInvokable
         {
-            var viewModel = requestNewInstance ? new T() : ServiceLocator.Current.GetInstance<T>();
-            
-            if (viewModel is IUiInvokable)
-            {
-                if (activity != null)
-                {
-                    (viewModel as IUiInvokable).RunOnUiThread = activity.RunOnUiThread;
-                }
-                else
-                {
-                    throw new Exception("You must pass Activity object to initialize UiInvokableViewModel");
-                }
-            }
+            var viewModel = GetViewModel<T>(activity);
+            viewModel.RunOnUiThread = activity.RunOnUiThread;
 
-            if (viewModel is IDataFetchingViewModel)
-            {
-                (viewModel as IDataFetchingViewModel).DataProvider = _dataProvider;
-            }
+            return viewModel;
+        }
 
-            if (viewModel is LoginViewModel)
+        public T GetViewModel<T>(Context context) where T: ViewModelBase
+        {
+            var viewModel = ServiceLocator.Current.GetInstance<T>();
+
+            if (viewModel is IDataFetchingViewModel || viewModel is LoginViewModel)
             {
-                (viewModel as LoginViewModel).DataProvider = _dataProvider;
+                if (_dataProvider == null)
+                {
+                    _dataProvider = new RestClient(new AuthTokenManager(context));
+                }
+
+                if (viewModel is IDataFetchingViewModel)
+                {
+                    (viewModel as IDataFetchingViewModel).DataProvider = _dataProvider;
+                }
+
+                if (viewModel is LoginViewModel)
+                {
+                    (viewModel as LoginViewModel).DataProvider = _dataProvider;
+                }
             }
 
             if (viewModel is ISocketClientUsingViewModel)

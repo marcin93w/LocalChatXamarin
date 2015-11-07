@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect.Interfaces;
+using LocalConnect.Helpers;
 using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel

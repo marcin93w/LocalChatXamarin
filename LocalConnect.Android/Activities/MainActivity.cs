@@ -8,6 +8,7 @@ using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.Android.Activities.Services;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
@@ -17,7 +18,7 @@ using AndroidRes = Android.Resource;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity]
+    [Activity(MainLauncher = true)]
     public class MainActivity : FragmentActivity
     {
         private readonly PeopleViewModel _peopleViewModel;
@@ -26,7 +27,7 @@ namespace LocalConnect.Android.Activities
 
         public MainActivity()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>();
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)
@@ -35,8 +36,14 @@ namespace LocalConnect.Android.Activities
 
             SetContentView(Resource.Layout.Main);
 
+            if (!_peopleViewModel.DataProvider.IsAuthenticated())
+            {
+                OpenLoginActivity();
+                return;
+            }
+
             _peopleViewModel.OnDataLoad += OnDataLoad;
-            _peopleViewModel.FetchDataAsync();
+            _peopleViewModel.FetchDataAsync(); //TODO do not fetch if already fetched
 
             _viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             _viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
@@ -69,6 +76,7 @@ namespace LocalConnect.Android.Activities
             if (e.ApplicationNotInitialized)
             {
                 OpenLoginActivity();
+                return;
             }
             if (!e.IsSuccesful)
             {
@@ -91,7 +99,6 @@ namespace LocalConnect.Android.Activities
         private void CreateLocationUpdateService()
         {
             var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
-            startLocationUpdateServiceIntent.PutExtra("DataProvider", JsonConvert.SerializeObject(_peopleViewModel.DataProvider));
             StartService(startLocationUpdateServiceIntent);
         }
 
@@ -129,17 +136,10 @@ namespace LocalConnect.Android.Activities
 
         private void Logout()
         {
-            DeleteAuthToken();
+            var tokenManager = new AuthTokenManager(this);
+            tokenManager.DeleteAuthToken();
             ViewModelLocator.Instance.ResetViewModel<PeopleViewModel>();
             OpenLoginActivity();
-        }
-
-        private void DeleteAuthToken()
-        {
-            var prefs = PreferenceManager.GetDefaultSharedPreferences(ApplicationContext);
-            var editor = prefs.Edit();
-            editor.Remove("auth_token");
-            editor.Apply();
         }
 
         private void OpenLoginActivity()

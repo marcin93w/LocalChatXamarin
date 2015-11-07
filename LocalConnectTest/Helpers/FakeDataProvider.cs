@@ -19,17 +19,17 @@ namespace LocalConnectTest.Helpers
 
         private string _authToken;
 
-        public Task<T> FetchDataAsync<T>(string method, bool noAuthorization = false)
+        public Task<T> FetchDataAsync<T>(string method)
         {
             throw new NotImplementedException();
         }
 
-        public Task PostDataAsync<TPostType>(string method, TPostType postData, bool noAuthorization = false)
+        public Task PostDataAsync<TPostType>(string method, TPostType postData)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData, bool noAuthorization = false)
+        public Task<TReturnType> PostDataAsync<TPostType, TReturnType>(string method, TPostType postData)
         {
             throw new NotImplementedException();
         }
@@ -52,12 +52,17 @@ namespace LocalConnectTest.Helpers
             }
         }
 
-        public async Task<SessionInfo> LoginWithToken(string authToken)
+        public Task<RegistrationInfo> Register(User user)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateAuthToken(string token)
+        public Task<SessionInfo> LoginWithFacebook(string facebookToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsAuthenticated()
         {
             throw new NotImplementedException();
         }

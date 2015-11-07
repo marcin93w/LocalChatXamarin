@@ -44,11 +44,11 @@ namespace LocalConnect.ViewModel
         public ISocketClient SocketClient { private get; set; }
 
 
-        public async Task<SessionInfo> Authenticate(string authToken = null, bool isFacebookToken = false)
+        public async Task<SessionInfo> Authenticate()
         {
             try
             {
-                var sessionInfo = await _user.Login(DataProvider, authToken, isFacebookToken);
+                var sessionInfo = await _user.Login(DataProvider);
 
                 if (sessionInfo == null)
                 {
@@ -57,7 +57,6 @@ namespace LocalConnect.ViewModel
                 else
                 {
                     SocketClient.Connect(sessionInfo.PersonId);
-                    DataProvider.AuthToken = sessionInfo.Token;
                 }
 
                 return sessionInfo;
@@ -99,7 +98,6 @@ namespace LocalConnect.ViewModel
                 else
                 {
                     SocketClient.Connect(response.SessionInfo.PersonId);
-                    DataProvider.AuthToken = response.SessionInfo.Token;
                 }
 
                 return response.SessionInfo;
@@ -114,7 +112,20 @@ namespace LocalConnect.ViewModel
 
         public async Task<SessionInfo> LoginFromFacebook(string facebookToken)
         {
-            return await Authenticate(facebookToken, true);
+            try
+            {
+                var sessionInfo = await _user.LoginFromFacebook(DataProvider, facebookToken);
+
+                SocketClient.Connect(sessionInfo.PersonId);
+
+                return sessionInfo;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "Can not connect to server. " + ex.Message;
+            }
+
+            return null;
         }
     }
 }

@@ -4,6 +4,8 @@ using Android.App;
 using Android.Content;
 using Android.Locations;
 using Android.OS;
+using Android.Widget;
+using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.Services;
 using Newtonsoft.Json;
 using Location = LocalConnect.Models.Location;
@@ -61,12 +63,7 @@ namespace LocalConnect.Android.Activities.Services
         {
             base.OnStartCommand(intent, flags, startId);
             
-            _dataProvider = JsonConvert.DeserializeObject<RestClient>(intent.GetStringExtra("DataProvider"));
-
-            if (_dataProvider == null)
-            {
-                throw new ArgumentNullException("Wrong intent data");
-            }
+            _dataProvider = new RestClient(new AuthTokenManager(ApplicationContext));
 
             if(!_locationUpdateStarted)
                 StartLocationUpdates();
@@ -85,19 +82,35 @@ namespace LocalConnect.Android.Activities.Services
             };
 
             var locationProvider = _locMgr.GetBestProvider(locationCriteria, true);
-            var lastKnownLocation = _locMgr.GetLastKnownLocation(locationProvider)
-                ?? _locMgr.GetLastKnownLocation(LocationManager.NetworkProvider);
-            if (lastKnownLocation != null)
+            if (locationProvider != null)
             {
-                Location = new Location(lastKnownLocation.Longitude, lastKnownLocation.Latitude);
-                SendLocationUpdate();
+                var lastKnownLocation = _locMgr.GetLastKnownLocation(locationProvider)
+                                        ?? _locMgr.GetLastKnownLocation(LocationManager.NetworkProvider);
+                if (lastKnownLocation != null)
+                {
+                    Location = new Location(lastKnownLocation.Longitude, lastKnownLocation.Latitude);
+                    SendLocationUpdate();
+                }
+                _locMgr.RequestLocationUpdates(locationProvider, LocationUpdateTimeInterval, LocationUpdateMinDistance,
+                    this);
             }
-            _locMgr.RequestLocationUpdates(locationProvider, LocationUpdateTimeInterval, LocationUpdateMinDistance, this);
+            else
+            {
+                Toast.MakeText(ApplicationContext, "Turn on GPS", ToastLength.Long);
+                _locationUpdateStarted = false;
+            }
         }
 
         private async void SendLocationUpdate()
         {
-            await _dataProvider.PostDataAsync("me/updateLocation", Location);
+            try
+            {
+                await _dataProvider.PostDataAsync("me/updateLocation", Location);
+            }
+            catch (Exception)
+            {
+                Toast.MakeText(ApplicationContext, "Error updating location", ToastLength.Short);
+            }
         }
 
         public void OnLocationChanged(global::Android.Locations.Location location)
@@ -114,6 +127,8 @@ namespace LocalConnect.Android.Activities.Services
 
         public void OnProviderEnabled(string provider)
         {
+            if (!_locationUpdateStarted)
+                StartLocationUpdates();
             LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, Availability.Available));
         }
 

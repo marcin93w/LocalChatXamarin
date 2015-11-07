@@ -32,7 +32,7 @@ namespace LocalConnect.Android.Activities
 
         public PersonActivity()
         {
-            _personViewModel = ViewModelLocator.Instance.GetViewModel<PersonViewModel>(this);
+            _personViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PersonViewModel>(this);
         }
 
         protected override void OnCreate(Bundle bundle)

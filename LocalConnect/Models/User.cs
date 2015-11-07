@@ -20,28 +20,17 @@ namespace LocalConnect.Models
 
         public async Task<RegistrationInfo> Register(IDataProvider dataProvider)
         {
-            return await dataProvider.PostDataAsync<User, RegistrationInfo>("register", this, true);
+            return await dataProvider.Register(this);
         }
 
-        public async Task<SessionInfo> Login(IDataProvider dataProvider, string authToken, bool isFacebookLogin)
+        public async Task<SessionInfo> Login(IDataProvider dataProvider)
         {
-            if (authToken != null)
-            {
-                if (isFacebookLogin)
-                {
-                    return
-                        await dataProvider.FetchDataAsync<SessionInfo>($"loginWithFacebook?access_token={authToken}", true);
-                }
-                else
-                {
-                    dataProvider.AuthToken = authToken;
-                    return await dataProvider.FetchDataAsync<SessionInfo>("loginWithToken");
-                }
-            }
-            else
-            {
-                return await dataProvider.Login(Username, Password);
-            }
+            return await dataProvider.Login(Username, Password);
+        }
+
+        public async Task<SessionInfo> LoginFromFacebook(IDataProvider dataProvider, string facebookToken)
+        {
+            return await dataProvider.LoginWithFacebook(facebookToken);
         }
     }
 }

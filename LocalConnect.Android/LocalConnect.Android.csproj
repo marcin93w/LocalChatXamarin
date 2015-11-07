@@ -148,6 +148,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\Helpers\AuthTokenManager.cs" />
     <Compile Include="Activities\Services\LocationUpdateService.cs" />
     <Compile Include="Activities\PersonActivity.cs" />
     <Compile Include="Activities\ListViewFragment.cs" />

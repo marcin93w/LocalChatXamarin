@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LocalConnect.Interfaces
+namespace LocalConnect.Helpers
 {
     public delegate void RunOnUiThreadHandler(Action action);
 
