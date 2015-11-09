@@ -40,7 +40,7 @@ namespace LocalConnect.ViewModel
 
         public string ErrorMessage { set; get; }
 
-        public IDataProvider DataProvider { private get; set; }
+        public IRestClient RestClient { private get; set; }
         public ISocketClient SocketClient { private get; set; }
 
 
@@ -48,7 +48,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                var sessionInfo = await _user.Login(DataProvider);
+                var sessionInfo = await _user.Login(RestClient);
 
                 if (sessionInfo == null)
                 {
@@ -86,7 +86,7 @@ namespace LocalConnect.ViewModel
 
             try
             {
-                RegistrationInfo response = await _user.Register(DataProvider);
+                RegistrationInfo response = await _user.Register(RestClient);
 
                 if (!response.Registered)
                 {
@@ -114,7 +114,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                var sessionInfo = await _user.LoginFromFacebook(DataProvider, facebookToken);
+                var sessionInfo = await _user.LoginFromFacebook(RestClient, facebookToken);
 
                 SocketClient.Connect(sessionInfo.PersonId);
 

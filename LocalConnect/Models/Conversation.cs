@@ -22,6 +22,7 @@ namespace LocalConnect.Models
             _socketClient = socketClient;
             Person = person;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
+            socketClient.OnMessageReceived -= HandleMessageReceive;
             socketClient.OnMessageReceived += HandleMessageReceive;
         }
 
@@ -35,17 +36,14 @@ namespace LocalConnect.Models
 
         public void SendMessage(string message)
         {
-            if (IsHolded)
-                throw new InvalidAsynchronousStateException("Chat is not started with any person");
-
             var msg = new OutcomeMessage(Person.PersonId, message, DateTime.Now);
             Messages.Add(msg);
             _socketClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
-        public async Task FetchLastMessages(IDataProvider dataProvider)
+        public async Task FetchLastMessages(IRestClient restClient)
         {
-            var lastMessages = await dataProvider.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
+            var lastMessages = await restClient.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
 
             foreach (JContainer message in (IEnumerable)lastMessages)
             {

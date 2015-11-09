@@ -10,7 +10,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IDataFetchingViewModel, ISocketClientUsingViewModel
+    public class PeopleViewModel : ViewModelBase, IRestClientUsingViewModel, ISocketClientUsingViewModel
     {
         private readonly People _people;
         private readonly Me _me;
@@ -22,7 +22,7 @@ namespace LocalConnect.ViewModel
         private string _errorMessage;
 
         private OnDataLoadEventHandler _onDataLoad;
-        public IDataProvider DataProvider { get; set; }
+        public IRestClient RestClient { get; set; }
         public ISocketClient SocketClient { private get; set; }
 
         public event OnDataLoadEventHandler OnDataLoad
@@ -53,8 +53,8 @@ namespace LocalConnect.ViewModel
             bool authTokenMissing = false;
             try
             {
-                var fetchPeopleTask = _people.FetchPeopleList(DataProvider);
-                var fetchMeTask = _me.FetchData(DataProvider);
+                var fetchPeopleTask = _people.FetchPeopleList(RestClient);
+                var fetchMeTask = _me.FetchData(RestClient);
 
                 await Task.WhenAll(fetchPeopleTask, fetchMeTask);
             }

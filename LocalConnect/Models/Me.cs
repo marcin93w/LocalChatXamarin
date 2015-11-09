@@ -10,9 +10,9 @@ namespace LocalConnect.Models
     {
         public Person Person { set; get; }
 
-        public async Task FetchData(IDataProvider dataProvider)
+        public async Task FetchData(IRestClient restClient)
         {
-            Person = await dataProvider.FetchDataAsync<Person>("me");
+            Person = await restClient.FetchDataAsync<Person>("me");
         }
     }
 }

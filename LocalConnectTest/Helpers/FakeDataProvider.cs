@@ -10,7 +10,7 @@ using LocalConnect.Services;
 
 namespace LocalConnectTest.Helpers
 {
-    class FakeDataProvider : IDataProvider
+    class FakeRestClient : IRestClient
     {
         public static string CorrectUsername = "asd";
         public static string CorrectPassword = "asd";

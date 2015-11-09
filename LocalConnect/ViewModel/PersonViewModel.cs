@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
 using LocalConnect.Helpers;
@@ -7,7 +8,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PersonViewModel : ViewModelBase, IUiInvokable, IDataFetchingViewModel, ISocketClientUsingViewModel
+    public class PersonViewModel : ViewModelBase, IUiInvokable, IRestClientUsingViewModel, ISocketClientUsingViewModel
     {
         private Conversation _conversation;
 
@@ -19,11 +20,10 @@ namespace LocalConnect.ViewModel
 
         public Person Person { private set; get; }
         public ObservableCollection<Message> Messages => _conversation.Messages;
+        public string ErrorMessage { private set; get; }
 
         public ISocketClient SocketClient { private get; set; }
-        public IDataProvider DataProvider { private get; set; }
-
-        public event OnDataLoadEventHandler OnDataLoad;
+        public IRestClient RestClient { private get; set; }
 
         public void Initialize(Person person)
         {
@@ -31,24 +31,19 @@ namespace LocalConnect.ViewModel
             _conversation = new Conversation(Person, SocketClient, RunOnUiThread);
         }
 
-        public async void FetchDataAsync()
+        public async Task<bool> FetchDataAsync()
         {
-            bool dataLoaded;
-            string errorMsg = String.Empty;
             try
             {
-                await Person.LoadDetailedData(DataProvider);
-                await _conversation.FetchLastMessages(DataProvider);
-                dataLoaded = true;
+                await Person.LoadDetailedData(RestClient);
+                await _conversation.FetchLastMessages(RestClient);
+                return true;
             }
             catch (Exception ex)
             {
-                dataLoaded = false;
-                errorMsg = ex.Message;
+                ErrorMessage = ex.Message;
+                return false;
             }
-
-            OnDataLoad?.Invoke(this, 
-                new OnDataLoadEventArgs(dataLoaded ? null : "Error loading person data. " + errorMsg));
         }
 
         public void StopChat()

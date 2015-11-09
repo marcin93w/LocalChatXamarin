@@ -13,7 +13,7 @@ namespace LocalConnectTest.ViewModelTests
     public class LoginViewModelTest
     {
         private readonly FakeSocketClient _socketClient = new FakeSocketClient();
-        private readonly FakeDataProvider _dataProvider = new FakeDataProvider();
+        private readonly FakeRestClient _restClient = new FakeRestClient();
 
         private LoginViewModel _loginViewModel;
 
@@ -22,23 +22,23 @@ namespace LocalConnectTest.ViewModelTests
         {
             _loginViewModel = new LoginViewModel();
             _loginViewModel.SocketClient = _socketClient;
-            _loginViewModel.DataProvider = _dataProvider;
+            _loginViewModel.RestClient = _restClient;
         }
 
         [Test]
         public async Task CorrectAuthenticationTest()
         {
-            _loginViewModel.Login = FakeDataProvider.CorrectUsername;
-            _loginViewModel.Password = FakeDataProvider.CorrectPassword;
+            _loginViewModel.Login = FakeRestClient.CorrectUsername;
+            _loginViewModel.Password = FakeRestClient.CorrectPassword;
             var loginData = await _loginViewModel.Authenticate();
 
-            Assert.AreEqual(FakeDataProvider.CorrectPersonId, loginData.PersonId);
+            Assert.AreEqual(FakeRestClient.CorrectPersonId, loginData.PersonId);
         }
 
         [Test]
         public async Task IncorrectAuthenticationTest()
         {
-            _loginViewModel.Login = FakeDataProvider.CorrectUsername;
+            _loginViewModel.Login = FakeRestClient.CorrectUsername;
             _loginViewModel.Password = "ppl";
             var loginData = await _loginViewModel.Authenticate();
 
@@ -48,14 +48,14 @@ namespace LocalConnectTest.ViewModelTests
         [Test]
         public async Task ErrorDuringAuthenticationTest()
         {
-            var mockDataProvider = new Mock<IDataProvider>();
+            var mockDataProvider = new Mock<IRestClient>();
             mockDataProvider
-                .Setup(e => e.Login(FakeDataProvider.CorrectUsername, FakeDataProvider.CorrectPassword))
+                .Setup(e => e.Login(FakeRestClient.CorrectUsername, FakeRestClient.CorrectPassword))
                 .ThrowsAsync(new Exception());
 
-            _loginViewModel.DataProvider = mockDataProvider.Object;
-            _loginViewModel.Login = FakeDataProvider.CorrectUsername;
-            _loginViewModel.Password = FakeDataProvider.CorrectPassword;
+            _loginViewModel.RestClient = mockDataProvider.Object;
+            _loginViewModel.Login = FakeRestClient.CorrectUsername;
+            _loginViewModel.Password = FakeRestClient.CorrectPassword;
             var loginData = await _loginViewModel.Authenticate();
 
             Assert.IsNull(loginData);

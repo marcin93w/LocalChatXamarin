@@ -1,3 +1,7 @@
+
+
+
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace LocalConnect.Services
 {
-    public class RestClient : IDataProvider
+    public class RestClient : IRestClient
     {
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
@@ -81,11 +85,12 @@ namespace LocalConnect.Services
         {
             if (string.IsNullOrEmpty(_authenticationHeader))
             {
-                _authenticationHeader = "Bearer " + _authTokenManager.ReadAuthToken();
+                var authToken = _authTokenManager.ReadAuthToken();
                 if (string.IsNullOrEmpty(_authenticationHeader))
                 {
                     return false;
                 }
+                _authenticationHeader = "Bearer " + authToken;
             }
 
             return true;

@@ -17,7 +17,7 @@ namespace LocalConnect.Android
     /// </summary>
     public class ViewModelLocator
     {
-        private IDataProvider _dataProvider;
+        private IRestClient _restClient;
         private readonly SocketClient _socketClient;
 
         private static ViewModelLocator _instance;
@@ -47,21 +47,21 @@ namespace LocalConnect.Android
         {
             var viewModel = ServiceLocator.Current.GetInstance<T>();
 
-            if (viewModel is IDataFetchingViewModel || viewModel is LoginViewModel)
+            if (viewModel is IRestClientUsingViewModel || viewModel is LoginViewModel)
             {
-                if (_dataProvider == null)
+                if (_restClient == null)
                 {
-                    _dataProvider = new RestClient(new AuthTokenManager(context));
+                    _restClient = new RestClient(new AuthTokenManager(context));
                 }
 
-                if (viewModel is IDataFetchingViewModel)
+                if (viewModel is IRestClientUsingViewModel)
                 {
-                    (viewModel as IDataFetchingViewModel).DataProvider = _dataProvider;
+                    (viewModel as IRestClientUsingViewModel).RestClient = _restClient;
                 }
 
                 if (viewModel is LoginViewModel)
                 {
-                    (viewModel as LoginViewModel).DataProvider = _dataProvider;
+                    (viewModel as LoginViewModel).RestClient = _restClient;
                 }
             }
 

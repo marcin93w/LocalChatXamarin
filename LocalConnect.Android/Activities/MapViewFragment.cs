@@ -14,6 +14,7 @@ using Android.Views;
 using Android.Widget;
 using Java.Lang.Reflect;
 using LocalConnect.Android.Activities.Services;
+using LocalConnect.Helpers;
 using LocalConnect.Models;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
@@ -90,7 +91,7 @@ namespace LocalConnect.Android.Activities
             {
                 var startLocationUpdateServiceIntent = new Intent(Activity, typeof (LocationUpdateService));
                 startLocationUpdateServiceIntent.PutExtra("DataProvider",
-                    JsonConvert.SerializeObject(_peopleViewModel.DataProvider));
+                    JsonConvert.SerializeObject(_peopleViewModel.RestClient));
 
                 _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
                 _locationUpdateServiceConnection.ServiceConnected +=

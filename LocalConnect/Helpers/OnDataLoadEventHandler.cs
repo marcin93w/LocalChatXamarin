@@ -1,10 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using LocalConnect.Services;
 
-namespace LocalConnect.ViewModel
+namespace LocalConnect.Helpers
 {
     public class OnDataLoadEventArgs : EventArgs
     {
@@ -35,14 +34,4 @@ namespace LocalConnect.ViewModel
     }
 
     public delegate void OnDataLoadEventHandler(object sender, OnDataLoadEventArgs e);
-
-    public interface IDataFetchingViewModel
-    {
-        IDataProvider DataProvider { set; }
-
-        event OnDataLoadEventHandler OnDataLoad;
-
-        void FetchDataAsync();
-    }
-
 }

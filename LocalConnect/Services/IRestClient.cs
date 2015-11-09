@@ -7,7 +7,7 @@ using LocalConnect.Models;
 
 namespace LocalConnect.Services
 {
-    public interface IDataProvider
+    public interface IRestClient
     {
         Task<T> FetchDataAsync<T>(string method);
         Task PostDataAsync<TPostType>(string method, TPostType postData);

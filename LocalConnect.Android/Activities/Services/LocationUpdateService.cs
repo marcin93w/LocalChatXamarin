@@ -96,6 +96,7 @@ namespace LocalConnect.Android.Activities.Services
             }
             else
             {
+                //TODO move to activity
                 Toast.MakeText(ApplicationContext, "Turn on GPS", ToastLength.Long);
                 _locationUpdateStarted = false;
             }
@@ -109,6 +110,7 @@ namespace LocalConnect.Android.Activities.Services
             }
             catch (Exception)
             {
+                //TODO move to activity
                 Toast.MakeText(ApplicationContext, "Error updating location", ToastLength.Short);
             }
         }

@@ -18,19 +18,19 @@ namespace LocalConnect.Models
 
         public Person Person { get; }
 
-        public async Task<RegistrationInfo> Register(IDataProvider dataProvider)
+        public async Task<RegistrationInfo> Register(IRestClient restClient)
         {
-            return await dataProvider.Register(this);
+            return await restClient.Register(this);
         }
 
-        public async Task<SessionInfo> Login(IDataProvider dataProvider)
+        public async Task<SessionInfo> Login(IRestClient restClient)
         {
-            return await dataProvider.Login(Username, Password);
+            return await restClient.Login(Username, Password);
         }
 
-        public async Task<SessionInfo> LoginFromFacebook(IDataProvider dataProvider, string facebookToken)
+        public async Task<SessionInfo> LoginFromFacebook(IRestClient restClient, string facebookToken)
         {
-            return await dataProvider.LoginWithFacebook(facebookToken);
+            return await restClient.LoginWithFacebook(facebookToken);
         }
     }
 }

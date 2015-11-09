@@ -12,6 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IAuthTokenManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\OnDataLoadEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Me.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationInfo.cs" />
@@ -24,12 +25,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\SocketClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISocketClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\IDataProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\IRestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\MissingAuthenticationTokenException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ISocketClientUsingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IDataFetchingViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IRestClientUsingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />
   </ItemGroup>

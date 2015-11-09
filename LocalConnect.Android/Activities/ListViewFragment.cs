@@ -10,6 +10,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.Helpers;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;

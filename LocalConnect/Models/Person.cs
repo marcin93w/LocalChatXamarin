@@ -38,9 +38,9 @@ namespace LocalConnect.Models
             PersonId = personId;
         }
 
-        public async Task LoadDetailedData(IDataProvider dataProvider)
+        public async Task LoadDetailedData(IRestClient restClient)
         {
-            var personData = (JContainer) await dataProvider.FetchDataAsync($"personDetails/{PersonId}");
+            var personData = (JContainer) await restClient.FetchDataAsync($"personDetails/{PersonId}");
             LongDescription = personData.Value<string>("longDescription");
         }
     }

@@ -10,6 +10,7 @@ using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
 using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.Android.Activities.Services;
+using LocalConnect.Helpers;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Org.Apache.Http.Impl.Conn;
@@ -36,24 +37,28 @@ namespace LocalConnect.Android.Activities
 
             SetContentView(Resource.Layout.Main);
 
-            if (!_peopleViewModel.DataProvider.IsAuthenticated())
-            {
-                OpenLoginActivity();
-                return;
-            }
-
-            _peopleViewModel.OnDataLoad += OnDataLoad;
-            _peopleViewModel.FetchDataAsync(); //TODO do not fetch if already fetched
-
             _viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             _viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
-                new ListViewFragment(), new MapViewFragment());
+                    new ListViewFragment(), new MapViewFragment());
             _viewPager.PageSelected += OnViewChanged;
 
             var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
             switchViewButton.Click += OnSwitchViewCicked;
             var settingsButton = FindViewById<ImageButton>(Resource.Id.MenuButton);
             settingsButton.Click += (sender, e) => OnSettingsClick(settingsButton);
+
+            _peopleViewModel.OnDataLoad += OnDataLoad;
+
+            if (bundle == null)
+            {
+                if (!_peopleViewModel.RestClient.IsAuthenticated())
+                {
+                    OpenLoginActivity();
+                    return;
+                }
+
+                _peopleViewModel.FetchDataAsync();
+            }
         }
 
         private void OnViewChanged(object sender, ViewPager.PageSelectedEventArgs e)

@@ -15,9 +15,9 @@ namespace LocalConnect.Models
             PeopleList = new List<Person>();
         }
 
-        public async Task FetchPeopleList(IDataProvider dataProvider)
+        public async Task FetchPeopleList(IRestClient restClient)
         {
-            PeopleList = await dataProvider.FetchDataAsync<List<Person>>("people");
+            PeopleList = await restClient.FetchDataAsync<List<Person>>("people");
         }
     }
 }

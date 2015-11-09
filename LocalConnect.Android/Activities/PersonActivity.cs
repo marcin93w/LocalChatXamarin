@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -35,16 +35,17 @@ namespace LocalConnect.Android.Activities
             _personViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PersonViewModel>(this);
         }
 
-        protected override void OnCreate(Bundle bundle)
+        protected async override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             SetContentView(Resource.Layout.Person);
 
+            Person person;
             try
             {
-                var person = JsonConvert.DeserializeObject<Person>(Intent.GetStringExtra("Person"));
-                _personViewModel.Initialize(person);
+                person = JsonConvert.DeserializeObject<Person>(Intent.GetStringExtra("Person"));
+                
             }
             catch (Exception)
             {
@@ -52,20 +53,12 @@ namespace LocalConnect.Android.Activities
                 return;
             }
 
-            var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
-            _personViewModel.OnDataLoad += (sender, args) =>
+            Task<bool> conversationDataLoading = null;
+            if (_personViewModel.Person == null || _personViewModel.Person.PersonId != person.PersonId)
             {
-                if (args.IsSuccesful)
-                {
-                    longDescription.Text = _personViewModel.Person.LongDescription;
-                }
-                else
-                {
-                    Toast.MakeText(this, args.ErrorMessage, ToastLength.Long);
-                }
-            };
-
-            _personViewModel.FetchDataAsync();
+                _personViewModel.Initialize(person);
+                conversationDataLoading = _personViewModel.FetchDataAsync();
+            }
 
             var personName = FindViewById<TextView>(Resource.Id.PersonName);
             personName.Text = _personViewModel.Person.Name;
@@ -85,6 +78,17 @@ namespace LocalConnect.Android.Activities
             moreButton.Click += ToggleMoreLessInfo;
 
             InitializeChat();
+
+            if (conversationDataLoading != null)
+            {
+                if (!await conversationDataLoading)
+                {
+                    Toast.MakeText(this, _personViewModel.ErrorMessage, ToastLength.Long);
+                }
+            }
+
+            var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
+            longDescription.Text = _personViewModel.Person.LongDescription;
         }
 
         public int ConvertDpToPx(float dp)
