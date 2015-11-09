@@ -21,7 +21,7 @@ router.route('/loginWithFacebook').get(authController.facebookAuthenticate,
     authController.getUserData);
 
 router.route('/people').get(authController.isAuthenticated, 
-    peopleController.getAllPeople);
+    peopleController.getNearestPeople);
 
 router.route('/personDetails/:id').get(authController.isAuthenticated, 
     peopleController.getPersonDetails);

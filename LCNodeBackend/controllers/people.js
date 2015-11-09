@@ -12,7 +12,7 @@
                 };
             }
         });
-        return collection;
+        return collection.reverse();
     }    
     
     peopleCtrl.getAllPeople = function (req, res) {
@@ -23,6 +23,31 @@
             if (err) res.send(err);
             res.json(beautifyPeopleCollection(people));
         });
+    };
+    
+    peopleCtrl.getNearestPeople = function (req, res) {
+        Person.findOne({ user: req.user }, 'location')
+        .then(function(me) {
+            return Person.find({location: {
+                        $near : {
+                            $geometry: { type: "Point", coordinates: me.location },
+                            $minDistance: 0,
+                            $maxDistance: 10000
+                        }
+                    }}, 
+                    'id firstname surname shortDescription location avatar')
+                .where("user").ne(req.user)
+                .limit(20)
+                .lean()
+                .exec()
+                .then(function (people) {
+                    res.json(beautifyPeopleCollection(people));
+                });
+        })
+        .catch(function(err) {
+            res.send(err);
+            });
+        
     };
     
     peopleCtrl.getPersonDetails = function(req, res) {

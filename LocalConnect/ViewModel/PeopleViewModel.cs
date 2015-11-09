@@ -71,6 +71,7 @@ namespace LocalConnect.ViewModel
             }
         }
 
+        //TODO this should be property on Person(ViewModel) awaited for my location from service
         public string GetLocationDescription(Person person)
         {
             var distance = person.CalculateDistanceFrom(Me);
