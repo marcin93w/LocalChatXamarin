@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
+using Android.Support.V4.View;
+using Android.Widget;
 using LocalConnect.Services;
+using NetTopologySuite.Operation.Distance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -28,7 +31,7 @@ namespace LocalConnect.Models
         public Person()
         {
         }
-        
+
         public Person(string firstName, string surname, string shortDescription, Location location, string personId)
         {
             FirstName = firstName;
@@ -42,6 +45,18 @@ namespace LocalConnect.Models
         {
             var personData = (JContainer) await restClient.FetchDataAsync($"personDetails/{PersonId}");
             LongDescription = personData.Value<string>("longDescription");
+        }
+
+        public double? CalculateDistanceFrom(Person me)
+        {
+            if (Location == null || me.Location == null)
+                return null;
+
+            var results = new float[1];
+            global::Android.Locations.Location.DistanceBetween(
+                me.Location.Lat, me.Location.Lon, Location.Lat, Location.Lon, results);
+
+            return results[0];
         }
     }
 }

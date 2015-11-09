@@ -22,9 +22,18 @@
     <TextView
         android:text="Text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="35dp"
         android:layout_below="@id/personName"
         android:id="@+id/personDesc"
         android:layout_toRightOf="@id/personImage"
         android:layout_margin="3dp" />
+    <TextView
+        android:text="Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/personDesc"
+        android:layout_toRightOf="@id/personImage"
+        android:id="@+id/personLocationDesc"
+        android:layout_margin="3dp"
+        android:textColor="@android:color/background_light" />
 </RelativeLayout>

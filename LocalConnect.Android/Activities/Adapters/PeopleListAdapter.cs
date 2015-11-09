@@ -29,9 +29,12 @@ namespace LocalConnect.Android.Activities.Adapters
             var name = listItemView.FindViewById<TextView>(Resource.Id.personName);
             var image = listItemView.FindViewById<ImageView>(Resource.Id.personImage);
             var desc = listItemView.FindViewById<TextView>(Resource.Id.personDesc);
+            var locationDesc = listItemView.FindViewById<TextView>(Resource.Id.personLocationDesc);
 
             name.Text = _peopleViewModel.People[position].Name;
             desc.Text = _peopleViewModel.People[position].ShortDescription;
+            locationDesc.Text = _peopleViewModel.GetLocationDescription(
+                _peopleViewModel.People[position]);
 
             if(!string.IsNullOrEmpty(_peopleViewModel.People[position].Avatar))
                 LoadUserAvatar(image, _peopleViewModel.People[position].Avatar);

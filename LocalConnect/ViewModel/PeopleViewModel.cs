@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
@@ -66,12 +67,22 @@ namespace LocalConnect.ViewModel
             finally
             {
                 _dataLoaded = true;
-                if (_onDataLoad != null)
-                {
-                    _onDataLoad(this, new OnDataLoadEventArgs(_errorMessage, authTokenMissing));
-                }
+                _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(_errorMessage, authTokenMissing));
             }
         }
 
+        public string GetLocationDescription(Person person)
+        {
+            var distance = person.CalculateDistanceFrom(Me);
+            if (distance.HasValue)
+            {
+                if(distance < 1000)
+                    return $"{distance.Value:0} m from you";
+                else
+                    return $"{(distance.Value/1000):0.0} km from you";
+            }
+            else
+                return string.Empty;
+        }
     }
 }
