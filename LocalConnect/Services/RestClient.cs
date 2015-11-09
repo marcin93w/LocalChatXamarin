@@ -1,7 +1,3 @@
-
-
-
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -86,7 +82,7 @@ namespace LocalConnect.Services
             if (string.IsNullOrEmpty(_authenticationHeader))
             {
                 var authToken = _authTokenManager.ReadAuthToken();
-                if (string.IsNullOrEmpty(_authenticationHeader))
+                if (string.IsNullOrEmpty(authToken))
                 {
                     return false;
                 }

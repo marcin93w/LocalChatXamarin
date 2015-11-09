@@ -5,6 +5,7 @@ using Android.Content;
 using Android.Locations;
 using Android.OS;
 using Android.Widget;
+using Java.Util.Logging;
 using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.Services;
 using Newtonsoft.Json;
@@ -23,12 +24,14 @@ namespace LocalConnect.Android.Activities.Services
     }
     public class LocationStatusChangedEventArgs : EventArgs
     {
-        public LocationStatusChangedEventArgs(string provider, Availability status)
+        public LocationStatusChangedEventArgs(string provider, Availability status, bool isEnabled)
         {
             Provider = provider;
             Status = status;
+            IsEnabled = isEnabled;
         }
 
+        public bool IsEnabled { get; }
         public string Provider { get; }
         public Availability Status { get; }
     }
@@ -44,11 +47,11 @@ namespace LocalConnect.Android.Activities.Services
         private const long LocationUpdateTimeInterval = 1000 * 60; //in miliseconds
         private const float LocationUpdateMinDistance = 10; //in meters
 
-        private bool _locationUpdateStarted = false;
         private RestClient _dataProvider;
         private readonly LocationManager _locMgr = Application.Context.GetSystemService("location") as LocationManager;
 
         public Location Location { private set; get; }
+        public bool LocationUpdateActive { private set; get; }
 
         public event CurrentLocationChangedEventHandler LocationChanged;
         public event LocationStatusChangedEventHandler LocationProviderStatusChanged;
@@ -65,7 +68,7 @@ namespace LocalConnect.Android.Activities.Services
             
             _dataProvider = new RestClient(new AuthTokenManager(ApplicationContext));
 
-            if(!_locationUpdateStarted)
+            if(!LocationUpdateActive)
                 StartLocationUpdates();
 
             return StartCommandResult.NotSticky;
@@ -74,7 +77,7 @@ namespace LocalConnect.Android.Activities.Services
 
         private void StartLocationUpdates ()
         {
-            _locationUpdateStarted = true;
+            LocationUpdateActive = true;
             var locationCriteria = new Criteria
             {
                 Accuracy = Accuracy.Fine,
@@ -96,9 +99,7 @@ namespace LocalConnect.Android.Activities.Services
             }
             else
             {
-                //TODO move to activity
-                Toast.MakeText(ApplicationContext, "Turn on GPS", ToastLength.Long);
-                _locationUpdateStarted = false;
+                LocationUpdateActive = false;
             }
         }
 
@@ -110,8 +111,7 @@ namespace LocalConnect.Android.Activities.Services
             }
             catch (Exception)
             {
-                //TODO move to activity
-                Toast.MakeText(ApplicationContext, "Error updating location", ToastLength.Short);
+                Logger.Global.Log(Level.All, "Error updating location");
             }
         }
 
@@ -124,19 +124,20 @@ namespace LocalConnect.Android.Activities.Services
 
         public void OnProviderDisabled(string provider)
         {
-            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, Availability.OutOfService));
+            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, Availability.OutOfService, false));
+            LocationUpdateActive = false;
         }
 
         public void OnProviderEnabled(string provider)
         {
-            if (!_locationUpdateStarted)
+            if (!LocationUpdateActive)
                 StartLocationUpdates();
-            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, Availability.Available));
+            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, Availability.Available, true));
         }
 
         public void OnStatusChanged(string provider, Availability status, Bundle extras)
         {
-            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, status));
+            LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, status, true));
         }
     }
 }

@@ -19,6 +19,7 @@ using LocalConnect.Models;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;
+using AndroidRes = global::Android.Resource;
 
 namespace LocalConnect.Android.Activities
 {
@@ -29,6 +30,8 @@ namespace LocalConnect.Android.Activities
         private LocationUpdateServiceConnection _locationUpdateServiceConnection;
 
         private Dictionary<Person, Marker> _markers;
+
+        private BitmapDescriptor _myLocationIcon;
 
         public MapViewFragment()
         {
@@ -41,6 +44,8 @@ namespace LocalConnect.Android.Activities
         {
             var rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.MapViewFragment, container, false);
+
+            _myLocationIcon = BitmapDescriptorFactory.FromResource(AndroidRes.Drawable.IcMenuMyLocation);
 
             var mapFragment = (SupportMapFragment) ChildFragmentManager.FindFragmentById(Resource.Id.map);
             mapFragment.GetMapAsync(this);
@@ -98,6 +103,10 @@ namespace LocalConnect.Android.Activities
                     (sender, args) =>
                     {
                         args.ServiceBinder.Service.LocationChanged += OnLocationChanged;
+                        if (!args.ServiceBinder.Service.LocationUpdateActive)
+                        {
+                            Toast.MakeText(Activity, "Please turn on GPS", ToastLength.Long);
+                        }
                         if (args.ServiceBinder.Service.Location != null)
                             AddOrChangeMyLocation(args.ServiceBinder.Service.Location);
                     };
@@ -117,7 +126,7 @@ namespace LocalConnect.Android.Activities
             var markerOptions = new MarkerOptions();
             var point = new LatLng(location.Lat, location.Lon);
             markerOptions.SetPosition(point);
-            markerOptions.SetTitle(_peopleViewModel.Me.Name); 
+            markerOptions.SetIcon(_myLocationIcon);
             var marker = _map.AddMarker(markerOptions);
 
             if (_markers.ContainsKey(_peopleViewModel.Me))
