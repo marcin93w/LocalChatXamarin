@@ -1,63 +1,55 @@
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
-using LocalConnect.Helpers;
 using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PersonViewModel : ViewModelBase, IUiInvokable, IRestClientUsingViewModel, ISocketClientUsingViewModel
+    public class PersonViewModel : ViewModelBase
     {
-        private Conversation _conversation;
+        private readonly Person _person;
+        private readonly Me _me;
 
-#region IUiInvokableViewModel implementation
-
-        public RunOnUiThreadHandler RunOnUiThread { private get; set; }
-
-#endregion
-
-        public Person Person { private set; get; }
-        public ObservableCollection<Message> Messages => _conversation.Messages;
-        public string ErrorMessage { private set; get; }
-
-        public ISocketClient SocketClient { private get; set; }
-        public IRestClient RestClient { private get; set; }
-
-        public void Initialize(Person person)
+        public PersonViewModel(Person person, Me me)
         {
-            Person = person;
-            _conversation = new Conversation(Person, SocketClient, RunOnUiThread);
-        }
-
-        public async Task<bool> FetchDataAsync()
-        {
-            try
+            _person = person;
+            if (me != null)
             {
-                await Person.LoadDetailedData(RestClient);
-                await _conversation.FetchLastMessages(RestClient);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                return false;
+                _me = me;
+                CreateLocationDescription();
+                _me.LocationChanged += (sender, args) => CreateLocationDescription();
             }
         }
 
-        public void StopChat()
+        public string Id => _person.PersonId;
+        public string Name => _person.Name;
+        public string Avatar => _person.Avatar;
+        public string ShortDescription => _person.ShortDescription;
+        public string LongDescription => _person.LongDescription;
+        public Location Location => _person.Location;
+        public string LocationDescription { private set; get; }
+
+
+        private void CreateLocationDescription()
         {
-            _conversation.IsHolded = true;
-        }
-        public void ResumeChat()
-        {
-            _conversation.IsHolded = false;
+            var distance = _person.CalculateDistanceFrom(_me);
+            if (distance.HasValue)
+            {
+                if (distance < 1000)
+                    LocationDescription = $"{distance.Value:0} m from you";
+                else
+                    LocationDescription = $"{(distance.Value / 1000):0.0} km from you";
+            }
+            else
+                LocationDescription = "Location unknown";
         }
 
-        public void SendMessage(string message)
+        public async Task LoadDetailedData(IRestClient restClient)
         {
-            _conversation.SendMessage(message);     
+            await _person.LoadDetailedData(restClient);
         }
     }
 }

@@ -29,9 +29,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\MissingAuthenticationTokenException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ISocketClientUsingViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonChatViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IRestClientUsingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
   </ItemGroup>
 </Project>

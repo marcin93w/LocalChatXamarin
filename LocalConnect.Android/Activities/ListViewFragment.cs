@@ -52,9 +52,9 @@ namespace LocalConnect.Android.Activities
 
         private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var chatActivity = new Intent(Activity.ApplicationContext, typeof(PersonActivity));
+            var chatActivity = new Intent(Activity.ApplicationContext, typeof(PersonChatActivity));
             var person = _peopleViewModel.People[e.Position];
-            chatActivity.PutExtra("Person", JsonConvert.SerializeObject(person));
+            chatActivity.PutExtra("PersonId", person.Id);
             StartActivity(chatActivity);
         }
     }

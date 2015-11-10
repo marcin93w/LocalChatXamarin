@@ -12,7 +12,7 @@
                 };
             }
         });
-        return collection.reverse();
+        return collection;
     }    
     
     peopleCtrl.getAllPeople = function (req, res) {
@@ -118,7 +118,7 @@
 
     peopleCtrl.getMe = function(req, res) {
         Person.findOne({ user: req.user }, 
-            'firstname surname shortDescription avatar',
+            'id firstname surname shortDescription avatar',
             function(err, me) {
                 if (err) res.send(err);
                 res.json(me);

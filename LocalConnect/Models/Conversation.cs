@@ -12,15 +12,16 @@ namespace LocalConnect.Models
     {
         private readonly ISocketClient _socketClient;
 
+        private readonly string _personId;
+
         public ObservableInvokableCollection<Message> Messages { get; }
-        public Person Person { get; }
 
         public bool IsHolded { set; get; }
 
-        public Conversation(Person person, ISocketClient socketClient, RunOnUiThreadHandler uiThreadHandler)
+        public Conversation(string personId, ISocketClient socketClient, RunOnUiThreadHandler uiThreadHandler)
         {
             _socketClient = socketClient;
-            Person = person;
+            _personId = personId;
             Messages = new ObservableInvokableCollection<Message>(uiThreadHandler);
             socketClient.OnMessageReceived -= HandleMessageReceive;
             socketClient.OnMessageReceived += HandleMessageReceive;
@@ -28,7 +29,7 @@ namespace LocalConnect.Models
 
         private void HandleMessageReceive(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
         {
-            if (!IsHolded && messageReceivedEventArgs.Message.SenderId == Person.PersonId)
+            if (!IsHolded && messageReceivedEventArgs.Message.SenderId == _personId)
             {
                 Messages.Add(messageReceivedEventArgs.Message);
             }
@@ -36,25 +37,25 @@ namespace LocalConnect.Models
 
         public void SendMessage(string message)
         {
-            var msg = new OutcomeMessage(Person.PersonId, message, DateTime.Now);
+            var msg = new OutcomeMessage(_personId, message, DateTime.Now);
             Messages.Add(msg);
             _socketClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
         public async Task FetchLastMessages(IRestClient restClient)
         {
-            var lastMessages = await restClient.FetchDataAsync($"lastMessagesWith/{Person.PersonId}");
+            var lastMessages = await restClient.FetchDataAsync($"lastMessagesWith/{_personId}");
 
             foreach (JContainer message in (IEnumerable)lastMessages)
             {
                 Message msg;
-                if (message.Value<string>("sender") == Person.PersonId)
+                if (message.Value<string>("sender") == _personId)
                 {
-                    msg = new IncomeMessage(Person.PersonId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
+                    msg = new IncomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
                 }
                 else
                 {
-                    msg = new OutcomeMessage(Person.PersonId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
+                    msg = new OutcomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
                 }
 
                 Messages.Insert(0, msg);

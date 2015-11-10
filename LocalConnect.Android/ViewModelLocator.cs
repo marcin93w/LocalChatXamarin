@@ -28,7 +28,7 @@ namespace LocalConnect.Android
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            SimpleIoc.Default.Register<PersonViewModel>();
+            SimpleIoc.Default.Register<PersonChatViewModel>();
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
 

@@ -6,13 +6,25 @@ using LocalConnect.Services;
 
 namespace LocalConnect.Models
 {
-    public class Me
+    public class Me : Person
     {
-        public Person Person { set; get; }
+        public event EventHandler LocationChanged;
 
         public async Task FetchData(IRestClient restClient)
         {
-            Person = await restClient.FetchDataAsync<Person>("me");
+            var me = await restClient.FetchDataAsync<Person>("me");
+            FirstName = me.FirstName;
+            Surname = me.Surname;
+            Avatar = me.Avatar;
+            ShortDescription = me.ShortDescription;
+            PersonId = me.PersonId;
+        }
+
+        public async Task UpdateLocation(IRestClient restClient, Location location)
+        {
+            Location = location;
+            await restClient.PostDataAsync("me/updateLocation", location);
+            LocationChanged?.Invoke(this, new EventArgs());
         }
     }
 }

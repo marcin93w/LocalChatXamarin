@@ -150,7 +150,7 @@
   <ItemGroup>
     <Compile Include="Activities\Helpers\AuthTokenManager.cs" />
     <Compile Include="Activities\Services\LocationUpdateService.cs" />
-    <Compile Include="Activities\PersonActivity.cs" />
+    <Compile Include="Activities\PersonChatActivity.cs" />
     <Compile Include="Activities\ListViewFragment.cs" />
     <Compile Include="Activities\LoginActivity.cs" />
     <Compile Include="Activities\MainActivity.cs" />

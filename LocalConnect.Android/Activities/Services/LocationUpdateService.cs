@@ -8,20 +8,21 @@ using Android.Widget;
 using Java.Util.Logging;
 using LocalConnect.Android.Activities.Helpers;
 using LocalConnect.Services;
+using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Location = LocalConnect.Models.Location;
 
 namespace LocalConnect.Android.Activities.Services
 {
-    public class CurrentLocationChangedEventArgs : EventArgs
-    {
-        public CurrentLocationChangedEventArgs(Location location)
-        {
-            Location = location;
-        }
+    //public class CurrentLocationChangedEventArgs : EventArgs
+    //{
+    //    public CurrentLocationChangedEventArgs(Location location)
+    //    {
+    //        Location = location;
+    //    }
 
-        public Location Location { get; }
-    }
+    //    public Location Location { get; }
+    //}
     public class LocationStatusChangedEventArgs : EventArgs
     {
         public LocationStatusChangedEventArgs(string provider, Availability status, bool isEnabled)
@@ -36,7 +37,7 @@ namespace LocalConnect.Android.Activities.Services
         public Availability Status { get; }
     }
 
-    public delegate void CurrentLocationChangedEventHandler(object sender, CurrentLocationChangedEventArgs args);
+    //public delegate void CurrentLocationChangedEventHandler(object sender, CurrentLocationChangedEventArgs args);
 
     public delegate void LocationStatusChangedEventHandler(object sender, LocationStatusChangedEventArgs args);
 
@@ -47,13 +48,13 @@ namespace LocalConnect.Android.Activities.Services
         private const long LocationUpdateTimeInterval = 1000 * 60; //in miliseconds
         private const float LocationUpdateMinDistance = 10; //in meters
 
-        private RestClient _dataProvider;
+        private PeopleViewModel _peopleViewModel;
         private readonly LocationManager _locMgr = Application.Context.GetSystemService("location") as LocationManager;
 
         public Location Location { private set; get; }
         public bool LocationUpdateActive { private set; get; }
 
-        public event CurrentLocationChangedEventHandler LocationChanged;
+        //public event CurrentLocationChangedEventHandler LocationChanged;
         public event LocationStatusChangedEventHandler LocationProviderStatusChanged;
 
         public override IBinder OnBind(Intent intent)
@@ -65,8 +66,8 @@ namespace LocalConnect.Android.Activities.Services
         public override StartCommandResult OnStartCommand(Intent intent, StartCommandFlags flags, int startId)
         {
             base.OnStartCommand(intent, flags, startId);
-            
-            _dataProvider = new RestClient(new AuthTokenManager(ApplicationContext));
+
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(ApplicationContext);
 
             if(!LocationUpdateActive)
                 StartLocationUpdates();
@@ -107,7 +108,7 @@ namespace LocalConnect.Android.Activities.Services
         {
             try
             {
-                await _dataProvider.PostDataAsync("me/updateLocation", Location);
+                await _peopleViewModel.SendLocationUpdate(Location);
             }
             catch (Exception)
             {
@@ -119,7 +120,6 @@ namespace LocalConnect.Android.Activities.Services
         {
             Location = new Location(location.Longitude, location.Latitude);
             SendLocationUpdate();
-            LocationChanged?.Invoke(this, new CurrentLocationChangedEventArgs(Location));
         }
 
         public void OnProviderDisabled(string provider)

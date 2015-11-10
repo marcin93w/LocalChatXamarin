@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
+using Java.Util.Logging;
 using LocalConnect.Models;
 using LocalConnect.Helpers;
 using LocalConnect.Services;
@@ -14,10 +15,15 @@ namespace LocalConnect.ViewModel
     public class PeopleViewModel : ViewModelBase, IRestClientUsingViewModel, ISocketClientUsingViewModel
     {
         private readonly People _people;
-        private readonly Me _me;
 
-        public List<Person> People => _people.PeopleList;
-        public Person Me => _me.Person;
+        public List<PersonViewModel> People { get; }
+        public Me Me { get; }
+
+        public event EventHandler MyLocationChanged
+        {
+            add { Me.LocationChanged += value; }
+            remove { Me.LocationChanged -= value; }
+        }
 
         private bool _dataLoaded;
         private string _errorMessage;
@@ -45,7 +51,8 @@ namespace LocalConnect.ViewModel
         public PeopleViewModel()
         {
             _people = new People();
-            _me = new Me();
+            People = new List<PersonViewModel>();
+            Me = new Me();
         }
 
         public async void FetchDataAsync()
@@ -55,9 +62,11 @@ namespace LocalConnect.ViewModel
             try
             {
                 var fetchPeopleTask = _people.FetchPeopleList(RestClient);
-                var fetchMeTask = _me.FetchData(RestClient);
+                var fetchMeTask = Me.FetchData(RestClient);
 
                 await Task.WhenAll(fetchPeopleTask, fetchMeTask);
+
+                People.AddRange(_people.PeopleList.ConvertAll(p => new PersonViewModel(p, Me)));
             }
             catch (Exception ex)
             {
@@ -71,19 +80,9 @@ namespace LocalConnect.ViewModel
             }
         }
 
-        //TODO this should be property on Person(ViewModel) awaited for my location from service
-        public string GetLocationDescription(Person person)
+        public async Task SendLocationUpdate(Location location)
         {
-            var distance = person.CalculateDistanceFrom(Me);
-            if (distance.HasValue)
-            {
-                if(distance < 1000)
-                    return $"{distance.Value:0} m from you";
-                else
-                    return $"{(distance.Value/1000):0.0} km from you";
-            }
-            else
-                return string.Empty;
+            await Me.UpdateLocation(RestClient, location);
         }
     }
 }

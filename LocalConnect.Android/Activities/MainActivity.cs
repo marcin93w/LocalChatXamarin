@@ -22,6 +22,7 @@ namespace LocalConnect.Android.Activities
     [Activity(MainLauncher = true)]
     public class MainActivity : FragmentActivity
     {
+        private LocationUpdateServiceConnection _locationUpdateServiceConnection;
         private readonly PeopleViewModel _peopleViewModel;
 
         private ViewPager _viewPager;
@@ -57,8 +58,16 @@ namespace LocalConnect.Android.Activities
                     return;
                 }
 
-                _peopleViewModel.FetchDataAsync();
+                CreateLocationUpdateService();
+                BindToLocationUpdateService();
             }
+        }
+
+        protected override void OnDestroy()
+        {
+            if (_locationUpdateServiceConnection != null)
+                UnbindService(_locationUpdateServiceConnection);
+            base.OnDestroy();
         }
 
         private void OnViewChanged(object sender, ViewPager.PageSelectedEventArgs e)
@@ -76,6 +85,38 @@ namespace LocalConnect.Android.Activities
             }
         }
 
+        private void CreateLocationUpdateService()
+        {
+            var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
+            StartService(startLocationUpdateServiceIntent);
+        }
+
+        private void BindToLocationUpdateService()
+        {
+            if (_locationUpdateServiceConnection == null || !_locationUpdateServiceConnection.IsConnected)
+            {
+                var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
+
+                _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
+                _locationUpdateServiceConnection.ServiceConnected += OnLocationUpdateServiceConnected;
+                BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
+            }
+        }
+
+        private async void OnLocationUpdateServiceConnected(object sender, ServiceConnectedEventArgs args)
+        {
+            if (!args.ServiceBinder.Service.LocationUpdateActive
+                                || args.ServiceBinder.Service.Location == null)
+            {
+                Toast.MakeText(this, "Please turn on GPS", ToastLength.Long);
+            }
+            else
+            {
+                await _peopleViewModel.SendLocationUpdate(args.ServiceBinder.Service.Location);
+                _peopleViewModel.FetchDataAsync(); //TODO maybe fetch 'me' ealier
+            }
+        }
+
         private void OnDataLoad(object sender, OnDataLoadEventArgs e)
         {
             if (e.ApplicationNotInitialized)
@@ -89,8 +130,6 @@ namespace LocalConnect.Android.Activities
             }
             else
             {
-                CreateLocationUpdateService();
-
                 if (!string.IsNullOrEmpty(_peopleViewModel.Me.Avatar))
                 {
                     var meImage = FindViewById<ImageView>(Resource.Id.MeImage);
@@ -99,12 +138,6 @@ namespace LocalConnect.Android.Activities
                         .Into(meImage);
                 }
             }
-        }
-
-        private void CreateLocationUpdateService()
-        {
-            var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
-            StartService(startLocationUpdateServiceIntent);
         }
 
         private void OnSwitchViewCicked(object sender, EventArgs e)

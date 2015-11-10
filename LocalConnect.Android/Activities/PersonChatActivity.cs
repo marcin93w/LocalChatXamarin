@@ -20,19 +20,20 @@ using Message = LocalConnect.Models.Message;
 
 namespace LocalConnect.Android.Activities
 {
-    [Activity(Label = "ChatActivity",
-        WindowSoftInputMode = SoftInput.AdjustResize)]
-    public class PersonActivity : Activity
+    [Activity(WindowSoftInputMode = SoftInput.AdjustResize)]
+    public class PersonChatActivity : Activity
     {
-        private readonly PersonViewModel _personViewModel;
+        private readonly PersonChatViewModel _personChatViewModel;
+        private readonly PeopleViewModel _peopleViewModel;
 
         private bool _moreInfoDisplayed;
 
         private TextView _messageTextView;
 
-        public PersonActivity()
+        public PersonChatActivity()
         {
-            _personViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PersonViewModel>(this);
+            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(this);
+            _personChatViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PersonChatViewModel>(this);
         }
 
         protected async override void OnCreate(Bundle bundle)
@@ -41,36 +42,26 @@ namespace LocalConnect.Android.Activities
 
             SetContentView(Resource.Layout.Person);
 
-            Person person;
-            try
-            {
-                person = JsonConvert.DeserializeObject<Person>(Intent.GetStringExtra("Person"));
-                
-            }
-            catch (Exception)
-            {
-                Toast.MakeText(this, "Wrong Intent data", ToastLength.Long);
-                return;
-            }
+            var person = _peopleViewModel.People.First(p => p.Id == Intent.GetStringExtra("PersonId"));
 
             Task<bool> conversationDataLoading = null;
-            if (_personViewModel.Person == null || _personViewModel.Person.PersonId != person.PersonId)
+            if (_personChatViewModel.Person == null || _personChatViewModel.Person.Id != person.Id)
             {
-                _personViewModel.Initialize(person);
-                conversationDataLoading = _personViewModel.FetchDataAsync();
+                _personChatViewModel.Initialize(person);
+                conversationDataLoading = _personChatViewModel.FetchDataAsync();
             }
 
             var personName = FindViewById<TextView>(Resource.Id.PersonName);
-            personName.Text = _personViewModel.Person.Name;
+            personName.Text = _personChatViewModel.Person.Name;
 
             var personShortDescription = FindViewById<TextView>(Resource.Id.ShortDescription);
-            personShortDescription.Text = _personViewModel.Person.ShortDescription;
+            personShortDescription.Text = _personChatViewModel.Person.ShortDescription;
 
-            if (!string.IsNullOrEmpty(_personViewModel.Person.Avatar))
+            if (!string.IsNullOrEmpty(_personChatViewModel.Person.Avatar))
             {
                 var personAvatar = FindViewById<ImageView>(Resource.Id.PersonImage);
                 Picasso.With(this)
-                    .Load(_personViewModel.Person.Avatar)
+                    .Load(_personChatViewModel.Person.Avatar)
                     .Into(personAvatar);
             }
 
@@ -83,12 +74,12 @@ namespace LocalConnect.Android.Activities
             {
                 if (!await conversationDataLoading)
                 {
-                    Toast.MakeText(this, _personViewModel.ErrorMessage, ToastLength.Long);
+                    Toast.MakeText(this, _personChatViewModel.ErrorMessage, ToastLength.Long);
                 }
             }
 
             var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
-            longDescription.Text = _personViewModel.Person.LongDescription;
+            longDescription.Text = _personChatViewModel.Person.LongDescription;
         }
 
         public int ConvertDpToPx(float dp)
@@ -129,7 +120,7 @@ namespace LocalConnect.Android.Activities
         private void InitializeChat()
         {
             var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
-            messagesList.Adapter = _personViewModel.Messages.GetAdapter(GetMessageView);
+            messagesList.Adapter = _personChatViewModel.Messages.GetAdapter(GetMessageView);
             messagesList.ItemClick += ToggleMessageInfo;
 
             _messageTextView = FindViewById<TextView>(Resource.Id.TextInput);
@@ -176,13 +167,13 @@ namespace LocalConnect.Android.Activities
 
         protected override void OnStart()
         {
-            _personViewModel.ResumeChat();
             base.OnStart();
+            _personChatViewModel.ResumeChat();
         }
 
         protected override void OnStop()
         {
-            _personViewModel.StopChat();
+            _personChatViewModel.StopChat();
             base.OnStop();
         }
 
@@ -190,7 +181,7 @@ namespace LocalConnect.Android.Activities
         {
             try
             {
-                _personViewModel.SendMessage(_messageTextView.Text);
+                _personChatViewModel.SendMessage(_messageTextView.Text);
                 _messageTextView.Text = string.Empty;
             }
             catch (Exception)

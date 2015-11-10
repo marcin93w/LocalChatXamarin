@@ -27,16 +27,15 @@ namespace LocalConnect.Android.Activities
     {
         private readonly PeopleViewModel _peopleViewModel;
         private GoogleMap _map;
-        private LocationUpdateServiceConnection _locationUpdateServiceConnection;
 
-        private Dictionary<Person, Marker> _markers;
+        private Dictionary<string, Marker> _markers;
 
         private BitmapDescriptor _myLocationIcon;
 
         public MapViewFragment()
         {
             _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(Activity);
-            _markers = new Dictionary<Person, Marker>();
+            _markers = new Dictionary<string, Marker>();
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +63,12 @@ namespace LocalConnect.Android.Activities
         {
             if (e.IsSuccesful)
             {
-                var bounds = new LatLngBounds.Builder();
+                var bounds = new LatLngBounds.Builder(); //TODO change camera move from bounds to my location center with all people visible (probably logic in VM)
+
+                var myPoint = new LatLng(_peopleViewModel.Me.Location.Lat, _peopleViewModel.Me.Location.Lon);
+                AddOrChangeMyLocation(myPoint);
+                bounds.Include(myPoint);
+
                 var peopleWithLocation = _peopleViewModel.People.Where(p => p.Location != null);
                 foreach (var person in peopleWithLocation)
                 {
@@ -73,68 +77,34 @@ namespace LocalConnect.Android.Activities
                     markerOptions.SetPosition(point);
                     markerOptions.SetTitle(person.Name);
                     var marker = _map.AddMarker(markerOptions);
-                    _markers[person] = marker;
+                    _markers[person.Id] = marker;
                     bounds.Include(point);
                 }
-                if(peopleWithLocation.Any())
-                    _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
 
-                BindToLocationUpdateService();
+                _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
+
+                _peopleViewModel.MyLocationChanged += OnLocationChanged;
             }
         }
 
-        public override void OnDestroyView()
+        private void OnLocationChanged(object sender, EventArgs args)
         {
-            if (_locationUpdateServiceConnection != null)
-                Activity.UnbindService(_locationUpdateServiceConnection);
-            base.OnDestroyView();
+            AddOrChangeMyLocation(new LatLng(_peopleViewModel.Me.Location.Lat, _peopleViewModel.Me.Location.Lon));
         }
 
-        private void BindToLocationUpdateService()
+        private void AddOrChangeMyLocation(LatLng point)
         {
-            if (_locationUpdateServiceConnection == null || !_locationUpdateServiceConnection.IsConnected)
-            {
-                var startLocationUpdateServiceIntent = new Intent(Activity, typeof (LocationUpdateService));
-                startLocationUpdateServiceIntent.PutExtra("DataProvider",
-                    JsonConvert.SerializeObject(_peopleViewModel.RestClient));
-
-                _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
-                _locationUpdateServiceConnection.ServiceConnected +=
-                    (sender, args) =>
-                    {
-                        args.ServiceBinder.Service.LocationChanged += OnLocationChanged;
-                        if (!args.ServiceBinder.Service.LocationUpdateActive)
-                        {
-                            Toast.MakeText(Activity, "Please turn on GPS", ToastLength.Long);
-                        }
-                        if (args.ServiceBinder.Service.Location != null)
-                            AddOrChangeMyLocation(args.ServiceBinder.Service.Location);
-                    };
-                Activity.BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
-            }
-        }
-
-        private void OnLocationChanged(object sender, CurrentLocationChangedEventArgs args)
-        {
-            AddOrChangeMyLocation(args.Location);
-        }
-
-        private void AddOrChangeMyLocation(Location location)
-        {
-            _peopleViewModel.Me.Location = location;
-
             var markerOptions = new MarkerOptions();
-            var point = new LatLng(location.Lat, location.Lon);
             markerOptions.SetPosition(point);
             markerOptions.SetIcon(_myLocationIcon);
             var marker = _map.AddMarker(markerOptions);
 
-            if (_markers.ContainsKey(_peopleViewModel.Me))
+            if (_markers.ContainsKey(_peopleViewModel.Me.PersonId))
             {
-                _markers[_peopleViewModel.Me].Remove();
+                _markers[_peopleViewModel.Me.PersonId].Remove();
             }
 
-            _markers[_peopleViewModel.Me] = marker;
+            _markers[_peopleViewModel.Me.PersonId] = marker;
         }
     }
 }
