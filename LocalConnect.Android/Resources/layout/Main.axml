@@ -40,10 +40,47 @@
             android:layout_toLeftOf="@id/MenuButton"
             android:id="@+id/SearchButton"
             android:layout_centerVertical="true" />
+        <ImageButton
+            android:src="@android:drawable/ic_menu_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/MenuButton"
+            android:id="@+id/SearchButton"
+            android:layout_centerVertical="true" />
+        <ImageButton
+            android:src="@android:drawable/ic_menu_rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/SearchButton"
+            android:id="@+id/refreshButton"
+            android:layout_centerVertical="true" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/MenuLayout"
+        android:id="@+id/LoadingInfoPanel"
+        android:background="@android:color/holo_green_light">
+        <ImageView
+            android:src="@android:drawable/ic_menu_info_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/LoadingInfoIcon"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp" />
+        <TextView
+            android:text="Checking current location..."
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/LoadingInfoIcon"
+            android:id="@+id/LoadingInfoText"
+            android:layout_centerVertical="true"
+            android:textColor="@android:color/background_light" />
     </RelativeLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/MenuLayout" />
+        android:layout_below="@id/LoadingInfoPanel" />
 </RelativeLayout>

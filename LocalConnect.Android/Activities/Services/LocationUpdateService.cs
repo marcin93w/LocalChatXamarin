@@ -14,15 +14,6 @@ using Location = LocalConnect.Models.Location;
 
 namespace LocalConnect.Android.Activities.Services
 {
-    //public class CurrentLocationChangedEventArgs : EventArgs
-    //{
-    //    public CurrentLocationChangedEventArgs(Location location)
-    //    {
-    //        Location = location;
-    //    }
-
-    //    public Location Location { get; }
-    //}
     public class LocationStatusChangedEventArgs : EventArgs
     {
         public LocationStatusChangedEventArgs(string provider, Availability status, bool isEnabled)
@@ -36,8 +27,6 @@ namespace LocalConnect.Android.Activities.Services
         public string Provider { get; }
         public Availability Status { get; }
     }
-
-    //public delegate void CurrentLocationChangedEventHandler(object sender, CurrentLocationChangedEventArgs args);
 
     public delegate void LocationStatusChangedEventHandler(object sender, LocationStatusChangedEventArgs args);
 
@@ -54,11 +43,12 @@ namespace LocalConnect.Android.Activities.Services
         public Location Location { private set; get; }
         public bool LocationUpdateActive { private set; get; }
 
-        //public event CurrentLocationChangedEventHandler LocationChanged;
         public event LocationStatusChangedEventHandler LocationProviderStatusChanged;
 
         public override IBinder OnBind(Intent intent)
         {
+            if(Location != null)
+                SendLocationUpdate(); //TODO byc moze nie potrzebne bo OnLocationUpdate zalatwia sprawe
             return new LocationUpdateServiceBinder(this);
         }
 
@@ -93,7 +83,6 @@ namespace LocalConnect.Android.Activities.Services
                 if (lastKnownLocation != null)
                 {
                     Location = new Location(lastKnownLocation.Longitude, lastKnownLocation.Latitude);
-                    SendLocationUpdate();
                 }
                 _locMgr.RequestLocationUpdates(locationProvider, LocationUpdateTimeInterval, LocationUpdateMinDistance,
                     this);
@@ -137,6 +126,8 @@ namespace LocalConnect.Android.Activities.Services
 
         public void OnStatusChanged(string provider, Availability status, Bundle extras)
         {
+            if (status == Availability.Available && !LocationUpdateActive)
+                StartLocationUpdates();
             LocationProviderStatusChanged?.Invoke(this, new LocationStatusChangedEventArgs(provider, status, true));
         }
     }

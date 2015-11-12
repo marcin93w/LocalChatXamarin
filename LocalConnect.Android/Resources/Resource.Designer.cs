@@ -529,17 +529,26 @@ namespace LocalConnect.Android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0a0049
-			public const int ActionsPanel = 2131361865;
-			
 			// aapt resource value: 0x7f0a004d
-			public const int AddMessageForm = 2131361869;
+			public const int ActionsPanel = 2131361869;
+			
+			// aapt resource value: 0x7f0a0051
+			public const int AddMessageForm = 2131361873;
 			
 			// aapt resource value: 0x7f0a0032
 			public const int ErrorText = 2131361842;
 			
 			// aapt resource value: 0x7f0a0036
 			public const int FacebookLoginButton = 2131361846;
+			
+			// aapt resource value: 0x7f0a0040
+			public const int LoadingInfoIcon = 2131361856;
+			
+			// aapt resource value: 0x7f0a003f
+			public const int LoadingInfoPanel = 2131361855;
+			
+			// aapt resource value: 0x7f0a0041
+			public const int LoadingInfoText = 2131361857;
 			
 			// aapt resource value: 0x7f0a0037
 			public const int LoadingPanel = 2131361847;
@@ -553,8 +562,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a002a
 			public const int LoginPanel = 2131361834;
 			
-			// aapt resource value: 0x7f0a0048
-			public const int LongDescription = 2131361864;
+			// aapt resource value: 0x7f0a004c
+			public const int LongDescription = 2131361868;
 			
 			// aapt resource value: 0x7f0a002f
 			public const int Mail = 2131361839;
@@ -586,11 +595,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a0021
 			public const int MessageTextContainer = 2131361825;
 			
-			// aapt resource value: 0x7f0a004c
-			public const int MessagesList = 2131361868;
+			// aapt resource value: 0x7f0a0050
+			public const int MessagesList = 2131361872;
 			
-			// aapt resource value: 0x7f0a0045
-			public const int MoreButton = 2131361861;
+			// aapt resource value: 0x7f0a0049
+			public const int MoreButton = 2131361865;
 			
 			// aapt resource value: 0x7f0a0030
 			public const int Name = 2131361840;
@@ -598,14 +607,14 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a002c
 			public const int PasswordInput = 2131361836;
 			
-			// aapt resource value: 0x7f0a0044
-			public const int PersonImage = 2131361860;
+			// aapt resource value: 0x7f0a0048
+			public const int PersonImage = 2131361864;
+			
+			// aapt resource value: 0x7f0a004a
+			public const int PersonName = 2131361866;
 			
 			// aapt resource value: 0x7f0a0046
-			public const int PersonName = 2131361862;
-			
-			// aapt resource value: 0x7f0a0042
-			public const int PersonRootView = 2131361858;
+			public const int PersonRootView = 2131361862;
 			
 			// aapt resource value: 0x7f0a002d
 			public const int RegistrationInfoPanel = 2131361837;
@@ -613,11 +622,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a003d
 			public const int SearchButton = 2131361853;
 			
-			// aapt resource value: 0x7f0a004f
-			public const int SendButton = 2131361871;
+			// aapt resource value: 0x7f0a0053
+			public const int SendButton = 2131361875;
 			
-			// aapt resource value: 0x7f0a0047
-			public const int ShortDescription = 2131361863;
+			// aapt resource value: 0x7f0a004b
+			public const int ShortDescription = 2131361867;
 			
 			// aapt resource value: 0x7f0a0031
 			public const int Surname = 2131361841;
@@ -625,8 +634,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a003b
 			public const int SwitchViewButton = 2131361851;
 			
-			// aapt resource value: 0x7f0a004e
-			public const int TextInput = 2131361870;
+			// aapt resource value: 0x7f0a0052
+			public const int TextInput = 2131361874;
 			
 			// aapt resource value: 0x7f0a0034
 			public const int ToogleRegisterButton = 2131361844;
@@ -649,11 +658,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a000b
 			public const int button = 2131361803;
 			
-			// aapt resource value: 0x7f0a004a
-			public const int button2 = 2131361866;
+			// aapt resource value: 0x7f0a004e
+			public const int button2 = 2131361870;
 			
-			// aapt resource value: 0x7f0a004b
-			public const int button3 = 2131361867;
+			// aapt resource value: 0x7f0a004f
+			public const int button3 = 2131361871;
 			
 			// aapt resource value: 0x7f0a0010
 			public const int center = 2131361808;
@@ -703,17 +712,17 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a0029
 			public const int listView = 2131361833;
 			
-			// aapt resource value: 0x7f0a0050
-			public const int logout = 2131361872;
+			// aapt resource value: 0x7f0a0054
+			public const int logout = 2131361876;
 			
-			// aapt resource value: 0x7f0a0040
-			public const int map = 2131361856;
+			// aapt resource value: 0x7f0a0044
+			public const int map = 2131361860;
 			
-			// aapt resource value: 0x7f0a003f
-			public const int mapLayout = 2131361855;
+			// aapt resource value: 0x7f0a0043
+			public const int mapLayout = 2131361859;
 			
-			// aapt resource value: 0x7f0a0041
-			public const int messenger_send_button = 2131361857;
+			// aapt resource value: 0x7f0a0045
+			public const int messenger_send_button = 2131361861;
 			
 			// aapt resource value: 0x7f0a0015
 			public const int never_display = 2131361813;
@@ -730,8 +739,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a0008
 			public const int page = 2131361800;
 			
-			// aapt resource value: 0x7f0a003e
-			public const int pager = 2131361854;
+			// aapt resource value: 0x7f0a0042
+			public const int pager = 2131361858;
 			
 			// aapt resource value: 0x7f0a0026
 			public const int personDesc = 2131361830;
@@ -745,8 +754,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0a0025
 			public const int personName = 2131361829;
 			
-			// aapt resource value: 0x7f0a0043
-			public const int relativeLayout2 = 2131361859;
+			// aapt resource value: 0x7f0a003e
+			public const int refreshButton = 2131361854;
+			
+			// aapt resource value: 0x7f0a0047
+			public const int relativeLayout2 = 2131361863;
 			
 			// aapt resource value: 0x7f0a002e
 			public const int repeatedPassword = 2131361838;

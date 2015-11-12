@@ -22,8 +22,8 @@ namespace LocalConnect.Models
 
         public async Task UpdateLocation(IRestClient restClient, Location location)
         {
-            Location = location;
             await restClient.PostDataAsync("me/updateLocation", location);
+            Location = location;
             LocationChanged?.Invoke(this, new EventArgs());
         }
     }

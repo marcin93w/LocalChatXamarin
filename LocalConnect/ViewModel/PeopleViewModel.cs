@@ -26,7 +26,7 @@ namespace LocalConnect.ViewModel
         }
 
         private bool _dataLoaded;
-        private string _errorMessage;
+        public string ErrorMessage { get; set; }
 
         private OnDataLoadEventHandler _onDataLoad;
         public IRestClient RestClient { get; set; }
@@ -38,7 +38,7 @@ namespace LocalConnect.ViewModel
             {
                 if (_dataLoaded)
                 {
-                    value(this, new OnDataLoadEventArgs(_errorMessage));
+                    value(this, new OnDataLoadEventArgs(ErrorMessage));
                 }
                 _onDataLoad += value;
             }
@@ -55,28 +55,37 @@ namespace LocalConnect.ViewModel
             Me = new Me();
         }
 
-        public async void FetchDataAsync()
+        public async Task<bool> FetchMyDataAsync()
         {
-            _errorMessage = null;
+            try
+            {
+                await Me.FetchData(RestClient);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return false;
+            }
+        }
+
+        public async void FetchPeopleDataAsync()
+        {
             bool authTokenMissing = false;
             try
             {
-                var fetchPeopleTask = _people.FetchPeopleList(RestClient);
-                var fetchMeTask = Me.FetchData(RestClient);
-
-                await Task.WhenAll(fetchPeopleTask, fetchMeTask);
-
+                await _people.FetchPeopleList(RestClient);
+                People.Clear();
                 People.AddRange(_people.PeopleList.ConvertAll(p => new PersonViewModel(p, Me)));
             }
             catch (Exception ex)
             {
-                _errorMessage = ex.Message;
-                authTokenMissing = (ex as ConnectionException)?.IsAuthTokenMissing ?? false;
+                ErrorMessage = ex.Message;
             }
             finally
             {
                 _dataLoaded = true;
-                _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(_errorMessage, authTokenMissing));
+                _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
             }
         }
 
