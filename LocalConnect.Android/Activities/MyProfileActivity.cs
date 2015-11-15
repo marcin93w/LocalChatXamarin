@@ -37,11 +37,14 @@ namespace LocalConnect.Android.Activities
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.MyProfile);
 
-            Task<bool> dataLoading = null;
             if (!MyProfileViewModel.IsInitialized)
             {
                 var me = JsonConvert.DeserializeObject<Me>(Intent.GetStringExtra("Me"));
                 MyProfileViewModel.Initialize(me);
+            }
+            Task<bool> dataLoading = null;
+            if (!MyProfileViewModel.DataLoaded)
+            {
                 dataLoading = MyProfileViewModel.LoadData();
             }
 

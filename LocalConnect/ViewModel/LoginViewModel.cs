@@ -11,7 +11,7 @@ using LocalConnect.Services;
 namespace LocalConnect.ViewModel
 {
 
-    public class LoginViewModel : ViewModelBase, ISocketClientUsingViewModel
+    public class LoginViewModel : ViewModelBase, IRestClientUsingViewModel
     {
         private readonly User _user = new User();
 
@@ -41,8 +41,6 @@ namespace LocalConnect.ViewModel
         public string ErrorMessage { set; get; }
 
         public IRestClient RestClient { private get; set; }
-        public ISocketClient SocketClient { private get; set; }
-
 
         public async Task<SessionInfo> Authenticate()
         {
@@ -53,10 +51,6 @@ namespace LocalConnect.ViewModel
                 if (sessionInfo == null)
                 {
                     ErrorMessage = "Bad username or password";
-                }
-                else
-                {
-                    SocketClient.Connect(sessionInfo.PersonId);
                 }
 
                 return sessionInfo;
@@ -95,10 +89,6 @@ namespace LocalConnect.ViewModel
                     else
                         ErrorMessage = "Something goes wrong, please try again";
                 }
-                else
-                {
-                    SocketClient.Connect(response.SessionInfo.PersonId);
-                }
 
                 return response.SessionInfo;
             }
@@ -114,11 +104,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                var sessionInfo = await _user.LoginFromFacebook(RestClient, facebookToken);
-
-                SocketClient.Connect(sessionInfo.PersonId);
-
-                return sessionInfo;
+                return await _user.LoginFromFacebook(RestClient, facebookToken);
             }
             catch (Exception ex)
             {

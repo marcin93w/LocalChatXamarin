@@ -30,7 +30,7 @@ namespace LocalConnect.ViewModel
 
         private OnDataLoadEventHandler _onDataLoad;
         public IRestClient RestClient { get; set; }
-        public ISocketClient SocketClient { private get; set; }
+        public ISocketClient SocketClient { get; set; }
 
         public event OnDataLoadEventHandler OnPeopleLoaded
         {

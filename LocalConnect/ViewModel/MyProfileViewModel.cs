@@ -54,15 +54,12 @@ namespace LocalConnect.ViewModel
             try
             {
                 await _me.LoadDetailedData(RestClient);
+                DataLoaded = true;
                 return true;
             }
             catch (Exception ex)
             {
                 return false;
-            }
-            finally
-            {
-                DataLoaded = true;
             }
         }
 

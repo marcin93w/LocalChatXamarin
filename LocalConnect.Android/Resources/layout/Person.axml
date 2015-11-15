@@ -10,7 +10,7 @@
         android:minHeight="25px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout2"
+        android:id="@+id/personInfoPanel"
         android:background="@android:color/holo_green_dark"
         android:padding="5dp">
         <ImageView

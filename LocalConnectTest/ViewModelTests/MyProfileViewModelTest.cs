@@ -18,7 +18,7 @@ namespace LocalConnectTest.ViewModelTests
         public async void ProfileUpdateTest()
         {
             var myProfileVm = new MyProfileViewModel();
-            myProfileVm.RestClient = new RestClient(new FakeAuthTokenManager());
+            myProfileVm.RestClient = new RestClient(new FakeSessionInfoManager());
             myProfileVm.Initialize(new Me
             {
                 FirstName = "asd",

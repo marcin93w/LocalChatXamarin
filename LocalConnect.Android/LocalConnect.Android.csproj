@@ -148,7 +148,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\Helpers\AuthTokenManager.cs" />
+    <Compile Include="Activities\Helpers\SessionInfoManager.cs" />
     <Compile Include="Activities\MyProfileActivity.cs" />
     <Compile Include="Activities\Services\LocationUpdateService.cs" />
     <Compile Include="Activities\PersonChatActivity.cs" />

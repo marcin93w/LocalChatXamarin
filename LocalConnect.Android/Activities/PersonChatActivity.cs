@@ -65,8 +65,8 @@ namespace LocalConnect.Android.Activities
                     .Into(personAvatar);
             }
 
-            var moreButton = FindViewById<ImageView>(Resource.Id.MoreButton);
-            moreButton.Click += ToggleMoreLessInfo;
+            var personInfoPanel = FindViewById<ViewGroup>(Resource.Id.personInfoPanel);
+            personInfoPanel.Click += ToggleMoreLessInfo;
 
             InitializeChat();
 
@@ -74,7 +74,7 @@ namespace LocalConnect.Android.Activities
             {
                 if (!await conversationDataLoading)
                 {
-                    Toast.MakeText(this, _personChatViewModel.ErrorMessage, ToastLength.Long);
+                    Toast.MakeText(ApplicationContext, "Could not connect to server", ToastLength.Long);
                 }
             }
 
@@ -143,6 +143,14 @@ namespace LocalConnect.Android.Activities
             var dateTime = convertView.FindViewById<TextView>(Resource.Id.MessageDateTime);
             dateTime.Text = message.DateTime.ToString("G");
             var status = convertView.FindViewById<TextView>(Resource.Id.MessageStatus);
+            if (message is OutcomeMessage)
+            {
+                status.Text = _personChatViewModel.GetStatusText(message as OutcomeMessage);
+                message.StatusChanged += (sender, args) =>
+                    RunOnUiThread(() => status.Text = _personChatViewModel.GetStatusText(message as OutcomeMessage));
+            }
+            else
+                status.Visibility = ViewStates.Gone;
 
             return convertView;
         }

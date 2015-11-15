@@ -60,5 +60,16 @@ namespace LocalConnect.ViewModel
         {
             _conversation.SendMessage(message);     
         }
+
+        public string GetStatusText(OutcomeMessage message)
+        {
+            if (message.Delivered)
+                return "Sent";
+            if (message.DeliverError)
+                return "Error";
+            if (message.Displayed)
+                return "Displayed";
+            return "Sending...";
+        }
     }
 }

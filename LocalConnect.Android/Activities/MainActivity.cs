@@ -77,6 +77,10 @@ namespace LocalConnect.Android.Activities
 
             _peopleViewModel.OnPeopleLoaded += OnPeopleLoaded;
 
+            if (!_peopleViewModel.SocketClient.IsConnected)
+            {
+                _peopleViewModel.SocketClient.Connect();
+            }
             if (savedInstanceState == null || !_peopleViewModel.DataLoaded)
             {
                 if (!_peopleViewModel.RestClient.IsAuthenticated())
@@ -297,8 +301,8 @@ namespace LocalConnect.Android.Activities
 
         private void Logout()
         {
-            var tokenManager = new AuthTokenManager(this);
-            tokenManager.DeleteAuthToken();
+            var tokenManager = new SessionInfoManager(this);
+            tokenManager.DeleteSessionInfo();
             ViewModelLocator.Instance.ResetViewModel<PeopleViewModel>();
             OpenLoginActivity();
         }

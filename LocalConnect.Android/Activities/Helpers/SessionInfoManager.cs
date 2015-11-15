@@ -11,25 +11,28 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.Helpers;
+using LocalConnect.Models;
 
 namespace LocalConnect.Android.Activities.Helpers
 {
-    public class AuthTokenManager : IAuthTokenManager
+    public class SessionInfoManager : ISessionInfoManager
     {
         private const string AuthTokenKey = "auth_token";
+        private const string PersonIdKey = "person_id";
 
         private readonly Context _context;
 
-        public AuthTokenManager(Context context)
+        public SessionInfoManager(Context context)
         {
             _context = context;
         }
 
-        public void SaveAuthToken(string authToken)
+        public void SaveSessionInfo(SessionInfo sessionInfo)
         {
             var prefs = PreferenceManager.GetDefaultSharedPreferences(_context);
             var editor = prefs.Edit();
-            editor.PutString(AuthTokenKey, authToken);
+            editor.PutString(AuthTokenKey, sessionInfo.Token);
+            editor.PutString(PersonIdKey, sessionInfo.PersonId);
             editor.Apply();
         }
 
@@ -39,11 +42,18 @@ namespace LocalConnect.Android.Activities.Helpers
             return prefs.GetString(AuthTokenKey, null);
         }
 
-        public void DeleteAuthToken()
+        public string ReadPersonId()
+        {
+            var prefs = PreferenceManager.GetDefaultSharedPreferences(_context);
+            return prefs.GetString(PersonIdKey, null);
+        }
+
+        public void DeleteSessionInfo()
         {
             var prefs = PreferenceManager.GetDefaultSharedPreferences(_context);
             var editor = prefs.Edit();
             editor.Remove(AuthTokenKey);
+            editor.Remove(PersonIdKey);
             editor.Apply();
         }
     }

@@ -14,11 +14,11 @@ namespace LocalConnect.Services
     {
         private string _url = "https://lc-fancydesign.rhcloud.com/api";
         private string _authenticationHeader;
-        private readonly IAuthTokenManager _authTokenManager;
+        private readonly ISessionInfoManager _sessionInfoManager;
 
-        public RestClient(IAuthTokenManager authTokenManager)
+        public RestClient(ISessionInfoManager sessionInfoManager)
         {
-            _authTokenManager = authTokenManager;
+            _sessionInfoManager = sessionInfoManager;
         }
 
         public async Task<SessionInfo> Login(string username, string password)
@@ -47,7 +47,7 @@ namespace LocalConnect.Services
             }
 
             _authenticationHeader = $"Bearer {sessionInfo.Token}";
-            _authTokenManager.SaveAuthToken(sessionInfo.Token);
+            _sessionInfoManager.SaveSessionInfo(sessionInfo);
 
             return sessionInfo;
         }
@@ -59,7 +59,7 @@ namespace LocalConnect.Services
             var registrationInfo = await ExecuteRequestAsync<RegistrationInfo>(request);
 
             _authenticationHeader = $"Bearer {registrationInfo.SessionInfo.Token}";
-            _authTokenManager.SaveAuthToken(registrationInfo.SessionInfo.Token);
+            _sessionInfoManager.SaveSessionInfo(registrationInfo.SessionInfo);
 
             return registrationInfo;
         }
@@ -72,7 +72,7 @@ namespace LocalConnect.Services
             var sessionInfo = await ExecuteRequestAsync<SessionInfo>(request);
 
             _authenticationHeader = $"Bearer {sessionInfo.Token}";
-            _authTokenManager.SaveAuthToken(sessionInfo.Token);
+            _sessionInfoManager.SaveSessionInfo(sessionInfo);
 
             return sessionInfo;
         }
@@ -81,7 +81,7 @@ namespace LocalConnect.Services
         {
             if (string.IsNullOrEmpty(_authenticationHeader))
             {
-                var authToken = _authTokenManager.ReadAuthToken();
+                var authToken = _sessionInfoManager.ReadAuthToken();
                 if (string.IsNullOrEmpty(authToken))
                 {
                     return false;
@@ -123,7 +123,7 @@ namespace LocalConnect.Services
         {
             if (string.IsNullOrEmpty(_authenticationHeader) && !noAuthorization)
             {
-                _authenticationHeader = "Bearer " + _authTokenManager.ReadAuthToken();
+                _authenticationHeader = "Bearer " + _sessionInfoManager.ReadAuthToken();
 
                 if (string.IsNullOrEmpty(_authenticationHeader))
                     throw new MissingAuthenticationTokenException();

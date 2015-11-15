@@ -34,7 +34,7 @@
                                 { receiver: person.id, sender: new ObjectId(req.params.personId) }
                             ]
                         }, 
-                        'sender text dateTime status'
+                        'sender text dateTime status' //TODO change status to delivered or deserialization of status???
                     )
                     .sort('-dateTime')
                     .limit(messagesFetchCount)

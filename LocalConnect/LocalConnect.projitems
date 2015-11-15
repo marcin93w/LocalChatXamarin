@@ -9,7 +9,7 @@
     <Import_RootNamespace>LocalConnect</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\IAuthTokenManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ISessionInfoManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\IUiInvokable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\OnDataLoadEventHandler.cs" />

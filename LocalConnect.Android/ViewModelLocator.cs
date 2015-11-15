@@ -18,7 +18,7 @@ namespace LocalConnect.Android
     public class ViewModelLocator
     {
         private IRestClient _restClient;
-        private readonly SocketClient _socketClient;
+        private SocketClient _socketClient;
 
         private static ViewModelLocator _instance;
 
@@ -32,8 +32,6 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<MyProfileViewModel>();
-
-            _socketClient = new SocketClient();
         }
 
         public T GetUiInvokableViewModel<T>(Activity activity) where T : ViewModelBase, IUiInvokable
@@ -48,26 +46,21 @@ namespace LocalConnect.Android
         {
             var viewModel = ServiceLocator.Current.GetInstance<T>();
 
-            if (viewModel is IRestClientUsingViewModel || viewModel is LoginViewModel)
+            if (viewModel is IRestClientUsingViewModel)
             {
                 if (_restClient == null)
                 {
-                    _restClient = new RestClient(new AuthTokenManager(context));
+                    _restClient = new RestClient(new SessionInfoManager(context));
                 }
-
-                if (viewModel is IRestClientUsingViewModel)
-                {
-                    (viewModel as IRestClientUsingViewModel).RestClient = _restClient;
-                }
-
-                if (viewModel is LoginViewModel)
-                {
-                    (viewModel as LoginViewModel).RestClient = _restClient;
-                }
+                (viewModel as IRestClientUsingViewModel).RestClient = _restClient;
             }
 
             if (viewModel is ISocketClientUsingViewModel)
             {
+                if (_socketClient == null)
+                {
+                    _socketClient = new SocketClient(new SessionInfoManager(context));
+                }
                 (viewModel as ISocketClientUsingViewModel).SocketClient = _socketClient;
             }
 

@@ -7,7 +7,7 @@ using LocalConnect.Helpers;
 
 namespace LocalConnectTest.Helpers
 {
-    public class FakeAuthTokenManager : IAuthTokenManager
+    public class FakeSessionInfoManager : ISessionInfoManager
     {
         public void SaveAuthToken(string authToken)
         {
@@ -19,7 +19,7 @@ namespace LocalConnectTest.Helpers
             return "asda";
         }
 
-        public void DeleteAuthToken()
+        public void DeleteSessionInfo()
         {
             
         }

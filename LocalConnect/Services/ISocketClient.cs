@@ -4,8 +4,9 @@ namespace LocalConnect.Services
 {
     public interface ISocketClient
     {
-        void Connect(string personId);
+        bool Connect();
         event MessageReceivedEventHandler OnMessageReceived;
         void SendMessage(OutcomeMessage message, int messageIndex);
+        bool IsConnected { get; set; }
     }
 }
