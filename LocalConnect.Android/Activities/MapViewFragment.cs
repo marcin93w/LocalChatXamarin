@@ -56,10 +56,10 @@ namespace LocalConnect.Android.Activities
         {
             _map = googleMap;
             _map.MapType = GoogleMap.MapTypeHybrid;
-            _peopleViewModel.OnDataLoad += OnDataLoad;
+            _peopleViewModel.OnPeopleLoaded += OnPeopleLoaded;
         }
 
-        private void OnDataLoad(object sender, OnDataLoadEventArgs e)
+        private void OnPeopleLoaded(object sender, OnDataLoadEventArgs e)
         {
             if (e.IsSuccesful)
             {
@@ -77,6 +77,10 @@ namespace LocalConnect.Android.Activities
                     markerOptions.SetPosition(point);
                     markerOptions.SetTitle(person.Name);
                     var marker = _map.AddMarker(markerOptions);
+                    if (_markers.ContainsKey(person.Id))
+                    {
+                        _markers[person.Id].Remove();
+                    }
                     _markers[person.Id] = marker;
                     bounds.Include(point);
                 }

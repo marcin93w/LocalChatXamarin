@@ -23,12 +23,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Location.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SocketClient.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Services\ConnectionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISocketClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\IRestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\MissingAuthenticationTokenException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\RestClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\ISocketClientUsingViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\MyProfileViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonChatViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\IRestClientUsingViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />

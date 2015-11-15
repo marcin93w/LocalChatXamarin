@@ -75,9 +75,9 @@ namespace LocalConnect.Android.Activities
             _loadingInfoTextView = FindViewById<TextView>(Resource.Id.LoadingInfoText);
             _loadingInfoIcon = FindViewById<ImageView>(Resource.Id.LoadingInfoIcon);
 
-            _peopleViewModel.OnDataLoad += OnPeopleLoaded;
+            _peopleViewModel.OnPeopleLoaded += OnPeopleLoaded;
 
-            if (savedInstanceState == null)
+            if (savedInstanceState == null || !_peopleViewModel.DataLoaded)
             {
                 if (!_peopleViewModel.RestClient.IsAuthenticated())
                 {
@@ -115,9 +115,9 @@ namespace LocalConnect.Android.Activities
 
         protected override void OnDestroy()
         {
-            if (_locationUpdateServiceConnection != null)
-                UnbindService(_locationUpdateServiceConnection);
             base.OnDestroy();
+            if (_locationUpdateServiceConnection != null)
+                ApplicationContext.UnbindService(_locationUpdateServiceConnection);
         }
 
         private void OnMyDataLoaded()
@@ -129,13 +129,14 @@ namespace LocalConnect.Android.Activities
                 Picasso.With(this)
                     .Load(_peopleViewModel.Me.Avatar)
                     .Into(meImage);
+                meImage.Click += OpenMyProfileView;
             }
         }
 
         private void CreateLocationUpdateService()
         {
             var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
-            StartService(startLocationUpdateServiceIntent);
+            ApplicationContext.StartService(startLocationUpdateServiceIntent);
         }
 
         private void BindToLocationUpdateService()
@@ -146,26 +147,31 @@ namespace LocalConnect.Android.Activities
 
                 _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
                 _locationUpdateServiceConnection.ServiceConnected += OnLocationUpdateServiceConnected;
-                _peopleViewModel.MyLocationChanged += OnMyLocationChanged;
-                BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
+                ApplicationContext.BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
             }
         }
 
         private async void OnLocationUpdateServiceConnected(object sender, ServiceConnectedEventArgs args)
         {
-            if (!await _loadingMyDataTask)
-                return;
-
             if (args.ServiceBinder.Service.Location == null)
             {
                 ChangeLoadingInfoState(LoadingInfoState.GpsError);
             }
-        }
-
-        private void OnMyLocationChanged(object sender, EventArgs eventArgs)
-        {
-            FetchPeople();
-            _peopleViewModel.MyLocationChanged -= OnMyLocationChanged; //do not refresh people when moved, maybe this should be changed
+            else
+            {
+                if (!await _loadingMyDataTask)
+                    return;
+                try
+                {
+                    await _peopleViewModel.SendLocationUpdate(args.ServiceBinder.Service.Location);
+                }
+                catch (Exception ex)
+                {
+                    ChangeLoadingInfoState(LoadingInfoState.NetworkError);
+                    return;
+                }
+                FetchPeople();
+            }
         }
 
         private void FetchPeople()
@@ -302,6 +308,13 @@ namespace LocalConnect.Android.Activities
             var loginActivity = new Intent(ApplicationContext, typeof(LoginActivity));
             StartActivity(loginActivity);
             Finish();
+        }
+
+        private void OpenMyProfileView(object sender, EventArgs e)
+        {
+            var myProfileActivity = new Intent(ApplicationContext, typeof(MyProfileActivity));
+            myProfileActivity.PutExtra("Me", JsonConvert.SerializeObject(_peopleViewModel.Me));
+            StartActivity(myProfileActivity);
         }
     }
 }

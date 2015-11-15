@@ -22,6 +22,7 @@ namespace LocalConnect.Android.Activities
         private readonly PeopleViewModel _peopleViewModel ;
 
         private ViewGroup _rootView;
+        private ListView _list;
 
         public ListViewFragment()
         {
@@ -34,20 +35,17 @@ namespace LocalConnect.Android.Activities
             _rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.ListViewFragment, container, false);
 
-            _peopleViewModel.OnDataLoad += OnDataLoad;
+            _list = _rootView.FindViewById<ListView>(Resource.Id.listView);
+            _peopleViewModel.OnPeopleLoaded += OnPeopleLoad;
+            _list.ItemClick += UserToChatSelected;
 
             return _rootView;
         }
 
-        private void OnDataLoad(object sender, OnDataLoadEventArgs eventArgs)
+        private void OnPeopleLoad(object sender, OnDataLoadEventArgs e)
         {
-            if (eventArgs.IsSuccesful)
-            {
-                var list = _rootView.FindViewById<ListView>(Resource.Id.listView);
-                list.Adapter = new PeopleListAdapter(_rootView.Context,
-                    Resource.Layout.ListItem, _peopleViewModel);
-                list.ItemClick += UserToChatSelected;
-            }
+            _list.Adapter = new PeopleListAdapter(_rootView.Context,
+                Resource.Layout.ListItem, _peopleViewModel);
         }
 
         private void UserToChatSelected(object sender, AdapterView.ItemClickEventArgs e)

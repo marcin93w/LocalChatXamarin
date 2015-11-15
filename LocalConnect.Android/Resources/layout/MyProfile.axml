@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/ProfilePanel">
+        <RelativeLayout
+            android:minWidth="25px"
+            android:minHeight="25px"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:id="@+id/relativeLayout1"
+            android:background="@android:color/holo_green_dark"
+            android:paddingRight="10dp">
+            <ImageButton
+                android:src="@android:drawable/ic_menu_revert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ProfileCancelButton" />
+            <TextView
+                android:text="Edit profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ProfileLogin"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:layout_centerInParent="true"
+                android:textSize="20dp"
+                android:layout_marginRight="20dp" />
+        </RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout1">
+            <ImageView
+                android:src="@android:drawable/ic_menu_gallery"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:id="@+id/ProfileAvatar"
+                android:layout_margin="5dp" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/linearLayout2"
+                android:layout_margin="5dp">
+                <EditText
+                    android:inputType="textPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ProfileName"
+                    android:background="@drawable/edittextgreen"
+                    android:hint="Name" />
+                <EditText
+                    android:inputType="textPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ProfileSurname"
+                    android:background="@drawable/edittextgreen"
+                    android:hint="Surname"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </LinearLayout>
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ProfileShortDescription"
+            android:layout_margin="5dp"
+            android:background="@drawable/edittextgreen"
+            android:hint="Short descirption" />
+        <MultiAutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ProfileLongDescription"
+            android:layout_margin="5dp"
+            android:minLines="3"
+            android:background="@drawable/edittextgreen"
+            android:hint="Long description" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ProfileErrorPanel"
+            android:layout_margin="5dp"
+            android:visibility="gone">
+            <ImageView
+                android:src="@android:drawable/presence_offline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView1"
+                android:layout_margin="5dp" />
+            <TextView
+                android:text="Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ProfileErrorText"
+                android:layout_gravity="center"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout3">
+            <Button
+                android:text="Save"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/ProfileSaveButton"
+                android:layout_weight="1"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/LoadingPanel"
+        android:minWidth="25px"
+        android:minHeight="25px"
+        android:alpha="0.5"
+        android:background="@android:color/black"
+        android:visibility="gone">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar1"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</RelativeLayout>

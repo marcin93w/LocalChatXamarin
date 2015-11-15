@@ -64,10 +64,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Helpers\FakeAuthTokenManager.cs" />
     <Compile Include="Helpers\FakeChatClient.cs" />
     <Compile Include="Helpers\FakeDataProvider.cs" />
     <Compile Include="ViewModelTests\LoginViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModelTests\MyProfileViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocalConnect.Android\LocalConnect.Android.csproj">

@@ -47,8 +47,6 @@ namespace LocalConnect.Android.Activities.Services
 
         public override IBinder OnBind(Intent intent)
         {
-            if(Location != null)
-                SendLocationUpdate(); //TODO byc moze nie potrzebne bo OnLocationUpdate zalatwia sprawe
             return new LocationUpdateServiceBinder(this);
         }
 

@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\Helpers\AuthTokenManager.cs" />
+    <Compile Include="Activities\MyProfileActivity.cs" />
     <Compile Include="Activities\Services\LocationUpdateService.cs" />
     <Compile Include="Activities\PersonChatActivity.cs" />
     <Compile Include="Activities\ListViewFragment.cs" />
@@ -166,6 +167,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
+    <AndroidResource Include="Resources\layout\MyProfile.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml">

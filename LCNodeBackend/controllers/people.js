@@ -124,6 +124,26 @@
                 res.json(me);
             });
     }
+    
+    peopleCtrl.updateMe = function (req, res) {
+        if (!req.body.FirstName || !req.body.Surname || !req.body.ShortDescription || !req.body.LongDescription) {
+            res.send(400);
+            return;
+        }
+        Person.findOne({ user: req.user })
+            .then(function (person) {
+                person.firstname = req.body.FirstName;
+                person.surname = req.body.Surname;
+                person.shortDescription = req.body.ShortDescription;
+                person.longDescription = req.body.LongDescription;
+                person.save(function () {
+                    res.send(200);
+                });
+            })
+            .catch(function (err) {
+                res.send(err);
+            });
+    }
 
     peopleCtrl.updateMyLocation = function(req, res) {
         if (isNaN(req.body.Lon) || isNaN(req.body.Lat)) {

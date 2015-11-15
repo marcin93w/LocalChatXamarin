@@ -26,5 +26,10 @@ namespace LocalConnect.Models
             Location = location;
             LocationChanged?.Invoke(this, new EventArgs());
         }
+
+        public async Task UpdateData(IRestClient restClient)
+        {
+            await restClient.PostDataAsync<Me>("me/update", this);
+        }
     }
 }

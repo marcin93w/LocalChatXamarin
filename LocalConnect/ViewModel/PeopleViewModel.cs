@@ -25,18 +25,18 @@ namespace LocalConnect.ViewModel
             remove { Me.LocationChanged -= value; }
         }
 
-        private bool _dataLoaded;
+        public bool DataLoaded { get; private set; }
         public string ErrorMessage { get; set; }
 
         private OnDataLoadEventHandler _onDataLoad;
         public IRestClient RestClient { get; set; }
         public ISocketClient SocketClient { private get; set; }
 
-        public event OnDataLoadEventHandler OnDataLoad
+        public event OnDataLoadEventHandler OnPeopleLoaded
         {
             add
             {
-                if (_dataLoaded)
+                if (DataLoaded)
                 {
                     value(this, new OnDataLoadEventArgs(ErrorMessage));
                 }
@@ -84,7 +84,7 @@ namespace LocalConnect.ViewModel
             }
             finally
             {
-                _dataLoaded = true;
+                DataLoaded = true;
                 _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
             }
         }

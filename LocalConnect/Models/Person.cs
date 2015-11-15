@@ -24,7 +24,7 @@ namespace LocalConnect.Models
         public string Avatar { set; get; }
 
 
-        public string LongDescription { private set; get; }
+        public string LongDescription { set; get; }
 
         public string Name => FirstName + " " + Surname;
 

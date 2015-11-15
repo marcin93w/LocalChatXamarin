@@ -31,6 +31,7 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<PersonChatViewModel>();
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<MyProfileViewModel>();
 
             _socketClient = new SocketClient();
         }
