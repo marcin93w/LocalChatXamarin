@@ -2,7 +2,6 @@
     var io = require('socket.io')(http);
 
     var messagesCtrl = require('../controllers/messages');
-    var peopleCtrl = require('../controllers/people');
     var Message = require('../models/message');
 
     console.log('starting chat');
@@ -26,6 +25,17 @@
                 }, function(err) {
                     io.to(personId).emit('message error', { clientMessageId: msg.clientMessageId, error: err });
                 });
+        });
+
+        socket.on('message displayed', function(msgId) {
+            messagesCtrl.setDisplayed(msgId)
+            .then(function () {
+                console.log('message set as displayed: ' + msgId);
+                //TODO send that info to sender
+            })
+            .catch(function(err) {
+                console.log('ERROR!!: failed set message as displayed: ' + msgId + ': ' + err);
+            });
         });
     });
 };

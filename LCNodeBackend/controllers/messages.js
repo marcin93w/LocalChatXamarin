@@ -22,6 +22,24 @@
 
         return saveResultPromise.promise;
     };
+    
+    messagesCtrl.setDisplayed = function(msgId) {
+        var saveResultPromise = q.defer();
+
+        message.findOne({ _id: msgId }, 'status')
+            .then(function(message) {
+                message.status = 3;
+                return message.save()
+                    .then(function() {
+                        saveResultPromise.resolve();
+                    });
+            })
+            .catch(function(err) {
+                saveResultPromise.reject(err);
+            });
+        
+        return saveResultPromise.promise;
+    }
 
     messagesCtrl.getLastMessagesWith = function(req, res) {
         Person

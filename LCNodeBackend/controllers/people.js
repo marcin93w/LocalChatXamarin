@@ -1,18 +1,35 @@
 ﻿(function (peopleCtrl) {
 
+    var _ = require('underscore');
+    var mongoose = require('mongoose');
+
     var Person = require('../models/person');
+    var Message = require('../models/message');
     var User = require('../models/user');
 
-    function beautifyPeopleCollection(collection) {
-        collection.forEach(function(element) {
-            if (Array.isArray(element.location)) {
-                element.location = {
-                    'lon': element.location[0],
-                    'lat': element.location[1]
+    function beautifyPeopleCollection(people, unreadMsgs) {
+        return _.map(people, function(person) {
+            var newPerson = {
+                id: person.id,
+                firstname: person.firstname,
+                surname: person.surname,
+                shortDescription: person.shortDescription,
+                avatar: person.avatar
+            };
+            if (Array.isArray(person.location)) {
+                newPerson.location = {
+                    lon: person.location[0],
+                    lat: person.location[1]
                 };
             }
+            var personId = mongoose.Types.ObjectId(person.id);
+            var personMsgs = _.find(unreadMsgs, function(msg) {
+                return msg._id.id === personId.id;
+            });
+            if (personMsgs)
+                newPerson.unreadMessages = personMsgs.count;
+            return newPerson;
         });
-        return collection;
     }    
     
     peopleCtrl.getAllPeople = function (req, res) {
@@ -32,22 +49,40 @@
                         $near : {
                             $geometry: { type: "Point", coordinates: me.location },
                             $minDistance: 0,
-                            $maxDistance: 10000
+                            $maxDistance: 10000000
                         }
                     }}, 
                     'id firstname surname shortDescription location avatar')
                 .where("user").ne(req.user)
                 .limit(20)
-                .lean()
                 .exec()
                 .then(function (people) {
-                    res.json(beautifyPeopleCollection(people));
+
+                    var peopleIds = _.map(people, function(p) { return mongoose.Types.ObjectId(p.id); });
+                    var rules = [
+                        { 'receiver': mongoose.Types.ObjectId(me.id) },
+                        { 'status': { $lt: 3 } }, 
+                        { 'sender': { $in : peopleIds } }];
+                    Message.aggregate([{
+                            $match: { $and: rules }
+                        }, {
+                            $group: {
+                                _id: '$sender',
+                                count: { $sum: 1 }
+                            }
+                        }])
+                        .exec(function (err, unreadMsgs) {
+                            if (err)
+                                res.send(err);
+                            else {
+                                res.json(beautifyPeopleCollection(people, unreadMsgs));
+                            }
+                        });
                 });
         })
         .catch(function(err) {
             res.send(err);
-            });
-        
+        });
     };
     
     peopleCtrl.getPersonDetails = function(req, res) {
