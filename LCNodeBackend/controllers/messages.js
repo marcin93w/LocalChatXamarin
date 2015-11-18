@@ -26,7 +26,7 @@
     messagesCtrl.setDisplayed = function(msgId) {
         var saveResultPromise = q.defer();
 
-        message.findOne({ _id: msgId }, 'status')
+        Message.findOne({ _id: msgId }, 'status')
             .then(function(message) {
                 message.status = 3;
                 return message.save()
@@ -52,7 +52,7 @@
                                 { receiver: person.id, sender: new ObjectId(req.params.personId) }
                             ]
                         }, 
-                        'sender text dateTime status' //TODO change status to delivered or deserialization of status???
+                        'id sender text dateTime status'
                     )
                     .sort('-dateTime')
                     .limit(messagesFetchCount)

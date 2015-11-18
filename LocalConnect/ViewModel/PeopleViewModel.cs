@@ -29,6 +29,8 @@ namespace LocalConnect.ViewModel
         public string ErrorMessage { get; set; }
 
         private OnDataLoadEventHandler _onDataLoad;
+        private Task _peopleLoadingTask;
+
         public IRestClient RestClient { get; set; }
         public ISocketClient SocketClient { get; set; }
 
@@ -71,10 +73,12 @@ namespace LocalConnect.ViewModel
 
         public async void FetchPeopleData()
         {
+            SetUpMessagesListener();
             bool authTokenMissing = false;
             try
             {
-                await _people.FetchPeopleList(RestClient);
+                _peopleLoadingTask = _people.FetchPeopleList(RestClient);
+                await _peopleLoadingTask;
                 People.Clear();
                 People.AddRange(_people.PeopleList.ConvertAll(p => new PersonViewModel(p, Me)));
             }
@@ -86,6 +90,25 @@ namespace LocalConnect.ViewModel
             {
                 DataLoaded = true;
                 _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
+            }
+        }
+
+        private void SetUpMessagesListener()
+        {
+            SocketClient.OnMessageReceived += OnMessageReceived;
+        }
+
+        private async void OnMessageReceived(object sender, MessageReceivedEventArgs receivedEventArgs)
+        {
+            await _peopleLoadingTask;
+            var person = People.FirstOrDefault((p) => receivedEventArgs.Message.SenderId == p.Id);
+            if (person != null)
+            {
+                person.UnreadMessages = (person.UnreadMessages ?? 0) + 1;
+            }
+            else
+            {
+                //fetch that person
             }
         }
 

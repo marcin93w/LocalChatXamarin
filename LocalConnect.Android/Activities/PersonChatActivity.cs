@@ -44,10 +44,7 @@ namespace LocalConnect.Android.Activities
 
             var person = _peopleViewModel.People.First(p => p.Id == Intent.GetStringExtra("PersonId"));
 
-            if (_personChatViewModel.Person == null || _personChatViewModel.Person.Id != person.Id)
-            {
-                _personChatViewModel.Initialize(person);
-            }
+            _personChatViewModel.Initialize(person);
 
             Task<bool> conversationDataLoading = null;
             if(!_personChatViewModel.DataLoaded)

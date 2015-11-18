@@ -51,6 +51,7 @@ namespace LocalConnect.Services
                 if (msg != null && OnMessageReceived != null)
                 {
                     var incomeMessage = new IncomeMessage(
+                        msg["id"].ToString(),
                         msg["sender"].ToString(),
                         msg["text"].ToString(), 
                         DateTime.Now);
@@ -76,6 +77,7 @@ namespace LocalConnect.Services
                 msg.DeliverError = true;
                 _messagesWitingForConfirmation.Remove(msgIdx);
             });
+            _socket.On("disconnect", () => IsConnected = false);
 
             IsConnected = true;
             return true;
@@ -91,6 +93,12 @@ namespace LocalConnect.Services
             };
             _messagesWitingForConfirmation.Add(messageIndex, message);
             _socket.Emit("chat message", msg);
+        }
+
+        public void MarkMessageAsDisplayed(IncomeMessage message)
+        {
+            _socket.Emit("message displayed", message.MessageId);
+            message.Displayed = true;
         }
 
         public bool IsConnected { get; set; }

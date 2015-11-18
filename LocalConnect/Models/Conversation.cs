@@ -32,6 +32,7 @@ namespace LocalConnect.Models
             if (!IsHolded && messageReceivedEventArgs.Message.SenderId == _personId)
             {
                 Messages.Add(messageReceivedEventArgs.Message);
+                _socketClient.MarkMessageAsDisplayed(messageReceivedEventArgs.Message);
             }
         }
 
@@ -51,7 +52,8 @@ namespace LocalConnect.Models
                 Message msg;
                 if (message.Value<string>("sender") == _personId)
                 {
-                    msg = new IncomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
+                    msg = new IncomeMessage(message.Value<string>("_id"), 
+                        _personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
                 }
                 else
                 {
@@ -59,9 +61,16 @@ namespace LocalConnect.Models
                     {
                         Sent = true
                     };
-                    var status = message.Value<int?>("status");
-                    if (status.HasValue && status > 2)
-                        msg.Displayed = true;
+                }
+                var status = message.Value<int?>("status");
+                if (status.HasValue && status > 2)
+                {
+                    msg.Displayed = true;
+                }
+                
+                if (msg is IncomeMessage && !msg.Displayed)
+                {
+                    _socketClient.MarkMessageAsDisplayed((IncomeMessage) msg);    
                 }
 
                 Messages.Insert(0, msg);

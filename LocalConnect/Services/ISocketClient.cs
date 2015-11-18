@@ -7,6 +7,7 @@ namespace LocalConnect.Services
         bool Connect();
         event MessageReceivedEventHandler OnMessageReceived;
         void SendMessage(OutcomeMessage message, int messageIndex);
+        void MarkMessageAsDisplayed(IncomeMessage message);
         bool IsConnected { get; set; }
     }
 }

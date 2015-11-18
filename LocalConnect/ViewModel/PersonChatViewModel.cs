@@ -28,9 +28,13 @@ namespace LocalConnect.ViewModel
 
         public void Initialize(PersonViewModel person)
         {
-            Person = person;
-            _conversation = new Conversation(Person.Id, SocketClient, RunOnUiThread);
-            DataLoaded = false;
+            if (Person == null || Person.Id != person.Id || person.UnreadMessages.HasValue)
+            {
+                Person = person;
+                _conversation = new Conversation(Person.Id, SocketClient, RunOnUiThread);
+                DataLoaded = false;
+                Person.ClearUnreadMessages();
+            }
         }
 
         public async Task<bool> FetchDataAsync()

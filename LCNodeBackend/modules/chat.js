@@ -20,7 +20,7 @@
             });
             messagesCtrl.saveMessage(message)
                 .then(function(messageId) {
-                    io.to(msg.receiver).emit('chat message', { sender: personId, text: msg.text });
+                    io.to(msg.receiver).emit('chat message', { id: messageId, sender: personId, text: msg.text });
                     io.to(personId).emit('message saved', { clientMessageId: msg.clientMessageId, messageId: messageId });
                 }, function(err) {
                     io.to(personId).emit('message error', { clientMessageId: msg.clientMessageId, error: err });

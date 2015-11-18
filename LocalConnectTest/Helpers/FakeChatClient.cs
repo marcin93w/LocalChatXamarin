@@ -15,6 +15,11 @@ namespace LocalConnectTest.Helpers
             SentMessages = new List<OutcomeMessage>();
         }
 
+        public void MarkMessageAsDisplayed(IncomeMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool IsConnected { get; private set; }
         public string ConnectedPersonId { get; private set; }
 

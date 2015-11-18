@@ -44,7 +44,7 @@ namespace LocalConnect.Android.Activities
 
         private void OnPeopleLoad(object sender, OnDataLoadEventArgs e)
         {
-            _list.Adapter = new PeopleListAdapter(_rootView.Context,
+            _list.Adapter = new PeopleListAdapter(Activity, _rootView.Context,
                 Resource.Layout.ListItem, _peopleViewModel);
         }
 

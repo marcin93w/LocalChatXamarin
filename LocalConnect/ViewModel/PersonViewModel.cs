@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using LocalConnect.Models;
@@ -30,7 +31,16 @@ namespace LocalConnect.ViewModel
         public string ShortDescription => _person.ShortDescription;
         public string LongDescription => _person.LongDescription;
         public Location Location => _person.Location;
-        public int? UnreadMessages => _person.UnreadMessages;
+        public int? UnreadMessages
+        {
+            get { return _person.UnreadMessages; }
+            set
+            {
+                _person.UnreadMessages = value;
+                RaisePropertyChanged<int?>();
+            }
+        }
+
         public string LocationDescription { private set; get; }
 
 
@@ -51,6 +61,11 @@ namespace LocalConnect.ViewModel
         public async Task LoadDetailedData(IRestClient restClient)
         {
             await _person.LoadDetailedData(restClient);
+        }
+
+        public void ClearUnreadMessages()
+        {
+            UnreadMessages = null;
         }
     }
 }

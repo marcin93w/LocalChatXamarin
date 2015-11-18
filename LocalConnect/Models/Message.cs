@@ -14,6 +14,7 @@ namespace LocalConnect.Models
             DateTime = dateTime;
         }
 
+        public string MessageId { set; get; }
         public string Text { get; }
         public DateTime DateTime { get; }
 
@@ -37,9 +38,10 @@ namespace LocalConnect.Models
 
     public class IncomeMessage : Message
     {
-        public IncomeMessage(string senderId, string text, DateTime dateTime) 
+        public IncomeMessage(string msgId, string senderId, string text, DateTime dateTime) 
             : base(text, dateTime)
         {
+            MessageId = msgId;
             SenderId = senderId;
         }
 
@@ -57,7 +59,6 @@ namespace LocalConnect.Models
             ReceiverId = receiverId;
         }
 
-        public string MessageId { set; get; }
         public string ReceiverId { get; }
 
         public bool Sent
