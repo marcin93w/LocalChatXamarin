@@ -25,7 +25,7 @@ namespace LocalConnect.Android.Activities
 {
     public class MapViewFragment : Fragment, IOnMapReadyCallback
     {
-        private readonly PeopleViewModel _peopleViewModel;
+        private PeopleViewModel _peopleViewModel;
         private GoogleMap _map;
 
         private Dictionary<string, Marker> _markers;
@@ -34,7 +34,6 @@ namespace LocalConnect.Android.Activities
 
         public MapViewFragment()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(Activity);
             _markers = new Dictionary<string, Marker>();
         }
 
@@ -43,6 +42,8 @@ namespace LocalConnect.Android.Activities
         {
             var rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.MapViewFragment, container, false);
+
+            _peopleViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PeopleViewModel>(Activity);
 
             _myLocationIcon = BitmapDescriptorFactory.FromResource(AndroidRes.Drawable.IcMenuMyLocation);
 

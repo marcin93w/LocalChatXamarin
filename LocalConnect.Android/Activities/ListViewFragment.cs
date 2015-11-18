@@ -19,21 +19,18 @@ namespace LocalConnect.Android.Activities
 {
     public class ListViewFragment : Fragment
     {
-        private readonly PeopleViewModel _peopleViewModel ;
+        private PeopleViewModel _peopleViewModel ;
 
         private ViewGroup _rootView;
         private ListView _list;
-
-        public ListViewFragment()
-        {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(Activity);
-        }
-
+        
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
         {
             _rootView = (ViewGroup)inflater.Inflate(
                     Resource.Layout.ListViewFragment, container, false);
+
+            _peopleViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PeopleViewModel>(Activity);
 
             _list = _rootView.FindViewById<ListView>(Resource.Id.listView);
             _peopleViewModel.OnPeopleLoaded += OnPeopleLoad;

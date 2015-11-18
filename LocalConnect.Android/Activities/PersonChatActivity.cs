@@ -32,7 +32,7 @@ namespace LocalConnect.Android.Activities
 
         public PersonChatActivity()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(this);
+            _peopleViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PeopleViewModel>(this);
             _personChatViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PersonChatViewModel>(this);
         }
 

@@ -42,6 +42,11 @@ namespace LocalConnect.Models
             PersonId = personId;
         }
 
+        public static async Task<Person> LoadPerson(IRestClient restClient, string personId)
+        {
+            return await restClient.FetchDataAsync<Person>($"people/{personId}");
+        }
+
         public async Task LoadDetailedData(IRestClient restClient)
         {
             var personData = (JContainer) await restClient.FetchDataAsync($"personDetails/{PersonId}");

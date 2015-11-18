@@ -12,7 +12,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IRestClientUsingViewModel, ISocketClientUsingViewModel
+    public class PeopleViewModel : ViewModelBase, IRestClientUsingViewModel, ISocketClientUsingViewModel, IUiInvokable
     {
         private readonly People _people;
 
@@ -28,11 +28,13 @@ namespace LocalConnect.ViewModel
         public bool DataLoaded { get; private set; }
         public string ErrorMessage { get; set; }
 
-        private OnDataLoadEventHandler _onDataLoad;
+        private OnDataLoadEventHandler _onPeopleLoad;
         private Task _peopleLoadingTask;
+        private bool _messagesListenerAssigned;
 
         public IRestClient RestClient { get; set; }
         public ISocketClient SocketClient { get; set; }
+        public RunOnUiThreadHandler RunOnUiThread { private get; set; }
 
         public event OnDataLoadEventHandler OnPeopleLoaded
         {
@@ -42,11 +44,11 @@ namespace LocalConnect.ViewModel
                 {
                     value(this, new OnDataLoadEventArgs(ErrorMessage));
                 }
-                _onDataLoad += value;
+                _onPeopleLoad += value;
             }
             remove
             {
-                _onDataLoad -= value;
+                _onPeopleLoad -= value;
             }
         }
 
@@ -73,11 +75,11 @@ namespace LocalConnect.ViewModel
 
         public async void FetchPeopleData()
         {
-            SetUpMessagesListener();
             bool authTokenMissing = false;
             try
             {
                 _peopleLoadingTask = _people.FetchPeopleList(RestClient);
+                SetUpMessagesListener();
                 await _peopleLoadingTask;
                 People.Clear();
                 People.AddRange(_people.PeopleList.ConvertAll(p => new PersonViewModel(p, Me)));
@@ -89,13 +91,17 @@ namespace LocalConnect.ViewModel
             finally
             {
                 DataLoaded = true;
-                _onDataLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
+                _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
             }
         }
 
         private void SetUpMessagesListener()
         {
-            SocketClient.OnMessageReceived += OnMessageReceived;
+            if (!_messagesListenerAssigned)
+            {
+                _messagesListenerAssigned = true;
+                SocketClient.OnMessageReceived += OnMessageReceived;
+            }
         }
 
         private async void OnMessageReceived(object sender, MessageReceivedEventArgs receivedEventArgs)
@@ -108,7 +114,11 @@ namespace LocalConnect.ViewModel
             }
             else
             {
-                //fetch that person
+                var newPerson = await Person.LoadPerson(RestClient, receivedEventArgs.Message.SenderId);
+                person = new PersonViewModel(newPerson, Me);
+                _people.PeopleList.Add(newPerson);
+                People.Add(person);
+                RunOnUiThread(() => _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs()));
             }
         }
 

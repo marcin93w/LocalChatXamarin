@@ -50,7 +50,7 @@ namespace LocalConnect.Android.Activities
 
         public MainActivity()
         {
-            _peopleViewModel = ViewModelLocator.Instance.GetViewModel<PeopleViewModel>(this);
+            _peopleViewModel = ViewModelLocator.Instance.GetUiInvokableViewModel<PeopleViewModel>(this);
         }
 
         protected async override void OnCreate(Bundle savedInstanceState)

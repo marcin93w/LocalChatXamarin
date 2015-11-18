@@ -1,6 +1,7 @@
 ﻿(function (peopleCtrl) {
 
     var _ = require('underscore');
+    var q = require("q");
     var mongoose = require('mongoose');
 
     var Person = require('../models/person');
@@ -30,17 +31,33 @@
                 newPerson.unreadMessages = personMsgs.count;
             return newPerson;
         });
-    }    
+    }
     
-    peopleCtrl.getAllPeople = function (req, res) {
-        Person.find({}, 'id firstname surname shortDescription location avatar')
-        .where("user").ne(req.user)
-        .lean()
-        .exec(function (err, people) {
-            if (err) res.send(err);
-            res.json(beautifyPeopleCollection(people));
+    function checkUnreadedMessagesForPeople(people, me) {
+        var defer = q.defer();
+        
+        var peopleIds = _.map(people, function (p) { return mongoose.Types.ObjectId(p.id); });
+        var rules = [
+            { 'receiver': mongoose.Types.ObjectId(me.id) },
+            { 'status': { $lt: 3 } }, 
+            { 'sender': { $in : peopleIds } }];
+        Message.aggregate([{
+                $match: { $and: rules }
+            }, {
+                $group: {
+                    _id: '$sender',
+                    count: { $sum: 1 }
+                }
+            }])
+            .exec(function (err, unreadMsgs) {
+            if (err)
+                defer.reject(err);
+            else
+                defer.resolve(unreadMsgs);
         });
-    };
+        
+        return defer.promise;
+    }
     
     peopleCtrl.getNearestPeople = function (req, res) {
         Person.findOne({ user: req.user }, 'location')
@@ -57,26 +74,9 @@
                 .limit(20)
                 .exec()
                 .then(function (people) {
-
-                    var peopleIds = _.map(people, function(p) { return mongoose.Types.ObjectId(p.id); });
-                    var rules = [
-                        { 'receiver': mongoose.Types.ObjectId(me.id) },
-                        { 'status': { $lt: 3 } }, 
-                        { 'sender': { $in : peopleIds } }];
-                    Message.aggregate([{
-                            $match: { $and: rules }
-                        }, {
-                            $group: {
-                                _id: '$sender',
-                                count: { $sum: 1 }
-                            }
-                        }])
-                        .exec(function (err, unreadMsgs) {
-                            if (err)
-                                res.send(err);
-                            else {
-                                res.json(beautifyPeopleCollection(people, unreadMsgs));
-                            }
+                    return checkUnreadedMessagesForPeople(people, me)
+                        .then(function(unreadMsgs) {
+                            res.json(beautifyPeopleCollection(people, unreadMsgs));
                         });
                 });
         })
@@ -84,7 +84,24 @@
             res.send(err);
         });
     };
-    
+
+    peopleCtrl.getPerson = function(req, res) {
+        Person.findOne({ user: req.user }, 'id')
+        .then(function(me) {
+            return Person.findOne({ _id: req.params.id }, 'id firstname surname shortDescription location avatar')
+                .exec()
+                .then(function(person) {
+                    return checkUnreadedMessagesForPeople([person], me)
+                        .then(function(unreadMsgs) {
+                            res.json(_.first(beautifyPeopleCollection([person], unreadMsgs)));
+                        });
+                });
+        })
+        .catch(function (err) {
+            res.send(err);
+        });
+    };
+
     peopleCtrl.getPersonDetails = function(req, res) {
         Person.findOne({ _id: req.params.id }, 
             'longDescription',
