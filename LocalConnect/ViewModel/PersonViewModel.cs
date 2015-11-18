@@ -20,8 +20,8 @@ namespace LocalConnect.ViewModel
             if (me != null)
             {
                 _me = me;
-                CreateLocationDescription();
-                _me.LocationChanged += (sender, args) => CreateLocationDescription();
+                CalculateLocation();
+                _me.LocationChanged += (sender, args) => CalculateLocation();
             }
         }
 
@@ -41,14 +41,16 @@ namespace LocalConnect.ViewModel
             }
         }
 
+        public double? Distance { private set; get; }
         public string LocationDescription { private set; get; }
 
 
-        private void CreateLocationDescription()
+        private void CalculateLocation()
         {
             var distance = _person.CalculateDistanceFrom(_me);
             if (distance.HasValue)
             {
+                Distance = distance;
                 if (distance < 1000)
                     LocationDescription = $"{distance.Value:0} m from you";
                 else

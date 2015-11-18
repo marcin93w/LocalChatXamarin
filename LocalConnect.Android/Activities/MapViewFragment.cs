@@ -9,15 +9,11 @@ using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
 using Android.OS;
 using Android.Runtime;
-using Android.Support.V4.View;
 using Android.Views;
 using Android.Widget;
-using Java.Lang.Reflect;
-using LocalConnect.Android.Activities.Services;
 using LocalConnect.Helpers;
 using LocalConnect.Models;
 using LocalConnect.ViewModel;
-using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;
 using AndroidRes = global::Android.Resource;
 

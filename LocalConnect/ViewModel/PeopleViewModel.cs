@@ -81,8 +81,13 @@ namespace LocalConnect.ViewModel
                 _peopleLoadingTask = _people.FetchPeopleList(RestClient);
                 SetUpMessagesListener();
                 await _peopleLoadingTask;
+
+                var people = _people.PeopleList
+                    .ConvertAll(p => new PersonViewModel(p, Me))
+                    .OrderByDescending(p => p.UnreadMessages.HasValue)
+                    .ThenBy(p => p.Distance);
                 People.Clear();
-                People.AddRange(_people.PeopleList.ConvertAll(p => new PersonViewModel(p, Me)));
+                People.AddRange(people);
             }
             catch (Exception ex)
             {
@@ -117,7 +122,7 @@ namespace LocalConnect.ViewModel
                 var newPerson = await Person.LoadPerson(RestClient, receivedEventArgs.Message.SenderId);
                 person = new PersonViewModel(newPerson, Me);
                 _people.PeopleList.Add(newPerson);
-                People.Add(person);
+                People.Insert(0, person);
                 RunOnUiThread(() => _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs()));
             }
         }
