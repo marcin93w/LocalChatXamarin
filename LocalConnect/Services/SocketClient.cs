@@ -64,7 +64,7 @@ namespace LocalConnect.Services
                 int msgIdx = int.Parse(info["clientMessageId"].ToString());
                 string msgId = info["messageId"].ToString();
                 var msg = _messagesWitingForConfirmation[msgIdx];
-                msg.Delivered = true;
+                msg.Sent = true;
                 msg.MessageId = msgId;
                 _messagesWitingForConfirmation.Remove(msgIdx);
             });

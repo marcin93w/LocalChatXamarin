@@ -127,14 +127,14 @@ namespace LocalConnect.Android.Activities
         private void OnMyDataLoaded()
         {
             _myDataNeedsReload = false;
+            var meImage = FindViewById<ImageView>(Resource.Id.MeImage);
             if (!string.IsNullOrEmpty(_peopleViewModel.Me.Avatar))
             {
-                var meImage = FindViewById<ImageView>(Resource.Id.MeImage);
                 Picasso.With(this)
                     .Load(_peopleViewModel.Me.Avatar)
                     .Into(meImage);
-                meImage.Click += OpenMyProfileView;
             }
+            meImage.Click += OpenMyProfileView;
         }
 
         private void CreateLocationUpdateService()
@@ -183,7 +183,7 @@ namespace LocalConnect.Android.Activities
             if (_peopleViewModel.Me.Location != null)
             {
                 ChangeLoadingInfoState(LoadingInfoState.LoadingPeople);
-                _peopleViewModel.FetchPeopleDataAsync();
+                _peopleViewModel.FetchPeopleData();
             }
             else
             {

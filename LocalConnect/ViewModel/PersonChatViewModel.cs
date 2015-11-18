@@ -21,7 +21,7 @@ namespace LocalConnect.ViewModel
 
         public PersonViewModel Person { private set; get; }
         public ObservableCollection<Message> Messages => _conversation.Messages;
-        public string ErrorMessage { private set; get; }
+        public bool DataLoaded { private set; get; }
 
         public ISocketClient SocketClient { private get; set; }
         public IRestClient RestClient { private get; set; }
@@ -30,6 +30,7 @@ namespace LocalConnect.ViewModel
         {
             Person = person;
             _conversation = new Conversation(Person.Id, SocketClient, RunOnUiThread);
+            DataLoaded = false;
         }
 
         public async Task<bool> FetchDataAsync()
@@ -38,11 +39,11 @@ namespace LocalConnect.ViewModel
             {
                 await Person.LoadDetailedData(RestClient);
                 await _conversation.FetchLastMessages(RestClient);
+                DataLoaded = true;
                 return true;
             }
             catch (Exception ex)
             {
-                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -63,7 +64,7 @@ namespace LocalConnect.ViewModel
 
         public string GetStatusText(OutcomeMessage message)
         {
-            if (message.Delivered)
+            if (message.Sent)
                 return "Sent";
             if (message.DeliverError)
                 return "Error";

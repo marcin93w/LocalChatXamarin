@@ -30,6 +30,7 @@ namespace LocalConnect.ViewModel
         public string ShortDescription => _person.ShortDescription;
         public string LongDescription => _person.LongDescription;
         public Location Location => _person.Location;
+        public int? UnreadMessages => _person.UnreadMessages;
         public string LocationDescription { private set; get; }
 
 

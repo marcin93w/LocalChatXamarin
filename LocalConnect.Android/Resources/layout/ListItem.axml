@@ -36,15 +36,28 @@
         android:id="@+id/personLocationDesc"
         android:layout_margin="3dp"
         android:textColor="@android:color/background_light" />
-    <ImageView
-        android:src="@android:drawable/ic_dialog_email"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:minWidth="25px"
+        android:minHeight="25px"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/personName"
-        android:id="@+id/unreadMessageIcon"
-        android:layout_marginLeft="5dp"
         android:layout_above="@id/personDesc"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:visibility="gone" />
+        android:layout_marginBottom="5dp"
+        android:id="@+id/unreadMessagePanel"
+        android:visibility="gone">
+        <ImageView
+            android:src="@android:drawable/ic_dialog_email"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/unreadMessageIcon" />
+        <TextView
+            android:text="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/unreadMessageCount" />
+    </LinearLayout>
 </RelativeLayout>

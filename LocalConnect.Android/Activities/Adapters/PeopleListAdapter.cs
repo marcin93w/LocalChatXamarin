@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Android.Content;
+using Android.Graphics;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.ViewModel;
@@ -30,13 +31,24 @@ namespace LocalConnect.Android.Activities.Adapters
             var image = listItemView.FindViewById<ImageView>(Resource.Id.personImage);
             var desc = listItemView.FindViewById<TextView>(Resource.Id.personDesc);
             var locationDesc = listItemView.FindViewById<TextView>(Resource.Id.personLocationDesc);
+            var unreadMsgsPanel = listItemView.FindViewById<ViewGroup>(Resource.Id.unreadMessagePanel);
+            var uneadMsgsCount = listItemView.FindViewById<TextView>(Resource.Id.unreadMessageCount);
 
-            name.Text = _peopleViewModel.People[position].Name;
-            desc.Text = _peopleViewModel.People[position].ShortDescription;
-            locationDesc.Text = _peopleViewModel.People[position].LocationDescription;
+            var person = _peopleViewModel.People[position];
 
-            if(!string.IsNullOrEmpty(_peopleViewModel.People[position].Avatar))
-                LoadUserAvatar(image, _peopleViewModel.People[position].Avatar);
+            name.Text = person.Name;
+            desc.Text = person.ShortDescription;
+            locationDesc.Text = person.LocationDescription;
+
+            if (person.UnreadMessages.HasValue)
+            {
+                uneadMsgsCount.Text = person.UnreadMessages.Value.ToString();
+                unreadMsgsPanel.Visibility = ViewStates.Visible;
+                listItemView.SetBackgroundColor(Color.Argb(128, Color.DarkGreen.R, Color.DarkGreen.G, Color.DarkGreen.B));
+            }
+
+            if(!string.IsNullOrEmpty(person.Avatar))
+                LoadUserAvatar(image, person.Avatar);
 
             return listItemView;
         }

@@ -26,11 +26,22 @@ namespace LocalConnectTest.Helpers
             ConnectedPersonId = personId;
         }
 
+        public bool Connect()
+        {
+            throw new NotImplementedException();
+        }
+
         public event MessageReceivedEventHandler OnMessageReceived;
 
         public void SendMessage(OutcomeMessage message, int messageIndex)
         {
             SentMessages.Add(message);
+        }
+
+        bool ISocketClient.IsConnected
+        {
+            get { return IsConnected; }
+            set { IsConnected = value; }
         }
 
         public void UpdateMyLocation(Location location)

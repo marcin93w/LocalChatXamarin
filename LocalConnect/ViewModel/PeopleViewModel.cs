@@ -69,7 +69,7 @@ namespace LocalConnect.ViewModel
             }
         }
 
-        public async void FetchPeopleDataAsync()
+        public async void FetchPeopleData()
         {
             bool authTokenMissing = false;
             try

@@ -22,6 +22,7 @@ namespace LocalConnect.Models
         public string ShortDescription { set; get; }
         public Location Location { set; get; }
         public string Avatar { set; get; }
+        public int? UnreadMessages { set; get; }
 
 
         public string LongDescription { set; get; }

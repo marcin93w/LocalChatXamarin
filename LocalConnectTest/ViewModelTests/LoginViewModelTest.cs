@@ -21,7 +21,6 @@ namespace LocalConnectTest.ViewModelTests
         public void SetUp()
         {
             _loginViewModel = new LoginViewModel();
-            _loginViewModel.SocketClient = _socketClient;
             _loginViewModel.RestClient = _restClient;
         }
 

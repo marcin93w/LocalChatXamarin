@@ -10,7 +10,7 @@
     function beautifyPeopleCollection(people, unreadMsgs) {
         return _.map(people, function(person) {
             var newPerson = {
-                id: person.id,
+                _id: person.id,
                 firstname: person.firstname,
                 surname: person.surname,
                 shortDescription: person.shortDescription,

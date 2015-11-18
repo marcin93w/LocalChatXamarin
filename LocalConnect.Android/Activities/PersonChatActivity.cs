@@ -44,12 +44,14 @@ namespace LocalConnect.Android.Activities
 
             var person = _peopleViewModel.People.First(p => p.Id == Intent.GetStringExtra("PersonId"));
 
-            Task<bool> conversationDataLoading = null;
             if (_personChatViewModel.Person == null || _personChatViewModel.Person.Id != person.Id)
             {
                 _personChatViewModel.Initialize(person);
-                conversationDataLoading = _personChatViewModel.FetchDataAsync();
             }
+
+            Task<bool> conversationDataLoading = null;
+            if(!_personChatViewModel.DataLoaded)
+                conversationDataLoading = _personChatViewModel.FetchDataAsync();
 
             var personName = FindViewById<TextView>(Resource.Id.PersonName);
             personName.Text = _personChatViewModel.Person.Name;
@@ -74,7 +76,7 @@ namespace LocalConnect.Android.Activities
             {
                 if (!await conversationDataLoading)
                 {
-                    Toast.MakeText(ApplicationContext, "Could not connect to server", ToastLength.Long);
+                    Toast.MakeText(ApplicationContext, "Could not connect to server", ToastLength.Long).Show();
                 }
             }
 
@@ -150,7 +152,10 @@ namespace LocalConnect.Android.Activities
                     RunOnUiThread(() => status.Text = _personChatViewModel.GetStatusText(message as OutcomeMessage));
             }
             else
+            {
                 status.Visibility = ViewStates.Gone;
+                status.Text = string.Empty;
+            }
 
             return convertView;
         }

@@ -55,7 +55,13 @@ namespace LocalConnect.Models
                 }
                 else
                 {
-                    msg = new OutcomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"));
+                    msg = new OutcomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"))
+                    {
+                        Sent = true
+                    };
+                    var status = message.Value<int?>("status");
+                    if (status.HasValue && status > 2)
+                        msg.Displayed = true;
                 }
 
                 Messages.Insert(0, msg);

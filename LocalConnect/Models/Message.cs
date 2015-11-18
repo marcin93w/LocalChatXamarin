@@ -48,7 +48,7 @@ namespace LocalConnect.Models
 
     public class OutcomeMessage : Message
     {
-        private bool _delivered;
+        private bool _sent;
         private bool _deliverError;
 
         public OutcomeMessage(string receiverId, string text, DateTime dateTime)
@@ -60,14 +60,14 @@ namespace LocalConnect.Models
         public string MessageId { set; get; }
         public string ReceiverId { get; }
 
-        public bool Delivered
+        public bool Sent
         {
             set
             {
-                _delivered = value;
+                _sent = value;
                 RaiseStatusChanged();
             }
-            get { return _delivered; }
+            get { return _sent; }
         }
 
         public bool DeliverError
