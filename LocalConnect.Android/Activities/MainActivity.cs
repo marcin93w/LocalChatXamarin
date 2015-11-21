@@ -187,7 +187,7 @@ namespace LocalConnect.Android.Activities
             }
             else
             {
-                ChangeLoadingInfoState(LoadingInfoState.GpsError);
+                BindToLocationUpdateService();
             }
         }
 

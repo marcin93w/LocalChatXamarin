@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using Java.Util.Logging;
@@ -75,7 +76,8 @@ namespace LocalConnect.ViewModel
 
         public async void FetchPeopleData()
         {
-            bool authTokenMissing = false;
+            ErrorMessage = null;
+            bool isUnauthorized = false;
             try
             {
                 _peopleLoadingTask = _people.FetchPeopleList(RestClient);
@@ -92,11 +94,17 @@ namespace LocalConnect.ViewModel
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+                if (ex is MissingAuthenticationTokenException)
+                    isUnauthorized = true;
+                if (((ex as WebException)?.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    isUnauthorized = true;
+                }
             }
             finally
             {
                 DataLoaded = true;
-                _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, authTokenMissing)); //TODO when authtoken expires
+                _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs(ErrorMessage, isUnauthorized));
             }
         }
 
@@ -112,19 +120,33 @@ namespace LocalConnect.ViewModel
         private async void OnMessageReceived(object sender, MessageReceivedEventArgs receivedEventArgs)
         {
             await _peopleLoadingTask;
-            var person = People.FirstOrDefault((p) => receivedEventArgs.Message.SenderId == p.Id);
+            var person = FindPersonAndIncrementUnreadMessages(receivedEventArgs.Message.SenderId);
+            if (person == null)
+            {
+                var newPerson = await Person.LoadPerson(RestClient, receivedEventArgs.Message.SenderId);
+                lock (_people)
+                {
+                    person = FindPersonAndIncrementUnreadMessages(receivedEventArgs.Message.SenderId);
+                    if (person == null)
+                    {
+                        person = new PersonViewModel(newPerson, Me);
+                        person.UnreadMessages = 1;
+                        _people.PeopleList.Add(newPerson);
+                        People.Insert(0, person);
+                        RunOnUiThread(() => _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs()));
+                    }
+                }
+            }
+        }
+
+        private PersonViewModel FindPersonAndIncrementUnreadMessages(string personId)
+        {
+            var person = People.FirstOrDefault(p => personId == p.Id);
             if (person != null)
             {
                 person.UnreadMessages = (person.UnreadMessages ?? 0) + 1;
             }
-            else
-            {
-                var newPerson = await Person.LoadPerson(RestClient, receivedEventArgs.Message.SenderId);
-                person = new PersonViewModel(newPerson, Me);
-                _people.PeopleList.Add(newPerson);
-                People.Insert(0, person);
-                RunOnUiThread(() => _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs()));
-            }
+            return person;
         }
 
         public async Task SendLocationUpdate(Location location)

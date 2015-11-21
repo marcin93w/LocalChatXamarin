@@ -7,15 +7,16 @@
     var Person = require('../models/person');
     var Message = require('../models/message');
     var User = require('../models/user');
-
-    function beautifyPeopleCollection(people, unreadMsgs) {
-        return _.map(people, function(person) {
+    
+    function beautifyPeopleCollection(people) {
+        return _.map(people, function (person) {
             var newPerson = {
                 _id: person.id,
                 firstname: person.firstname,
                 surname: person.surname,
                 shortDescription: person.shortDescription,
-                avatar: person.avatar
+                avatar: person.avatar,
+                unreadMessages: person.unreadMessages
             };
             if (Array.isArray(person.location)) {
                 newPerson.location = {
@@ -23,62 +24,84 @@
                     lat: person.location[1]
                 };
             }
-            var personId = mongoose.Types.ObjectId(person.id);
-            var personMsgs = _.find(unreadMsgs, function(msg) {
-                return msg._id.id === personId.id;
-            });
-            if (personMsgs)
-                newPerson.unreadMessages = personMsgs.count;
             return newPerson;
         });
     }
     
-    function checkUnreadedMessagesForPeople(people, me) {
+    function getPeopleWithUnreadedMessages(me) {
         var defer = q.defer();
         
-        var peopleIds = _.map(people, function (p) { return mongoose.Types.ObjectId(p.id); });
         var rules = [
             { 'receiver': mongoose.Types.ObjectId(me.id) },
-            { 'status': { $lt: 3 } }, 
-            { 'sender': { $in : peopleIds } }];
+            { 'status': { $lt: 3 } }];
         Message.aggregate([{
-                $match: { $and: rules }
-            }, {
-                $group: {
-                    _id: '$sender',
-                    count: { $sum: 1 }
-                }
-            }])
-            .exec(function (err, unreadMsgs) {
+            $match: { $and: rules }
+        }, {
+            $group: {
+                _id: '$sender',
+                count: { $sum: 1 }
+            }
+        }])
+        .exec(function (err, unreadMsgs) {
             if (err)
                 defer.reject(err);
-            else
-                defer.resolve(unreadMsgs);
+            else {
+                Person.populate(unreadMsgs, { path: '_id', select: 'id firstname surname shortDescription location avatar' },
+                function(err, unreadMsgsWithPeople) {
+                    if (err)
+                        defer.reject(err);
+                    else {
+                        var people = _.map(unreadMsgsWithPeople, function(msg) {
+                            msg._id.unreadMessages = msg.count;
+                            return msg._id;
+                        });
+                        defer.resolve(people);
+                    }
+                });
+            }
         });
         
         return defer.promise;
     }
     
+    function getNearestPeople(me, user) {
+        return Person.find({
+                location: {
+                    $near: {
+                        $geometry: { type: "Point", coordinates: me.location },
+                        $minDistance: 0,
+                        $maxDistance: 10000000
+                    }
+                }
+            },
+            'id firstname surname shortDescription location avatar')
+        .where("user").ne(user)
+        .limit(20)
+        .exec()
+        .then(function(people) {
+                return people;
+            });
+    }
+    
     peopleCtrl.getNearestPeople = function (req, res) {
+        var me = null;
+        var people = [];
         Person.findOne({ user: req.user }, 'location')
-        .then(function(me) {
-            return Person.find({location: {
-                        $near : {
-                            $geometry: { type: "Point", coordinates: me.location },
-                            $minDistance: 0,
-                            $maxDistance: 10000000
-                        }
-                    }}, 
-                    'id firstname surname shortDescription location avatar')
-                .where("user").ne(req.user)
-                .limit(20)
-                .exec()
-                .then(function (people) {
-                    return checkUnreadedMessagesForPeople(people, me)
-                        .then(function(unreadMsgs) {
-                            res.json(beautifyPeopleCollection(people, unreadMsgs));
-                        });
+        .then(function(myPerson) {
+            me = myPerson;
+            return getPeopleWithUnreadedMessages(me);
+        })
+        .then(function (peopleWithMsgs) {
+            people = peopleWithMsgs;
+            return getNearestPeople(me, req.user);
+        })
+        .then(function (nearestPeople) {
+            people = _.union(people, _.filter(nearestPeople, function(p) {
+                return ! _.find(people, function(person) {
+                     return person._id.id === p._id.id;
                 });
+            }));
+            res.json(beautifyPeopleCollection(people));
         })
         .catch(function(err) {
             res.send(err);
@@ -86,20 +109,10 @@
     };
 
     peopleCtrl.getPerson = function(req, res) {
-        Person.findOne({ user: req.user }, 'id')
-        .then(function(me) {
-            return Person.findOne({ _id: req.params.id }, 'id firstname surname shortDescription location avatar')
-                .exec()
-                .then(function(person) {
-                    return checkUnreadedMessagesForPeople([person], me)
-                        .then(function(unreadMsgs) {
-                            res.json(_.first(beautifyPeopleCollection([person], unreadMsgs)));
-                        });
-                });
-        })
-        .catch(function (err) {
-            res.send(err);
-        });
+        Person.findOne({ _id: req.params.id }, 'id firstname surname shortDescription location avatar')
+            .exec()
+            .then(res.json.bind(res))
+            .catch(res.send.bind(res));
     };
 
     peopleCtrl.getPersonDetails = function(req, res) {

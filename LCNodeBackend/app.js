@@ -17,7 +17,8 @@ var mongoUrl = process.env.OPENSHIFT_MONGODB_DB_URL;
 if (mongoUrl) {
     mongoUrl += 'lc';
 } else {
-    mongoUrl = 'mongodb://localhost:27017/localConnect';
+    //mongoUrl = 'mongodb://localhost:27017/localConnect';
+    mongoUrl = 'mongodb://admin:3nPpy4lk7E9S@localhost:27017/lc';
 }
 mongoose.connect(mongoUrl);
 

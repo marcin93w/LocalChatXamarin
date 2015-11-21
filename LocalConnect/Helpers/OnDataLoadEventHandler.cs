@@ -11,25 +11,18 @@ namespace LocalConnect.Helpers
 
         public string ErrorMessage { get; }
 
-        public bool ApplicationNotInitialized { get; }
+        public bool IsUnauthorized { get; }
 
         public OnDataLoadEventArgs()
         {
             IsSuccesful = true;
         }
 
-        public OnDataLoadEventArgs(string errorMessage, bool appNotInitialized = false)
+        public OnDataLoadEventArgs(string errorMessage, bool isIsUnauthorized = false)
         {
             ErrorMessage = errorMessage;
             IsSuccesful = string.IsNullOrEmpty(errorMessage);
-            ApplicationNotInitialized = appNotInitialized;
-        }
-
-        public OnDataLoadEventArgs(Exception ex)
-        {
-            ErrorMessage = ex.Message;
-            ApplicationNotInitialized = ex is MissingAuthenticationTokenException;
-            IsSuccesful = false;
+            IsUnauthorized = isIsUnauthorized;
         }
     }
 
