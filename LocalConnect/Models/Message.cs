@@ -8,8 +8,9 @@ namespace LocalConnect.Models
     {
         private bool _displayed;
 
-        public Message(string text, DateTime dateTime)
+        public Message(string messageId, string text, DateTime dateTime)
         {
+            MessageId = messageId;
             Text = text;
             DateTime = dateTime;
         }
@@ -39,9 +40,8 @@ namespace LocalConnect.Models
     public class IncomeMessage : Message
     {
         public IncomeMessage(string msgId, string senderId, string text, DateTime dateTime) 
-            : base(text, dateTime)
+            : base(msgId, text, dateTime)
         {
-            MessageId = msgId;
             SenderId = senderId;
         }
 
@@ -53,8 +53,8 @@ namespace LocalConnect.Models
         private bool _sent;
         private bool _deliverError;
 
-        public OutcomeMessage(string receiverId, string text, DateTime dateTime)
-            : base(text, dateTime)
+        public OutcomeMessage(string msgId, string receiverId, string text, DateTime dateTime)
+            : base(msgId, text, dateTime)
         {
             ReceiverId = receiverId;
         }

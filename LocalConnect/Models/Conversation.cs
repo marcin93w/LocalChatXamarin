@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using LocalConnect.Helpers;
 using LocalConnect.Services;
@@ -38,15 +39,19 @@ namespace LocalConnect.Models
 
         public void SendMessage(string message)
         {
-            var msg = new OutcomeMessage(_personId, message, DateTime.Now);
+            var msg = new OutcomeMessage(null, _personId, message, DateTime.Now);
             Messages.Add(msg);
             _socketClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
-        public async Task FetchLastMessages(IRestClient restClient)
+        private async Task<int> FetchMessages(IRestClient restClient, Message olderThen = null)
         {
-            var lastMessages = await restClient.FetchDataAsync($"lastMessagesWith/{_personId}");
+            var query = $"lastMessagesWith/{_personId}";
+            if (olderThen != null)
+                query += $"?olderThen={olderThen.MessageId}";
+            var lastMessages = await restClient.FetchDataAsync(query);
 
+            int count = 0;
             foreach (JContainer message in (IEnumerable)lastMessages)
             {
                 Message msg;
@@ -57,7 +62,8 @@ namespace LocalConnect.Models
                 }
                 else
                 {
-                    msg = new OutcomeMessage(_personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"))
+                    msg = new OutcomeMessage(message.Value<string>("_id"), 
+                        _personId, message.Value<string>("text"), message.Value<DateTime>("dateTime"))
                     {
                         Sent = true
                     };
@@ -74,7 +80,20 @@ namespace LocalConnect.Models
                 }
 
                 Messages.Insert(0, msg);
+                count++;
             }
+
+            return count;
+        }
+
+        public async Task FetchLastMessages(IRestClient restClient)
+        {
+            await FetchMessages(restClient);
+        }
+
+        public async Task<bool> FetchOlderMessages(IRestClient restClient)
+        {
+            return (await FetchMessages(restClient, Messages.FirstOrDefault())) > 0;
         }
     }
 }

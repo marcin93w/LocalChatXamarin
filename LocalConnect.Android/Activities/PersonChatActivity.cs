@@ -67,18 +67,26 @@ namespace LocalConnect.Android.Activities
             var personInfoPanel = FindViewById<ViewGroup>(Resource.Id.personInfoPanel);
             personInfoPanel.Click += ToggleMoreLessInfo;
 
-            InitializeChat();
+            var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
+            InitializeChat(messagesList);
 
+            var dataLoaded = true;
             if (conversationDataLoading != null)
             {
                 if (!await conversationDataLoading)
                 {
                     Toast.MakeText(ApplicationContext, "Could not connect to server", ToastLength.Long).Show();
+                    dataLoaded = false;
                 }
             }
 
-            var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
-            longDescription.Text = _personChatViewModel.Person.LongDescription;
+            if (dataLoaded)
+            {
+                var longDescription = FindViewById<TextView>(Resource.Id.LongDescription);
+                longDescription.Text = _personChatViewModel.Person.LongDescription;
+                if(_personChatViewModel.Messages.Count > 0)
+                    messagesList.AddHeaderView(LayoutInflater.Inflate(Resource.Layout.GetMoreMessages, null), null, true);
+            }
         }
 
         public int ConvertDpToPx(float dp)
@@ -116,11 +124,10 @@ namespace LocalConnect.Android.Activities
             messagesList.PostInvalidate();
         }
 
-        private void InitializeChat()
+        private void InitializeChat(ListView messagesList)
         {
-            var messagesList = FindViewById<ListView>(Resource.Id.MessagesList);
             messagesList.Adapter = _personChatViewModel.Messages.GetAdapter(GetMessageView);
-            messagesList.ItemClick += ToggleMessageInfo;
+            messagesList.ItemClick += OnMessagesListItemClick;
 
             _messageTextView = FindViewById<TextView>(Resource.Id.TextInput);
             var sendButton = FindViewById<View>(Resource.Id.SendButton);
@@ -167,12 +174,43 @@ namespace LocalConnect.Android.Activities
             return false;
         }
 
-        private void ToggleMessageInfo(object sender, AdapterView.ItemClickEventArgs e)
+        private void OnMessagesListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            var dateTime = e.View.FindViewById<TextView>(Resource.Id.MessageDateTime);
+            if (e.Position > 0)
+            {
+                ToggleMessageInfo(e.View);
+            }
+            else 
+            {
+                LoadOlderMessages(e.View);
+            }
+        }
+
+        private static void ToggleMessageInfo(View view)
+        {
+            var dateTime = view.FindViewById<TextView>(Resource.Id.MessageDateTime);
             dateTime.Visibility = dateTime.Visibility == ViewStates.Gone ? ViewStates.Visible : ViewStates.Gone;
-            var status = e.View.FindViewById<TextView>(Resource.Id.MessageStatus);
+            var status = view.FindViewById<TextView>(Resource.Id.MessageStatus);
             status.Visibility = status.Visibility == ViewStates.Gone ? ViewStates.Visible : ViewStates.Gone;
+        }
+
+        private async void LoadOlderMessages(View view)
+        {
+            var textView = view.FindViewById<TextView>(Resource.Id.MessagesLoadText);
+            textView.Text = "Loading...";
+            bool? olderMessagesLoadingStatus = await _personChatViewModel.LoadOlderMessages();
+            if (olderMessagesLoadingStatus == true)
+            {
+                textView.Text = "Load older messages";
+            }
+            else if (olderMessagesLoadingStatus == false)
+            {
+                textView.Text = "Error loading messages";
+            }
+            else
+            {
+                view.Visibility = ViewStates.Gone;
+            }
         }
 
         protected override void OnStart()

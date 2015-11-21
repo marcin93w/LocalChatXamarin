@@ -76,5 +76,17 @@ namespace LocalConnect.ViewModel
                 return "Displayed";
             return "Sending...";
         }
+
+        public async Task<bool?> LoadOlderMessages()
+        {
+            try
+            {
+                return (await _conversation.FetchOlderMessages(RestClient)) ? true : (bool?) null;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }
