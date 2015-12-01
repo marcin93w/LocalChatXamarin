@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <resources>
-  <style name="AppStyle" parent="@android:style/Theme.Holo.NoActionBar">
+  <style name="AppStyle" parent="@style/Theme.AppCompat.NoActionBar">
     <item name="android:buttonStyle">@style/AppButton</item>
   </style>
 
-  <style name="AppButton" parent="@android:style/Widget.Holo.Button">
+  <style name="AppButton" parent="@android:style/Widget.Button">
   </style>
 </resources>

@@ -5,60 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/MainLayout">
-    <RelativeLayout
-        android:minWidth="25px"
-        android:minHeight="25px"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/ActionBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/MenuLayout"
-        android:background="@android:color/holo_green_dark"
-        android:padding="5dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
         <ImageView
             android:src="@android:drawable/ic_menu_gallery"
+            android:layout_height="match_parent"
             android:layout_width="50dp"
-            android:layout_height="50dp"
             android:id="@+id/MeImage"
-            android:layout_marginRight="10dp" />
-        <ImageButton
-            android:src="@android:drawable/ic_dialog_map"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:id="@+id/SwitchViewButton"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
-        <ImageButton
-            android:src="@android:drawable/ic_menu_manage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/SwitchViewButton"
-            android:id="@+id/MenuButton"
-            android:layout_centerVertical="true" />
-        <ImageButton
-            android:src="@android:drawable/ic_menu_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/MenuButton"
-            android:id="@+id/SearchButton"
-            android:layout_centerVertical="true" />
-        <ImageButton
-            android:src="@android:drawable/ic_menu_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/MenuButton"
-            android:id="@+id/SearchButton"
-            android:layout_centerVertical="true" />
-        <ImageButton
-            android:src="@android:drawable/ic_menu_rotate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/SearchButton"
-            android:id="@+id/refreshButton"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
+            android:layout_margin="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="0dp" />
+    </android.support.v7.widget.Toolbar>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_below="@id/MenuLayout"
+        android:layout_below="@id/ActionBar"
         android:id="@+id/LoadingInfoPanel"
         android:background="@android:color/holo_green_light">
         <ImageView

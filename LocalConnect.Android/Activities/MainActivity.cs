@@ -7,6 +7,7 @@ using Android.OS;
 using Android.Preferences;
 using Android.Support.V4.App;
 using Android.Support.V4.View;
+using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
 using LocalConnect.Android.Activities.Adapters;
@@ -19,11 +20,13 @@ using Org.Apache.Http.Impl.Conn;
 using Square.Picasso;
 using AndroidRes = Android.Resource;
 using Color = Android.Graphics.Color;
+using PopupMenu = Android.Support.V7.Widget.PopupMenu;
+using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace LocalConnect.Android.Activities
 {
     [Activity(MainLauncher = true)]
-    public class MainActivity : FragmentActivity
+    public class MainActivity : AppCompatActivity
     {
         private enum LoadingInfoState
         {
@@ -47,6 +50,7 @@ namespace LocalConnect.Android.Activities
 
         private Task<bool> _loadingMyDataTask;
         private bool _myDataNeedsReload;
+        private IMenuItem _switchViewAction;
 
         public MainActivity()
         {
@@ -59,17 +63,14 @@ namespace LocalConnect.Android.Activities
 
             SetContentView(Resource.Layout.Main);
 
+            var myToolbar = FindViewById<Toolbar>(Resource.Id.ActionBar);
+            SetSupportActionBar(myToolbar);
+            SupportActionBar.SetDisplayShowTitleEnabled(false);
+
             _viewPager = FindViewById<ViewPager>(Resource.Id.pager);
             _viewPager.Adapter = new MainViewsPagerAdapter(SupportFragmentManager,
                     new ListViewFragment(), new MapViewFragment());
             _viewPager.PageSelected += OnViewChanged;
-
-            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
-            switchViewButton.Click += OnSwitchViewCicked;
-            var settingsButton = FindViewById<ImageButton>(Resource.Id.MenuButton);
-            settingsButton.Click += (sender, e) => OnSettingsClick(settingsButton);
-            var refreshButton = FindViewById<ImageButton>(Resource.Id.refreshButton);
-            refreshButton.Click += DataRefreshRequested;
 
             _loadingInfoPanel = FindViewById<ViewGroup>(Resource.Id.LoadingInfoPanel);
             _loadingInfoTextView = FindViewById<TextView>(Resource.Id.LoadingInfoText);
@@ -268,35 +269,40 @@ namespace LocalConnect.Android.Activities
 
         private void OnViewChanged(object sender, ViewPager.PageSelectedEventArgs e)
         {
-            var switchViewButton = FindViewById<ImageButton>(Resource.Id.SwitchViewButton);
             if (_viewPager.CurrentItem == 1)
             {
                 //is on map view
-                switchViewButton.SetImageResource(Resource.Drawable.ic_view_list_white_36dp);
+                _switchViewAction.SetIcon(Resource.Drawable.ic_view_list_white_36dp);
             }
             else
             {
                 //is on list view
-                switchViewButton.SetImageResource(AndroidRes.Drawable.IcDialogMap);
+                _switchViewAction.SetIcon(AndroidRes.Drawable.IcDialogMap);
             }
         }
 
-        public void OnSettingsClick(View v)
+        public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            PopupMenu popup = new PopupMenu(this, v);
-            popup.MenuItemClick += PopupOnMenuItemClick;
-            popup.MenuInflater.Inflate(Resource.Menu.SettingsMenu, popup.Menu);
-            popup.Show();
+            MenuInflater.Inflate(Resource.Menu.ActionMenu, menu);
+            _switchViewAction = menu.FindItem(Resource.Id.ActionSwitchView);
+            return base.OnCreateOptionsMenu(menu);
         }
 
-        private void PopupOnMenuItemClick(object sender, PopupMenu.MenuItemClickEventArgs menuItemClickEventArgs)
+        public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            switch (menuItemClickEventArgs.Item.ItemId)
+            switch (item.ItemId)
             {
-                case Resource.Id.logout:
+                case Resource.Id.ActionLogout:
                     Logout();
                     break;
+                case Resource.Id.ActionSwitchView:
+                    OnSwitchViewCicked(null, EventArgs.Empty);
+                    break;
+                case Resource.Id.ActionRefresh:
+                    DataRefreshRequested(null, EventArgs.Empty);
+                    break;
             }
+            return base.OnOptionsItemSelected(item);
         }
 
         private void Logout()

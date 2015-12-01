@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:localconnect="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/ActionSearch"
+        android:icon="@android:drawable/ic_menu_search"
+        localconnect:showAsAction="always"
+        android:title="Search"/>
+    <item
+        android:id="@+id/ActionSwitchView"
+        android:icon="@android:drawable/ic_dialog_map"
+        localconnect:showAsAction="always"
+        android:title="Map"/>
+  
+    <item android:id="@+id/ActionRefresh"
+          android:icon="@android:drawable/ic_menu_rotate"
+          android:title="Refresh"/>
+    <item android:id="@+id/ActionLogout"
+            android:title="Logout"/>
+
+
+</menu>
