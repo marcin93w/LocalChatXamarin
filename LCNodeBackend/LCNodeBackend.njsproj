@@ -38,10 +38,11 @@
     <Compile Include="models\message.js" />
     <Compile Include="models\person.js" />
     <Compile Include="models\user.js" />
-    <Compile Include="modules\chat.js" />
+    <Compile Include="services\chat.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\api.js" />
     <Compile Include="bin\www" />
+    <Compile Include="services\locationJammer.js" />
     <Content Include="package.json" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="views\chat.html" />
@@ -51,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
-    <Folder Include="modules\" />
+    <Folder Include="services\" />
     <Folder Include="controllers\" />
     <Folder Include="models\" />
     <Folder Include="public\" />

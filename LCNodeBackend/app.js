@@ -26,7 +26,7 @@ var passport = require('passport');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
-var chat = require('./modules/chat')(http);
+var chat = require('./services/chat')(http);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

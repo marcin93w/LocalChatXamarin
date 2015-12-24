@@ -38,6 +38,12 @@ router.route('/me').get(authController.isAuthenticated,
 router.route('/me/update').post(authController.isAuthenticated, 
     peopleController.updateMe);
 
+router.route('/me/settings').get(authController.isAuthenticated, 
+    peopleController.getMySettings);
+
+router.route('/me/settings/update').post(authController.isAuthenticated, 
+    peopleController.updateMySettings);
+
 router.route('/me/updateLocation').post(authController.isAuthenticated, 
     peopleController.updateMyLocation);
 

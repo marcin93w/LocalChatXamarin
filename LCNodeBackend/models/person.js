@@ -10,7 +10,16 @@ var personSchema = new mongoose.Schema({
         type: [Number],  // [<longitude>, <latitude>]
         index: '2d'      // create the geospatial index
     },
-    avatar: String
+    avatar: String,
+    locationDisruption: Number,
+    jammedLocation: {
+        type: [Number],  // [<longitude>, <latitude>]
+        index: '2d'
+    },
+    locationJammerSettings: {
+        xDisruption: Number,
+        yDisruption: Number
+    }
 });
 
 module.exports = mongoose.model('Person', personSchema);
