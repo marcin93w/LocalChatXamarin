@@ -10,20 +10,19 @@ using Android.Support.V4.View;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
-using LocalConnect.Android.Activities.Adapters;
-using LocalConnect.Android.Activities.Helpers;
-using LocalConnect.Android.Activities.Services;
+using LocalConnect.Android.Views.Adapters;
+using LocalConnect.Android.Views.Helpers;
+using LocalConnect.Android.Views.Services;
 using LocalConnect.Helpers;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
-using Org.Apache.Http.Impl.Conn;
 using Square.Picasso;
 using AndroidRes = Android.Resource;
 using Color = Android.Graphics.Color;
 using PopupMenu = Android.Support.V7.Widget.PopupMenu;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     [Activity(MainLauncher = true)]
     public class MainActivity : AppCompatActivity
@@ -181,7 +180,7 @@ namespace LocalConnect.Android.Activities
 
         private void FetchPeople()
         {
-            if (_peopleViewModel.Me.Location != null)
+            if (_peopleViewModel.Me.RealLocation != null)
             {
                 ChangeLoadingInfoState(LoadingInfoState.LoadingPeople);
                 _peopleViewModel.FetchPeopleData();
@@ -300,6 +299,10 @@ namespace LocalConnect.Android.Activities
                     break;
                 case Resource.Id.ActionRefresh:
                     DataRefreshRequested(null, EventArgs.Empty);
+                    break;
+                case Resource.Id.ActionSettings:
+                    var intent = new Intent(ApplicationContext, typeof(SettingsActivity));
+                    StartActivity(intent);
                     break;
             }
             return base.OnOptionsItemSelected(item);

@@ -3,7 +3,7 @@ using Android.App;
 using Android.Content;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using LocalConnect.Android.Activities.Helpers;
+using LocalConnect.Android.Views.Helpers;
 using LocalConnect.ViewModel;
 using LocalConnect.Helpers;
 using LocalConnect.Services;
@@ -32,6 +32,7 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<PeopleViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<MyProfileViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
 
         public T GetUiInvokableViewModel<T>(Activity activity) where T : ViewModelBase, IUiInvokable

@@ -8,10 +8,11 @@ using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
+using LocalConnect.Models;
 using LocalConnect.ViewModel;
 using Square.Picasso;
 
-namespace LocalConnect.Android.Activities.Adapters
+namespace LocalConnect.Android.Views.Adapters
 {
     public class PeopleListAdapter : ArrayAdapter<string>
     {
@@ -40,7 +41,7 @@ namespace LocalConnect.Android.Activities.Adapters
 
             name.Text = person.Name;
             desc.Text = person.ShortDescription;
-            locationDesc.Text = person.LocationDescription;
+            locationDesc.Text = GetDistanceDescriptionText(person);
 
             SetupUnreadMessagesIndicator(listItemView, person.UnreadMessages);
 
@@ -56,6 +57,25 @@ namespace LocalConnect.Android.Activities.Adapters
             };
 
             return listItemView;
+        }
+
+        private string GetDistanceDescriptionText(PersonViewModel person)
+        {
+            switch (person.TypeOfDistance)
+            {
+                case PersonViewModel.DistanceType.Precise:
+                    return string.Format(Context.GetString(Resource.String.LocationFromYou), person.DistanceDescription);
+                case PersonViewModel.DistanceType.LowerThan:
+                    return string.Format(Context.GetString(Resource.String.LocationLessThanFromYou),
+                        person.DistanceDescription);
+                case PersonViewModel.DistanceType.Between:
+                    return string.Format(Context.GetString(Resource.String.LocationBetweenFromYou),
+                        person.MinDistanceDescription, person.DistanceDescription);
+                case PersonViewModel.DistanceType.Unknown:
+                    return Context.GetString(Resource.String.LocationUnknown);
+                default:
+                    return null;
+            }
         }
 
         private void SetupUnreadMessagesIndicator(View listItemView, int? unreadMessages)

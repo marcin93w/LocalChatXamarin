@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 using Square.Picasso;
 using Message = LocalConnect.Models.Message;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     [Activity(WindowSoftInputMode = SoftInput.AdjustResize)]
     public class PersonChatActivity : Activity

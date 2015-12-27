@@ -9,13 +9,13 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using LocalConnect.Android.Activities.Adapters;
+using LocalConnect.Android.Views.Adapters;
 using LocalConnect.Helpers;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Fragment = Android.Support.V4.App.Fragment;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     public class ListViewFragment : Fragment
     {

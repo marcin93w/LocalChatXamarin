@@ -13,7 +13,7 @@ using Android.Widget;
 using LocalConnect.Helpers;
 using LocalConnect.Models;
 
-namespace LocalConnect.Android.Activities.Helpers
+namespace LocalConnect.Android.Views.Helpers
 {
     public class SessionInfoManager : ISessionInfoManager
     {

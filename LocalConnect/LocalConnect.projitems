@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableInvokableCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\OnDataLoadEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Conversation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\JammedLocation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Me.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SessionInfo.cs" />
@@ -21,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\People.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Person.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Location.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SocketClient.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ISocketClient.cs" />
@@ -34,5 +36,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\LoginViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PeopleViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModel\PersonViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModel\SettingsViewModel.cs" />
   </ItemGroup>
 </Project>

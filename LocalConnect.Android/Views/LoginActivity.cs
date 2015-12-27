@@ -20,7 +20,7 @@ using Xamarin.Facebook.AppEvents;
 using Xamarin.Facebook.Login;
 using Xamarin.Facebook.Login.Widget;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     [Activity]
     public class LoginActivity : Activity

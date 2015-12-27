@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
-using Android.Support.V4.View;
-using Android.Widget;
 using LocalConnect.Services;
-using NetTopologySuite.Operation.Distance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -20,7 +17,7 @@ namespace LocalConnect.Models
         public string FirstName { set; get; }
         public string Surname { set; get; }
         public string ShortDescription { set; get; }
-        public Location Location { set; get; }
+        public JammedLocation Location { set; get; }
         public string Avatar { set; get; }
         public int? UnreadMessages { set; get; }
 
@@ -33,7 +30,7 @@ namespace LocalConnect.Models
         {
         }
 
-        public Person(string firstName, string surname, string shortDescription, Location location, string personId)
+        public Person(string firstName, string surname, string shortDescription, JammedLocation location, string personId)
         {
             FirstName = firstName;
             Surname = surname;
@@ -53,14 +50,14 @@ namespace LocalConnect.Models
             LongDescription = personData.Value<string>("longDescription");
         }
 
-        public double? CalculateDistanceFrom(Person me)
+        public double? CalculateDistanceFrom(Me me)
         {
-            if (Location == null || me.Location == null)
+            if (Location == null || me.RealLocation == null)
                 return null;
 
             var results = new float[1];
             global::Android.Locations.Location.DistanceBetween(
-                me.Location.Lat, me.Location.Lon, Location.Lat, Location.Lon, results);
+                me.RealLocation.Lat, me.RealLocation.Lon, Location.Lat, Location.Lon, results);
 
             return results[0];
         }

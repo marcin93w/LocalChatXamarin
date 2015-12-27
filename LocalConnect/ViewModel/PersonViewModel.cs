@@ -11,6 +11,11 @@ namespace LocalConnect.ViewModel
 {
     public class PersonViewModel : ViewModelBase
     {
+        public enum DistanceType
+        {
+            Unknown, Precise, LowerThan, Between
+        };
+
         private readonly Person _person;
         private readonly Me _me;
 
@@ -30,7 +35,7 @@ namespace LocalConnect.ViewModel
         public string Avatar => _person.Avatar;
         public string ShortDescription => _person.ShortDescription;
         public string LongDescription => _person.LongDescription;
-        public Location Location => _person.Location;
+        public JammedLocation Location => _person.Location;
         public int? UnreadMessages
         {
             get { return _person.UnreadMessages; }
@@ -42,7 +47,9 @@ namespace LocalConnect.ViewModel
         }
 
         public double? Distance { private set; get; }
-        public string LocationDescription { private set; get; }
+        public DistanceType TypeOfDistance { private set; get; }
+        public string DistanceDescription { private set; get; }
+        public string MinDistanceDescription { private set; get; }
 
 
         private void CalculateLocation()
@@ -51,13 +58,30 @@ namespace LocalConnect.ViewModel
             if (distance.HasValue)
             {
                 Distance = distance;
-                if (distance < 1000)
-                    LocationDescription = $"{distance.Value:0} m from you";
+                if (Location.Tolerance < double.Epsilon)
+                {
+                    TypeOfDistance = DistanceType.Precise;
+                    DistanceDescription = GetDistanceString(distance.Value);
+                }
+                else if (Distance < Location.Tolerance)
+                {
+                    TypeOfDistance = DistanceType.LowerThan;
+                    DistanceDescription = GetDistanceString(distance.Value + Location.Tolerance);
+                }
                 else
-                    LocationDescription = $"{(distance.Value / 1000):0.0} km from you";
+                {
+                    TypeOfDistance = DistanceType.Between;
+                    DistanceDescription = GetDistanceString(distance.Value + Location.Tolerance);
+                    MinDistanceDescription = GetDistanceString(distance.Value - Location.Tolerance);
+                }
             }
             else
-                LocationDescription = "Location unknown";
+                TypeOfDistance = DistanceType.Unknown;
+        }
+
+        private string GetDistanceString(double distance)
+        {
+            return distance < 1000 ? $"{distance:0} m" : $"{(distance / 1000):0.0} km";
         }
 
         public async Task LoadDetailedData(IRestClient restClient)

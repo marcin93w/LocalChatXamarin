@@ -7,7 +7,7 @@
     var Person = require('../models/person');
     var Message = require('../models/message');
     var User = require('../models/user');
-    var locationJammer = ('../services/locationJammer');
+    var locationJammer = require('../services/locationJammer');
     
     function beautifyPeopleCollection(people) {
         return _.map(people, function (person) {
@@ -222,20 +222,20 @@
     }
     
     peopleCtrl.updateMySettings = function (req, res) {
-        if (!req.body.locationDisruption) {
+        if (!req.body.LocationDisruption || !req.body.PeopleDisplayCount) {
             res.send(400);
             return;
         }
         Person.findOne({ user: req.user })
             .then(function (person) {
-                person.locationDisruption = req.body.locationDisruption;
-                person.locationJammerSettings = locationJammer.generateDisruptionSettings(req.body.locationDisruption);
+                person.locationDisruption = req.body.LocationDisruption;
+                person.locationJammerSettings = locationJammer.generateDisruptionSettings(req.body.LocationDisruption);
                 person.save(function () {
                     res.send(200);
                 });
             })
             .catch(function (err) {
-                res.send(err);
+                res.send(500, err);
             });
     }
 
@@ -247,7 +247,7 @@
         Person.findOne({ user: req.user })
             .then(function (person) {
                 var jammingResult = locationJammer.calculateJammedLocationAndNewDisruptionSettings(
-                    person.location, person.locationDisruption, person.locationJammerSettings);
+                    req.body, person.locationDisruption, person.locationJammerSettings);
 
                 person.locationJammerSettings = jammingResult.newDisruptionSettings;
                 person.location = [req.body.Lon, req.body.Lat];
@@ -258,7 +258,7 @@
                 });
             })
             .catch(function(err) {
-                res.send(err);
+                res.send(500, err);
             });
     }
 

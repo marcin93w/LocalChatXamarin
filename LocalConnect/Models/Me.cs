@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using LocalConnect.Helpers;
 using LocalConnect.Services;
 
 namespace LocalConnect.Models
@@ -9,6 +10,8 @@ namespace LocalConnect.Models
     public class Me : Person
     {
         public event EventHandler LocationChanged;
+
+        public Location RealLocation { set; get; }
 
         public async Task FetchData(IRestClient restClient)
         {
@@ -18,12 +21,13 @@ namespace LocalConnect.Models
             Avatar = me.Avatar;
             ShortDescription = me.ShortDescription;
             PersonId = me.PersonId;
+            //TODO MaxLocationDisturb = me.Location.Tolerance;
         }
 
         public async Task UpdateLocation(IRestClient restClient, Location location)
         {
             await restClient.PostDataAsync("me/updateLocation", location);
-            Location = location;
+            RealLocation = location;
             LocationChanged?.Invoke(this, new EventArgs());
         }
 

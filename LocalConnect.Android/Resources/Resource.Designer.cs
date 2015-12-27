@@ -825,29 +825,29 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f06004a
 			public const int MintCream = 2131099722;
 			
-			// aapt resource value: 0x7f06004c
-			public const int abc_background_cache_hint_selector_material_dark = 2131099724;
-			
 			// aapt resource value: 0x7f06004d
-			public const int abc_background_cache_hint_selector_material_light = 2131099725;
+			public const int abc_background_cache_hint_selector_material_dark = 2131099725;
+			
+			// aapt resource value: 0x7f06004e
+			public const int abc_background_cache_hint_selector_material_light = 2131099726;
 			
 			// aapt resource value: 0x7f06000a
 			public const int abc_input_method_navigation_guard = 2131099658;
 			
-			// aapt resource value: 0x7f06004e
-			public const int abc_primary_text_disable_only_material_dark = 2131099726;
-			
 			// aapt resource value: 0x7f06004f
-			public const int abc_primary_text_disable_only_material_light = 2131099727;
+			public const int abc_primary_text_disable_only_material_dark = 2131099727;
 			
 			// aapt resource value: 0x7f060050
-			public const int abc_primary_text_material_dark = 2131099728;
+			public const int abc_primary_text_disable_only_material_light = 2131099728;
 			
 			// aapt resource value: 0x7f060051
-			public const int abc_primary_text_material_light = 2131099729;
+			public const int abc_primary_text_material_dark = 2131099729;
 			
 			// aapt resource value: 0x7f060052
-			public const int abc_search_url_text = 2131099730;
+			public const int abc_primary_text_material_light = 2131099730;
+			
+			// aapt resource value: 0x7f060053
+			public const int abc_search_url_text = 2131099731;
 			
 			// aapt resource value: 0x7f06000b
 			public const int abc_search_url_text_normal = 2131099659;
@@ -858,11 +858,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f06000d
 			public const int abc_search_url_text_selected = 2131099661;
 			
-			// aapt resource value: 0x7f060053
-			public const int abc_secondary_text_material_dark = 2131099731;
-			
 			// aapt resource value: 0x7f060054
-			public const int abc_secondary_text_material_light = 2131099732;
+			public const int abc_secondary_text_material_dark = 2131099732;
+			
+			// aapt resource value: 0x7f060055
+			public const int abc_secondary_text_material_light = 2131099733;
 			
 			// aapt resource value: 0x7f06000e
 			public const int accent_material_dark = 2131099662;
@@ -905,6 +905,9 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f06001b
 			public const int button_material_light = 2131099675;
+			
+			// aapt resource value: 0x7f06004c
+			public const int colorPrimary = 2131099724;
 			
 			// aapt resource value: 0x7f06003d
 			public const int com_facebook_blue = 2131099709;
@@ -975,11 +978,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f060005
 			public const int common_signin_btn_light_text_pressed = 2131099653;
 			
-			// aapt resource value: 0x7f060055
-			public const int common_signin_btn_text_dark = 2131099733;
-			
 			// aapt resource value: 0x7f060056
-			public const int common_signin_btn_text_light = 2131099734;
+			public const int common_signin_btn_text_dark = 2131099734;
+			
+			// aapt resource value: 0x7f060057
+			public const int common_signin_btn_text_light = 2131099735;
 			
 			// aapt resource value: 0x7f06001c
 			public const int dim_foreground_disabled_material_dark = 2131099676;
@@ -1074,11 +1077,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f06003a
 			public const int switch_thumb_disabled_material_light = 2131099706;
 			
-			// aapt resource value: 0x7f060057
-			public const int switch_thumb_material_dark = 2131099735;
-			
 			// aapt resource value: 0x7f060058
-			public const int switch_thumb_material_light = 2131099736;
+			public const int switch_thumb_material_dark = 2131099736;
+			
+			// aapt resource value: 0x7f060059
+			public const int switch_thumb_material_light = 2131099737;
 			
 			// aapt resource value: 0x7f06003b
 			public const int switch_thumb_normal_material_dark = 2131099707;
@@ -1785,17 +1788,20 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b008b
 			public const int ActionBar = 2131427467;
 			
-			// aapt resource value: 0x7f0b00c1
-			public const int ActionLogout = 2131427521;
+			// aapt resource value: 0x7f0b00c9
+			public const int ActionLogout = 2131427529;
 			
-			// aapt resource value: 0x7f0b00c0
-			public const int ActionRefresh = 2131427520;
+			// aapt resource value: 0x7f0b00c7
+			public const int ActionRefresh = 2131427527;
 			
-			// aapt resource value: 0x7f0b00be
-			public const int ActionSearch = 2131427518;
+			// aapt resource value: 0x7f0b00c5
+			public const int ActionSearch = 2131427525;
 			
-			// aapt resource value: 0x7f0b00bf
-			public const int ActionSwitchView = 2131427519;
+			// aapt resource value: 0x7f0b00c8
+			public const int ActionSettings = 2131427528;
+			
+			// aapt resource value: 0x7f0b00c6
+			public const int ActionSwitchView = 2131427526;
 			
 			// aapt resource value: 0x7f0b00b7
 			public const int ActionsPanel = 2131427511;
@@ -1820,6 +1826,9 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f0b0089
 			public const int LoadingPanel = 2131427465;
+			
+			// aapt resource value: 0x7f0b00bf
+			public const int LocationDisruptionSpinner = 2131427519;
 			
 			// aapt resource value: 0x7f0b0087
 			public const int LoginButton = 2131427463;
@@ -1919,6 +1928,18 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f0b00bd
 			public const int SendButton = 2131427517;
+			
+			// aapt resource value: 0x7f0b00c2
+			public const int SettingsConnectionError = 2131427522;
+			
+			// aapt resource value: 0x7f0b00c1
+			public const int SettingsPoepleCountInput = 2131427521;
+			
+			// aapt resource value: 0x7f0b00c3
+			public const int SettingsReload = 2131427523;
+			
+			// aapt resource value: 0x7f0b00c4
+			public const int SettingsSave = 2131427524;
 			
 			// aapt resource value: 0x7f0b00b5
 			public const int ShortDescription = 2131427509;
@@ -2154,9 +2175,6 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b0040
 			public const int list_item = 2131427392;
 			
-			// aapt resource value: 0x7f0b00c2
-			public const int logout = 2131427522;
-			
 			// aapt resource value: 0x7f0b0092
 			public const int map = 2131427474;
 			
@@ -2327,6 +2345,12 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f0b0049
 			public const int textSpacerNoButtons = 2131427401;
+			
+			// aapt resource value: 0x7f0b00be
+			public const int textView1 = 2131427518;
+			
+			// aapt resource value: 0x7f0b00c0
+			public const int textView2 = 2131427520;
 			
 			// aapt resource value: 0x7f0b00a9
 			public const int time = 2131427497;
@@ -2577,7 +2601,10 @@ namespace LocalConnect.Android
 			public const int select_dialog_singlechoice_material = 2130903094;
 			
 			// aapt resource value: 0x7f030037
-			public const int support_simple_spinner_dropdown_item = 2130903095;
+			public const int Settings = 2130903095;
+			
+			// aapt resource value: 0x7f030038
+			public const int support_simple_spinner_dropdown_item = 2130903096;
 			
 			static Layout()
 			{
@@ -2595,9 +2622,6 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0c0000
 			public const int ActionMenu = 2131492864;
 			
-			// aapt resource value: 0x7f0c0001
-			public const int SettingsMenu = 2131492865;
-			
 			static Menu()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -2614,8 +2638,41 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f050046
 			public const int ApplicationName = 2131034182;
 			
+			// aapt resource value: 0x7f05004a
+			public const int DataLoadingError = 2131034186;
+			
+			// aapt resource value: 0x7f050049
+			public const int DataSavingError = 2131034185;
+			
 			// aapt resource value: 0x7f050045
 			public const int Hello = 2131034181;
+			
+			// aapt resource value: 0x7f05004f
+			public const int LocationBetweenFromYou = 2131034191;
+			
+			// aapt resource value: 0x7f05004d
+			public const int LocationFromYou = 2131034189;
+			
+			// aapt resource value: 0x7f05004e
+			public const int LocationLessThanFromYou = 2131034190;
+			
+			// aapt resource value: 0x7f050050
+			public const int LocationUnknown = 2131034192;
+			
+			// aapt resource value: 0x7f05004c
+			public const int Reload = 2131034188;
+			
+			// aapt resource value: 0x7f05004b
+			public const int Save = 2131034187;
+			
+			// aapt resource value: 0x7f050051
+			public const int Settings = 2131034193;
+			
+			// aapt resource value: 0x7f050047
+			public const int SettingsLocationDisruption = 2131034183;
+			
+			// aapt resource value: 0x7f050048
+			public const int SettingsPeopleCount = 2131034184;
 			
 			// aapt resource value: 0x7f050022
 			public const int abc_action_bar_home_description = 2131034146;

@@ -6,13 +6,11 @@ using Android.Locations;
 using Android.OS;
 using Android.Widget;
 using Java.Util.Logging;
-using LocalConnect.Android.Activities.Helpers;
-using LocalConnect.Services;
 using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Location = LocalConnect.Models.Location;
 
-namespace LocalConnect.Android.Activities.Services
+namespace LocalConnect.Android.Views.Services
 {
     public class LocationStatusChangedEventArgs : EventArgs
     {
@@ -35,7 +33,7 @@ namespace LocalConnect.Android.Activities.Services
     public class LocationUpdateService : Service, ILocationListener
     {
         private const long LocationUpdateTimeInterval = 1000 * 60; //in miliseconds
-        private const float LocationUpdateMinDistance = 10; //in meters
+        private const float LocationUpdateMinDistance = 0; //in meters
 
         private PeopleViewModel _peopleViewModel;
         private readonly LocationManager _locMgr = Application.Context.GetSystemService("location") as LocationManager;
@@ -47,6 +45,8 @@ namespace LocalConnect.Android.Activities.Services
 
         public override IBinder OnBind(Intent intent)
         {
+            if (!LocationUpdateActive)
+                StartLocationUpdates();
             return new LocationUpdateServiceBinder(this);
         }
 

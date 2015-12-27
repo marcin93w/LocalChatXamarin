@@ -17,7 +17,7 @@ using LocalConnect.ViewModel;
 using Fragment = Android.Support.V4.App.Fragment;
 using AndroidRes = global::Android.Resource;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     public class MapViewFragment : Fragment, IOnMapReadyCallback
     {
@@ -62,7 +62,7 @@ namespace LocalConnect.Android.Activities
             {
                 var bounds = new LatLngBounds.Builder(); //TODO change camera move from bounds to my location center with all people visible (probably logic in VM)
 
-                var myPoint = new LatLng(_peopleViewModel.Me.Location.Lat, _peopleViewModel.Me.Location.Lon);
+                var myPoint = new LatLng(_peopleViewModel.Me.RealLocation.Lat, _peopleViewModel.Me.RealLocation.Lon);
                 AddOrChangeMyLocation(myPoint);
                 bounds.Include(myPoint);
 
@@ -90,7 +90,7 @@ namespace LocalConnect.Android.Activities
 
         private void OnLocationChanged(object sender, EventArgs args)
         {
-            AddOrChangeMyLocation(new LatLng(_peopleViewModel.Me.Location.Lat, _peopleViewModel.Me.Location.Lon));
+            AddOrChangeMyLocation(new LatLng(_peopleViewModel.Me.RealLocation.Lat, _peopleViewModel.Me.RealLocation.Lon));
         }
 
         private void AddOrChangeMyLocation(LatLng point)

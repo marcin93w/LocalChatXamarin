@@ -11,7 +11,7 @@ using Android.Support.V4.App;
 using Android.Views;
 using Android.Widget;
 
-namespace LocalConnect.Android.Activities.Services
+namespace LocalConnect.Android.Views.Services
 {
     public delegate void ServiceConnectedEventHandler(object sender, ServiceConnectedEventArgs args);
     public delegate void ServiceDisconnectedEventHandler(object sender, EventArgs args);

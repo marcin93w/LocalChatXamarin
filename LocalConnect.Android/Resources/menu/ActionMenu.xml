@@ -16,6 +16,8 @@
     <item android:id="@+id/ActionRefresh"
           android:icon="@android:drawable/ic_menu_rotate"
           android:title="Refresh"/>
+  <item android:id="@+id/ActionSettings"
+          android:title="Settings"/>
     <item android:id="@+id/ActionLogout"
             android:title="Logout"/>
 

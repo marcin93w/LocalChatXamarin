@@ -15,7 +15,7 @@ using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Square.Picasso;
 
-namespace LocalConnect.Android.Activities
+namespace LocalConnect.Android.Views
 {
     [Activity]
     public class MyProfileActivity : Activity
