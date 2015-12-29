@@ -4,7 +4,6 @@
 
     var ObjectId = require('mongoose').Types.ObjectId; 
     var Message = require('../models/message');
-    var Person = require('../models/person');
 
     var messagesFetchCount = 10;
 
@@ -42,24 +41,20 @@
     }
     
     function getMessagesWith(me, personId, toDate) {
-        return Person
-            .findOne({ user: me }, 'id')
-            .then(function (person) {
-                var criteria = {
-                    $or: [
-                        { sender: person.id, receiver: new ObjectId(personId) },
-                        { receiver: person.id, sender: new ObjectId(personId) }
-                    ]
-                };
-                if (toDate) {
-                    criteria.dateTime = { $lt: toDate };
-                }
-                return Message
-                    .find(criteria, 'id sender text dateTime status')
-                    .sort('-dateTime')
-                    .limit(messagesFetchCount)
-                    .exec();
-            });
+        var criteria = {
+            $or: [
+                { sender: me.id, receiver: new ObjectId(personId) },
+                { receiver: me.id, sender: new ObjectId(personId) }
+            ]
+        };
+        if (toDate) {
+            criteria.dateTime = { $lt: toDate };
+        }
+        return Message
+            .find(criteria, 'id sender text dateTime status')
+            .sort('-dateTime')
+            .limit(messagesFetchCount)
+            .exec();
     }
 
     messagesCtrl.getLastMessagesWith = function(req, res) {

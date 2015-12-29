@@ -12,7 +12,7 @@ namespace LocalConnect.Models
     [Serializable]
     public class Person
     {
-        [JsonProperty("_id")]
+        [JsonProperty("id")]
         public string PersonId { set; get; }
         public string FirstName { set; get; }
         public string Surname { set; get; }

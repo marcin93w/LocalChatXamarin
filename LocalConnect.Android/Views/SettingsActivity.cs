@@ -50,8 +50,8 @@ namespace LocalConnect.Android.Views
 
             CreateBindings();
 
-            var reloadButton = FindViewById<Button>(Resource.Id.SettingsReload);
-            reloadButton.Click += async (sender, args) => await SettingsViewModel.LoadSettings();
+            //var reloadButton = FindViewById<Button>(Resource.Id.SettingsReload);
+            //reloadButton.Click += async (sender, args) => await SettingsViewModel.LoadSettings();
 
             var saveButton = FindViewById<Button>(Resource.Id.SettingsSave);
             saveButton.Click += OnSaveClick;

@@ -36,7 +36,6 @@
     <Compile Include="controllers\messages.js" />
     <Compile Include="controllers\people.js" />
     <Compile Include="models\message.js" />
-    <Compile Include="models\person.js" />
     <Compile Include="models\user.js" />
     <Compile Include="services\chat.js" />
     <Compile Include="routes\index.js" />

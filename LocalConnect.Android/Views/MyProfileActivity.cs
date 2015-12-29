@@ -37,9 +37,9 @@ namespace LocalConnect.Android.Views
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.MyProfile);
 
-            if (!MyProfileViewModel.IsInitialized)
+            var me = JsonConvert.DeserializeObject<Me>(Intent.GetStringExtra("Me"));
+            if (!MyProfileViewModel.IsInitialized || MyProfileViewModel.Id != me.PersonId)
             {
-                var me = JsonConvert.DeserializeObject<Me>(Intent.GetStringExtra("Me"));
                 MyProfileViewModel.Initialize(me);
             }
             Task<bool> dataLoading = null;

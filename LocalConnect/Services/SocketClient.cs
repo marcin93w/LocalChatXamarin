@@ -78,9 +78,14 @@ namespace LocalConnect.Services
                 _messagesWitingForConfirmation.Remove(msgIdx);
             });
             _socket.On("disconnect", () => IsConnected = false);
-
+            
             IsConnected = true;
             return true;
+        }
+
+        public void Disconnect()
+        {
+            _socket.Disconnect();
         }
 
         public void SendMessage(OutcomeMessage message, int messageIndex)

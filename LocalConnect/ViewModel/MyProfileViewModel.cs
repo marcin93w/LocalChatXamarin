@@ -43,6 +43,7 @@ namespace LocalConnect.ViewModel
 
         public bool DataLoaded { private set; get; }
         public bool IsInitialized => _me != null;
+        public string Id => _me?.PersonId;
 
         public void Initialize(Me me)
         {

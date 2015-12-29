@@ -9,7 +9,6 @@
     var FacebookTokenStrategy = require('passport-facebook-token');
     
     var User = require('../models/user');
-    var Person = require('../models/person');
     
     passport.serializeUser(function (user, done) {
         done(null, user);
@@ -65,19 +64,23 @@
             if (user) {
                 return done(error, user);
             } else {
-                user = new User({ facebookId: profile.id });
-                var person = new Person({
-                    user: user,
+                user = new User({
+                    facebookId: profile.id,
                     firstname: profile.name.givenName,
                     surname: profile.name.familyName,
                     shortDescription: 'Facebook user',
-                    avatar: _.first(profile.photos) && _.first(profile.photos).value
-            });
+                    avatar: _.first(profile.photos) && _.first(profile.photos).value,
+                    settings: {
+                        locationDisruption: 0,
+                        peopleDisplayCount: 20
+                    },
+                    locationJammerSettings: {
+                        xDisruption: 0,
+                        yDisruption: 0
+                    }
+                });
 
                 user.save()
-                .then(function () {
-                    return person.save();
-                })
                 .then(function() {
                     return done(null, user);
                 })
@@ -98,12 +101,9 @@
         var user = req.user;
         user.generateNewToken()
             .then(function() {
-                return Person.findOne({ user: user }, 'id');
-            })
-            .then(function(person) {
                 res.json({
                     token: user.token,
-                    personId: person.id
+                    personId: user.id
                 });
             }, function (error) {
                 res.send(error);

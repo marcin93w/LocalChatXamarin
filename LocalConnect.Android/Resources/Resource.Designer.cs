@@ -819,6 +819,9 @@ namespace LocalConnect.Android
 		public partial class Color
 		{
 			
+			// aapt resource value: 0x7f06004c
+			public const int ColorPrimary = 2131099724;
+			
 			// aapt resource value: 0x7f06004b
 			public const int LowContrastFontOnGreenBkg = 2131099723;
 			
@@ -905,9 +908,6 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f06001b
 			public const int button_material_light = 2131099675;
-			
-			// aapt resource value: 0x7f06004c
-			public const int colorPrimary = 2131099724;
 			
 			// aapt resource value: 0x7f06003d
 			public const int com_facebook_blue = 2131099709;
@@ -1788,20 +1788,20 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b008b
 			public const int ActionBar = 2131427467;
 			
-			// aapt resource value: 0x7f0b00c9
-			public const int ActionLogout = 2131427529;
-			
-			// aapt resource value: 0x7f0b00c7
-			public const int ActionRefresh = 2131427527;
-			
-			// aapt resource value: 0x7f0b00c5
-			public const int ActionSearch = 2131427525;
-			
 			// aapt resource value: 0x7f0b00c8
-			public const int ActionSettings = 2131427528;
+			public const int ActionLogout = 2131427528;
 			
 			// aapt resource value: 0x7f0b00c6
-			public const int ActionSwitchView = 2131427526;
+			public const int ActionRefresh = 2131427526;
+			
+			// aapt resource value: 0x7f0b00c4
+			public const int ActionSearch = 2131427524;
+			
+			// aapt resource value: 0x7f0b00c7
+			public const int ActionSettings = 2131427527;
+			
+			// aapt resource value: 0x7f0b00c5
+			public const int ActionSwitchView = 2131427525;
 			
 			// aapt resource value: 0x7f0b00b7
 			public const int ActionsPanel = 2131427511;
@@ -1936,10 +1936,7 @@ namespace LocalConnect.Android
 			public const int SettingsPoepleCountInput = 2131427521;
 			
 			// aapt resource value: 0x7f0b00c3
-			public const int SettingsReload = 2131427523;
-			
-			// aapt resource value: 0x7f0b00c4
-			public const int SettingsSave = 2131427524;
+			public const int SettingsSave = 2131427523;
 			
 			// aapt resource value: 0x7f0b00b5
 			public const int ShortDescription = 2131427509;

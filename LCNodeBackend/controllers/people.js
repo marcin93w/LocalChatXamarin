@@ -4,15 +4,14 @@
     var q = require("q");
     var mongoose = require('mongoose');
 
-    var Person = require('../models/person');
     var Message = require('../models/message');
     var User = require('../models/user');
     var locationJammer = require('../services/locationJammer');
     
-    function beautifyPeopleCollection(people) {
+    function mapPeopleCollection(people) {
         return _.map(people, function (person) {
             var newPerson = {
-                _id: person.id,
+                id: person.id,
                 firstname: person.firstname,
                 surname: person.surname,
                 shortDescription: person.shortDescription,
@@ -23,7 +22,7 @@
                 newPerson.location = {
                     lon: person.jammedLocation[0],
                     lat: person.jammedLocation[1],
-                    disruption: person.locationDisruption
+                    disruption: person.settings && person.settings.locationDisruption
                 };
             }
             return newPerson;
@@ -48,7 +47,7 @@
             if (err)
                 defer.reject(err);
             else {
-                Person.populate(unreadMsgs, { path: '_id', select: 'id firstname surname shortDescription locationDisruption jammedLocation avatar' },
+                User.populate(unreadMsgs, { path: '_id', select: 'id firstname surname shortDescription settings jammedLocation avatar' },
                 function(err, unreadMsgsWithPeople) {
                     if (err)
                         defer.reject(err);
@@ -66,8 +65,8 @@
         return defer.promise;
     }
     
-    function getNearestPeople(me, user) {
-        return Person.find({
+    function getNearestPeople(me) {
+        return User.find({
                 location: {
                     $near: {
                         $geometry: { type: "Point", coordinates: me.location },
@@ -76,9 +75,9 @@
                     }
                 }
             },
-            'id firstname surname shortDescription locationDisruption jammedLocation avatar')
-        .where("user").ne(user)
-        .limit(20)
+            'id firstname surname shortDescription settings jammedLocation avatar')
+        .where("_id").ne(me.id)
+        .limit(me.peopleDisplayCount)
         .exec()
         .then(function(people) {
                 return people;
@@ -86,13 +85,10 @@
     }
     
     peopleCtrl.getNearestPeople = function (req, res) {
-        var me = null;
+        var me = req.user;
         var people = [];
-        Person.findOne({ user: req.user }, 'location')
-        .then(function(myPerson) {
-            me = myPerson;
-            return getPeopleWithUnreadedMessages(me);
-        })
+        
+        getPeopleWithUnreadedMessages(me)
         .then(function (peopleWithMsgs) {
             people = peopleWithMsgs;
             return getNearestPeople(me, req.user);
@@ -103,7 +99,7 @@
                      return person._id.id === p._id.id;
                 });
             }));
-            res.json(beautifyPeopleCollection(people));
+            res.json(mapPeopleCollection(people));
         })
         .catch(function(err) {
             res.send(err);
@@ -111,14 +107,16 @@
     };
 
     peopleCtrl.getPerson = function(req, res) {
-        Person.findOne({ _id: req.params.id }, 'id firstname surname shortDescription locationDisruption jammedLocation avatar')
+        User.findOne({ _id: req.params.id }, 'id firstname surname shortDescription settings jammedLocation avatar')
             .exec()
-            .then(res.json.bind(res))
+            .then(function(person) {
+                res.json(mapPeopleCollection([person])[0]);
+            })
             .catch(res.send.bind(res));
     };
 
     peopleCtrl.getPersonDetails = function(req, res) {
-        Person.findOne({ _id: req.params.id }, 
+        User.findOne({ _id: req.params.id }, 
             'longDescription',
             function (err, personDetails) {
                 if (err) res.send(err);
@@ -145,22 +143,24 @@
     peopleCtrl.postRegisterUser = function (req, res) {
         var user = new User({
             username: req.body.Username,
-            password: req.body.Password
-        });
-        var person = new Person({
-            user: user,
+            password: req.body.Password,
             firstname: req.body.Person.FirstName,
             surname: req.body.Person.Surname,
             shortDescription: req.body.Person.ShortDescription,
-            longDescription: req.body.Person.LongDescription
+            longDescription: req.body.Person.LongDescription,
+            settings: {
+                locationDisruption: 0,
+                peopleDisplayCount: 20
+            },
+            locationJammerSettings: {
+                xDisruption: 0,
+                yDisruption: 0
+            }
         });
         
         makeSureThatUserNotExists(user.username)
         .then(function () {
             return user.save();
-        })
-        .then(function() {
-            return person.save();
         })
         .then(function() {
             return user.generateNewToken();
@@ -170,7 +170,7 @@
                 registered: true,
                 sessionInfo: {
                     token: user.token,
-                    personId: person.id
+                    personId: user.id
                 }
             });
         })
@@ -184,12 +184,7 @@
     };
 
     peopleCtrl.getMe = function(req, res) {
-        Person.findOne({ user: req.user }, 
-            'id firstname surname shortDescription avatar',
-            function(err, me) {
-                if (err) res.send(err);
-                res.json(me);
-            });
+        res.json(_.pick(req.user, 'id', 'firstname', 'surname', 'shortDescription', 'avatar'));
     }
     
     peopleCtrl.updateMe = function (req, res) {
@@ -197,13 +192,13 @@
             res.send(400);
             return;
         }
-        Person.findOne({ user: req.user })
-            .then(function (person) {
-                person.firstname = req.body.FirstName;
-                person.surname = req.body.Surname;
-                person.shortDescription = req.body.ShortDescription;
-                person.longDescription = req.body.LongDescription;
-                person.save(function () {
+        User.findOne({ _id: req.user.id })
+            .then(function (user) {
+                user.firstname = req.body.FirstName;
+                user.surname = req.body.Surname;
+                user.shortDescription = req.body.ShortDescription;
+                user.longDescription = req.body.LongDescription;
+                user.save(function () {
                     res.send(200);
                 });
             })
@@ -213,24 +208,29 @@
     }
     
     peopleCtrl.getMySettings = function (req, res) {
-        Person.findOne({ user: req.user }, 
-            'id locationDisruption',
-            function (err, me) {
-            if (err) res.send(err);
-            res.json(me);
-        });
+        res.json(req.user.settings);
     }
     
     peopleCtrl.updateMySettings = function (req, res) {
-        if (!req.body.LocationDisruption || !req.body.PeopleDisplayCount) {
+        if (req.body.LocationDisruption === undefined || req.body.PeopleDisplayCount === undefined) {
             res.send(400);
             return;
         }
-        Person.findOne({ user: req.user })
-            .then(function (person) {
-                person.locationDisruption = req.body.LocationDisruption;
-                person.locationJammerSettings = locationJammer.generateDisruptionSettings(req.body.LocationDisruption);
-                person.save(function () {
+        User.findOne({ _id: req.user.id })
+            .then(function (user) {
+                user.settings.peopleDisplayCount = req.body.PeopleDisplayCount;
+                user.settings.locationDisruption = req.body.LocationDisruption;
+                user.locationJammerSettings = locationJammer.generateDisruptionSettings(req.body.LocationDisruption);
+            
+                var jammingResult = locationJammer.calculateJammedLocationAndNewDisruptionSettings(
+                    { Lon: user.location[0], Lat: user.location[1] }, user.settings.locationDisruption, user.locationJammerSettings);
+
+                user.jammedLocation = [jammingResult.location.Lon, jammingResult.location.Lat];
+                user.save(function () {
+                    console.log('Location updated for user ' + user.name + '(' + user._id + ') at ' + (new Date()));
+                    res.send(200);
+                });
+                user.save(function () {
                     res.send(200);
                 });
             })
@@ -244,16 +244,22 @@
             res.send(400);
             return;
         }
-        Person.findOne({ user: req.user })
-            .then(function (person) {
-                var jammingResult = locationJammer.calculateJammedLocationAndNewDisruptionSettings(
-                    req.body, person.locationDisruption, person.locationJammerSettings);
+        User.findOne({ _id: req.user.id })
+            .then(function (user) {
+                user.location = [req.body.Lon, req.body.Lat];
 
-                person.locationJammerSettings = jammingResult.newDisruptionSettings;
-                person.location = [req.body.Lon, req.body.Lat];
-                person.jammedLocation = [jammingResult.location.Lon, jammingResult.location.Lat];
-                person.save(function () {
-                    console.log('Location updated for user ' + person.name + '(' + person._id + ') at ' + (new Date()));
+                if (user.settings.locationDisruption > 0) {
+                    var jammingResult = locationJammer.calculateJammedLocationAndNewDisruptionSettings(
+                        req.body, user.settings.locationDisruption, user.locationJammerSettings);
+
+                    user.locationJammerSettings = jammingResult.newDisruptionSettings;
+                    user.jammedLocation = [jammingResult.location.Lon, jammingResult.location.Lat];
+                } else {
+                    user.jammedLocation = user.location;
+                }
+            
+                user.save(function () {
+                    console.log('Location updated for user ' + user.name + '(' + user._id + ') at ' + (new Date()));
                     res.send(200);
                 });
             })

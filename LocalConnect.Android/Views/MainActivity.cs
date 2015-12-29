@@ -310,6 +310,7 @@ namespace LocalConnect.Android.Views
 
         private void Logout()
         {
+            _peopleViewModel.SocketClient.Disconnect();
             var tokenManager = new SessionInfoManager(this);
             tokenManager.DeleteSessionInfo();
             ViewModelLocator.Instance.ResetViewModel<PeopleViewModel>();
