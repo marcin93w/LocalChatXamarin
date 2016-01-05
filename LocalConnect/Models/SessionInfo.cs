@@ -6,13 +6,13 @@ namespace LocalConnect.Models
 {
     public class SessionInfo
     {
-        public SessionInfo(string token, string personId)
+        public SessionInfo(string token, string userId)
         {
             Token = token;
-            PersonId = personId;
+            UserId = userId;
         }
 
         public string Token { set; get; }
-        public string PersonId { set; get; }
+        public string UserId { set; get; }
     }
 }

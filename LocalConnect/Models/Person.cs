@@ -24,8 +24,6 @@ namespace LocalConnect.Models
 
         public string LongDescription { set; get; }
 
-        public string Name => FirstName + " " + Surname;
-
         public Person()
         {
         }

@@ -32,8 +32,13 @@ namespace LocalConnect.Android.Views.Helpers
             var prefs = PreferenceManager.GetDefaultSharedPreferences(_context);
             var editor = prefs.Edit();
             editor.PutString(AuthTokenKey, sessionInfo.Token);
-            editor.PutString(PersonIdKey, sessionInfo.PersonId);
+            editor.PutString(PersonIdKey, sessionInfo.UserId);
             editor.Apply();
+        }
+
+        public SessionInfo ReadSessionInfo()
+        {
+            return new SessionInfo(ReadAuthToken(), ReadPersonId());
         }
 
         public string ReadAuthToken()

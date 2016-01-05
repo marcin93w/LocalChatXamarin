@@ -14,7 +14,7 @@ namespace LocalConnectTest.Helpers
         {
             SentMessages = new List<OutcomeMessage>();
         }
-
+        
         public void MarkMessageAsDisplayed(IncomeMessage message)
         {
             throw new NotImplementedException();
@@ -36,6 +36,11 @@ namespace LocalConnectTest.Helpers
             throw new NotImplementedException();
         }
 
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
+        }
+
         public event MessageReceivedEventHandler OnMessageReceived;
 
         public void SendMessage(OutcomeMessage message, int messageIndex)
@@ -47,11 +52,6 @@ namespace LocalConnectTest.Helpers
         {
             get { return IsConnected; }
             set { IsConnected = value; }
-        }
-
-        public void UpdateMyLocation(Location location)
-        {
-            throw new NotImplementedException();
         }
     }
 }

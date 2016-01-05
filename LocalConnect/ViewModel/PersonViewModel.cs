@@ -31,7 +31,7 @@ namespace LocalConnect.ViewModel
         }
 
         public string Id => _person.PersonId;
-        public string Name => _person.Name;
+        public string Name => _person.FirstName + " " + _person.Surname;
         public string Avatar => _person.Avatar;
         public string ShortDescription => _person.ShortDescription;
         public string LongDescription => _person.LongDescription;

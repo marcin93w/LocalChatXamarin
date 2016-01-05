@@ -20,6 +20,11 @@ namespace LocalConnectTest.Helpers
             throw new NotImplementedException();
         }
 
+        public SessionInfo ReadSessionInfo()
+        {
+            throw new NotImplementedException();
+        }
+
         public string ReadAuthToken()
         {
             return "asda";

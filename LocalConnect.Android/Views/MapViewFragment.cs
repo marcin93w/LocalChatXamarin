@@ -7,6 +7,7 @@ using Android.App;
 using Android.Content;
 using Android.Gms.Maps;
 using Android.Gms.Maps.Model;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -25,12 +26,14 @@ namespace LocalConnect.Android.Views
         private GoogleMap _map;
 
         private Dictionary<string, Marker> _markers;
+        private Dictionary<string, Circle> _circles;
 
         private BitmapDescriptor _myLocationIcon;
 
         public MapViewFragment()
         {
             _markers = new Dictionary<string, Marker>();
+            _circles = new Dictionary<string, Circle>();
         }
 
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +83,29 @@ namespace LocalConnect.Android.Views
                     }
                     _markers[person.Id] = marker;
                     bounds.Include(point);
+
+                    var circle = _map.AddCircle(new CircleOptions()
+                        .InvokeCenter(point)
+                        .InvokeRadius(person.Location.Tolerance)
+                        .InvokeStrokeWidth(1)
+                        .InvokeStrokeColor(GetColorWithAlpha(Color.Green, 200))
+                        .InvokeFillColor(GetColorWithAlpha(Color.AntiqueWhite, 80)));
+                    if (_circles.ContainsKey(person.Id))
+                    {
+                        _circles[person.Id].Remove();
+                    }
+                    _circles[person.Id] = circle;
                 }
 
                 _map.MoveCamera(CameraUpdateFactory.NewLatLngBounds(bounds.Build(), 100));
 
                 _peopleViewModel.MyLocationChanged += OnLocationChanged;
             }
+        }
+
+        private Color GetColorWithAlpha(Color color, int alpha)
+        {
+            return Color.Argb(alpha, color.R, color.G, color.B);
         }
 
         private void OnLocationChanged(object sender, EventArgs args)

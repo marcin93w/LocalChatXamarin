@@ -31,7 +31,7 @@ namespace LocalConnectTest.ViewModelTests
             _loginViewModel.Password = FakeRestClient.CorrectPassword;
             var loginData = await _loginViewModel.Authenticate();
 
-            Assert.AreEqual(FakeRestClient.CorrectPersonId, loginData.PersonId);
+            Assert.AreEqual(FakeRestClient.CorrectPersonId, loginData.UserId);
         }
 
         [Test]

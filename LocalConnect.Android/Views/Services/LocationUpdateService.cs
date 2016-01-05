@@ -33,7 +33,7 @@ namespace LocalConnect.Android.Views.Services
     public class LocationUpdateService : Service, ILocationListener
     {
         private const long LocationUpdateTimeInterval = 1000 * 60; //in miliseconds
-        private const float LocationUpdateMinDistance = 0; //in meters
+        private const float LocationUpdateMinDistance = 5; //in meters
 
         private PeopleViewModel _peopleViewModel;
         private readonly LocationManager _locMgr = Application.Context.GetSystemService("location") as LocationManager;
