@@ -11,8 +11,8 @@
 /LocalConnectTest/obj
 /LocalConnectTest/dist
 /LocalConnectTest/*.user
-/LCNodeBackend/.ntvs_analysis.dat
-/LCNodeBackend/node_modules
+/LocalConnectServer/.ntvs_analysis.dat
+/LocalConnectServer/node_modules
 /packages
 /run-local-mongo.bat
 /.vs/LocalConnect/v14/*.suo

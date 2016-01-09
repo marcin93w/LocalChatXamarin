@@ -1,10 +1,12 @@
 ﻿(function(locationJammer) {
-    var maxDisruptionStep = 10;
+    var maxDisruptionStep = 5;
 
     locationJammer.generateDisruptionSettings = function(maxDisruption) {
+        var length = Math.random() * maxDisruption;
+        var angle = Math.random() * 2 * Math.PI;
         return {
-            xDisruption: Math.random() * maxDisruption * 2 - maxDisruption,
-            yDisruption: Math.random() * maxDisruption * 2 - maxDisruption
+            xDisruption: length * Math.sin(angle),
+            yDisruption: length * Math.cos(angle)
         };
     }
     
@@ -30,7 +32,7 @@
     }
     
     function disturbCoordinatesByMetres (location, disruptionSettings) {
-        var R = 6378137;
+        var R = 6371000;
         
         var radDisruptionY = disruptionSettings.yDisruption / R;
         var radDisruptionX = disruptionSettings.xDisruption / (R * Math.cos(Math.PI * location.Lat / 180));

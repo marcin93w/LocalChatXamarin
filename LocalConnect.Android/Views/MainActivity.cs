@@ -77,18 +77,22 @@ namespace LocalConnect.Android.Views
 
             _peopleViewModel.OnPeopleLoaded += OnPeopleLoaded;
 
+            if (!_peopleViewModel.RestClient.IsAuthenticated())
+            {
+                OpenLoginActivity();
+                return;
+            }
+
             if (!_peopleViewModel.SocketClient.IsConnected)
             {
-                _peopleViewModel.SocketClient.Connect();
+                if (!_peopleViewModel.SocketClient.Connect())
+                {
+                    ChangeLoadingInfoState(LoadingInfoState.NetworkError);
+                    return;
+                }
             }
             if (savedInstanceState == null || !_peopleViewModel.DataLoaded)
             {
-                if (!_peopleViewModel.RestClient.IsAuthenticated())
-                {
-                    OpenLoginActivity();
-                    return;
-                }
-
                 _loadingMyDataTask = _peopleViewModel.FetchMyDataAsync();
 
                 CreateLocationUpdateService();
@@ -106,6 +110,8 @@ namespace LocalConnect.Android.Views
                 LoadingInfoState savedState;
                 if(Enum.TryParse(savedInstanceState.GetString("LoadingInfoState"), false, out savedState))
                     ChangeLoadingInfoState(savedState);
+
+                BindToLocationUpdateService();
             }
 
             OnMyDataLoaded();

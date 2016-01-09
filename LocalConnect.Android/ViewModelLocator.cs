@@ -17,8 +17,7 @@ namespace LocalConnect.Android
     /// </summary>
     public class ViewModelLocator
     {
-        private IRestClient _restClient;
-        private SocketClient _socketClient;
+        private Context _context;
 
         private static ViewModelLocator _instance;
 
@@ -33,6 +32,10 @@ namespace LocalConnect.Android
             SimpleIoc.Default.Register<LoginViewModel>();
             SimpleIoc.Default.Register<MyProfileViewModel>();
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<Context>(() => _context);
+            SimpleIoc.Default.Register<ISessionInfoManager, SessionInfoManager>();
+            SimpleIoc.Default.Register<IRestClient, RestClient>();
+            SimpleIoc.Default.Register<ISocketClient, SocketClient>();
         }
 
         public T GetUiInvokableViewModel<T>(Activity activity) where T : ViewModelBase, IUiInvokable
@@ -45,27 +48,8 @@ namespace LocalConnect.Android
 
         public T GetViewModel<T>(Context context) where T: ViewModelBase
         {
-            var viewModel = ServiceLocator.Current.GetInstance<T>();
-
-            if (viewModel is IRestClientUsingViewModel)
-            {
-                if (_restClient == null)
-                {
-                    _restClient = new RestClient(new SessionInfoManager(context));
-                }
-                (viewModel as IRestClientUsingViewModel).RestClient = _restClient;
-            }
-
-            if (viewModel is ISocketClientUsingViewModel)
-            {
-                if (_socketClient == null)
-                {
-                    _socketClient = new SocketClient(new SessionInfoManager(context));
-                }
-                (viewModel as ISocketClientUsingViewModel).SocketClient = _socketClient;
-            }
-
-            return viewModel;
+            _context = context;
+            return SimpleIoc.Default.GetInstance<T>();
         }
 
         public void ResetViewModel<T>() where T : ViewModelBase
@@ -74,10 +58,9 @@ namespace LocalConnect.Android
                 SimpleIoc.Default.Unregister<T>();
             SimpleIoc.Default.Register<T>();
         }
+    }
 
-        public static void Cleanup()
-        {
-            // TODO Clear the ViewModels
-        }
+    public interface IContextProvider
+    {
     }
 }

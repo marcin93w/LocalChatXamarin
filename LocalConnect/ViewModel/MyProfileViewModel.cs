@@ -9,11 +9,16 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class MyProfileViewModel : ViewModelBase, IRestClientUsingViewModel
+    public class MyProfileViewModel : ViewModelBase
     {
         private Me _me;
 
-        public IRestClient RestClient { private get; set; }
+        private readonly IRestClient _restClient;
+
+        public MyProfileViewModel(IRestClient restClient)
+        {
+            _restClient = restClient;
+        }
 
         public string FirstName
         {
@@ -54,7 +59,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                await _me.LoadDetailedData(RestClient);
+                await _me.LoadDetailedData(_restClient);
                 DataLoaded = true;
                 return true;
             }
@@ -68,7 +73,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                await _me.UpdateData(RestClient);
+                await _me.UpdateData(_restClient);
                 return true;
             }
             catch (Exception ex)

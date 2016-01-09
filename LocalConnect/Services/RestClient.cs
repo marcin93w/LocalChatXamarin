@@ -31,19 +31,28 @@ namespace LocalConnect.Services
             request.Credentials = new NetworkCredential(username, password);
 
             SessionInfo sessionInfo;
-            using (var response = (HttpWebResponse)await request.GetResponseAsync())
+
+            try
             {
-                if (response.StatusCode == HttpStatusCode.OK)
+                using (var response = (HttpWebResponse)await request.GetResponseAsync())
                 {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        return null;
+                    }
                     using (var stream = response.GetResponseStream())
                     {
                         sessionInfo = await DeserializeFromStream<SessionInfo>(stream);
                     }
                 }
-                else
+            }
+            catch (WebException ex)
+            {
+                if ((ex.Response as HttpWebResponse)?.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     return null;
                 }
+                throw;
             }
 
             _authenticationHeader = $"Bearer {sessionInfo.Token}";

@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalConnect.Android", "LocalConnect.Android\LocalConnect.Android.csproj", "{306F7A60-6E0B-4368-9D36-34AE2B0436D0}"
 EndProject
-Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "LCNodeBackend", "LCNodeBackend\LCNodeBackend.njsproj", "{E48D2B67-0438-4C48-AF38-9F688DBDDCD0}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "LocalConnectServer", "LocalConnectServer\LocalConnectServer.njsproj", "{E48D2B67-0438-4C48-AF38-9F688DBDDCD0}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LocalConnect", "LocalConnect\LocalConnect.shproj", "{B85838AD-CD61-4E36-92B4-FACDBAB0A27F}"
 EndProject

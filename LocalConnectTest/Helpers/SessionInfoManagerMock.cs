@@ -8,7 +8,7 @@ using LocalConnect.Models;
 
 namespace LocalConnectTest.Helpers
 {
-    public class FakeSessionInfoManager : ISessionInfoManager
+    public class SessionInfoManagerMock : ISessionInfoManager
     {
         public void SaveAuthToken(string authToken)
         {

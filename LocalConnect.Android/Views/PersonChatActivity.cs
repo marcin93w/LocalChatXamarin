@@ -176,7 +176,7 @@ namespace LocalConnect.Android.Views
 
         private void OnMessagesListItemClick(object sender, AdapterView.ItemClickEventArgs e)
         {
-            if (e.Position > 0)
+            if (e.Position > 0 || e.View.FindViewById<TextView>(Resource.Id.MessagesLoadText) == null)
             {
                 ToggleMessageInfo(e.View);
             }

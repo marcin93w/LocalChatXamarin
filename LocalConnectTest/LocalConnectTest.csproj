@@ -64,12 +64,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Helpers\FakeSessionInfoManager.cs" />
-    <Compile Include="Helpers\FakeChatClient.cs" />
-    <Compile Include="Helpers\FakeRestClient.cs" />
+    <Compile Include="Helpers\SessionInfoManagerMock.cs" />
+    <Compile Include="Helpers\SocketClientMock.cs" />
+    <Compile Include="Helpers\RestClientMock.cs" />
     <Compile Include="ViewModelTests\LoginViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModelTests\MyProfileViewModelTest.cs" />
+    <Compile Include="ViewModelTests\PeopleViewModelTest.cs" />
+    <Compile Include="ViewModelTests\PersonChatViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LocalConnect.Android\LocalConnect.Android.csproj">

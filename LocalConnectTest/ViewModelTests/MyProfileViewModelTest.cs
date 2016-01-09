@@ -17,17 +17,7 @@ namespace LocalConnectTest.ViewModelTests
         [Test]
         public async void ProfileUpdateTest()
         {
-            var myProfileVm = new MyProfileViewModel();
-            myProfileVm.RestClient = new RestClient(new FakeSessionInfoManager());
-            myProfileVm.Initialize(new Me
-            {
-                FirstName = "asd",
-                LongDescription = "asd",
-                ShortDescription = "asd",
-                Surname = "asd"
-            });
-
-            await myProfileVm.Save();
+            
         }
     }
 }

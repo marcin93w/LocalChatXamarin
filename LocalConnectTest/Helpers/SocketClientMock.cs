@@ -8,37 +8,30 @@ using LocalConnect.Services;
 
 namespace LocalConnectTest.Helpers
 {
-    class FakeSocketClient : ISocketClient
+    class SocketClientMock : ISocketClient
     {
-        public FakeSocketClient()
+        public SocketClientMock()
         {
             SentMessages = new List<OutcomeMessage>();
         }
         
         public void MarkMessageAsDisplayed(IncomeMessage message)
         {
-            throw new NotImplementedException();
         }
 
         public bool IsConnected { get; private set; }
-        public string ConnectedPersonId { get; private set; }
 
         public List<OutcomeMessage> SentMessages { get; } 
 
-        public void Connect(string personId)
-        {
-            IsConnected = true;
-            ConnectedPersonId = personId;
-        }
-
         public bool Connect()
         {
-            throw new NotImplementedException();
+            IsConnected = true;
+            return true;
         }
 
         public void Disconnect()
         {
-            throw new NotImplementedException();
+            OnMessageReceived = null;
         }
 
         public event MessageReceivedEventHandler OnMessageReceived;
@@ -52,6 +45,11 @@ namespace LocalConnectTest.Helpers
         {
             get { return IsConnected; }
             set { IsConnected = value; }
+        }
+
+        public void InvokeMessageReceive(IncomeMessage msg)
+        {
+            OnMessageReceived(this, new MessageReceivedEventArgs(msg));
         }
     }
 }

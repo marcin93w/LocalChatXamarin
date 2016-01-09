@@ -8,12 +8,17 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class SettingsViewModel : ViewModelBase, IRestClientUsingViewModel
+    public class SettingsViewModel : ViewModelBase
     {
         private static readonly List<int> DisruptionValuesList = new [] { 0, 100, 500, 1000, 5000, 10000, 50000 }.ToList();
 
         private Settings _settings;
-        public IRestClient RestClient { get; set; }
+        private readonly IRestClient _restClient;
+
+        public SettingsViewModel(IRestClient restClient)
+        {
+            _restClient = restClient;
+        }
 
         public int? LocationDisruption
         {
@@ -60,7 +65,7 @@ namespace LocalConnect.ViewModel
             LoadingError = false;
             try
             {
-                _settings = await Settings.FetchSettings(RestClient);
+                _settings = await Settings.FetchSettings(_restClient);
             }
             catch (Exception ex)
             {
@@ -75,7 +80,7 @@ namespace LocalConnect.ViewModel
             SendingError = false;
             try
             {
-                await _settings.SendUpdate(RestClient);
+                await _settings.SendUpdate(_restClient);
             }
             catch (Exception ex)
             {

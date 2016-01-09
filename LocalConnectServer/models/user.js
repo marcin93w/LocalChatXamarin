@@ -1,4 +1,9 @@
 ﻿var mongoose = require('mongoose');
+var bcrypt = require('bcryptjs');
+var hat = require('hat');
+var SHA256 = require("crypto-js/sha256");
+var q = require('q');
+var config = require('../config');
 
 var userSchema = new mongoose.Schema({
     username: String,
@@ -29,16 +34,38 @@ var userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.verifyPassword = function (password, callback) {
-    callback(null, this.password === password);
+    bcrypt.compare(password, this.password, callback);
 };
 
 userSchema.methods.verifyToken = function (token, callback) {
-    callback(null, this.token === token);
+    callback(null, this.token === SHA256(token).toString());
 };
 
 userSchema.methods.generateNewToken = function () {
-    this.token = this.username || this.facebookId;
-    return this.save();
+    var defer = q.defer();
+    var token = hat();
+    this.token = SHA256(token);
+    this.save(function (err) {
+        if (err) defer.reject(err);
+        defer.resolve(token);
+    });
+    
+    return defer.promise;
 };
+
+userSchema.methods.savePassword = function (password) {
+    var defer = q.defer();
+    var user = this;
+    bcrypt.hash(password, 8, function (err, hash) {
+        if (err) defer.reject(err);
+        user.password = hash;
+        user.save(function(err) {
+            if (err) defer.reject(err);
+            defer.resolve();
+        });
+    });
+
+    return defer.promise;
+}
 
 module.exports = mongoose.model('User', userSchema);

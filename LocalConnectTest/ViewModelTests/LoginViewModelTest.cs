@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using LocalConnect.Services;
@@ -12,36 +13,37 @@ namespace LocalConnectTest.ViewModelTests
     [TestFixture]
     public class LoginViewModelTest
     {
-        private readonly FakeSocketClient _socketClient = new FakeSocketClient();
-        private readonly FakeRestClient _restClient = new FakeRestClient();
+        private readonly SocketClientMock _socketClient = new SocketClientMock();
+        private readonly RestClientMock _restClient = new RestClientMock();
 
         private LoginViewModel _loginViewModel;
 
         [SetUp]
         public void SetUp()
         {
-            _loginViewModel = new LoginViewModel();
-            _loginViewModel.RestClient = _restClient;
+            _loginViewModel = new LoginViewModel(_restClient);
         }
 
         [Test]
         public async Task CorrectAuthenticationTest()
         {
-            _loginViewModel.Login = FakeRestClient.CorrectUsername;
-            _loginViewModel.Password = FakeRestClient.CorrectPassword;
+            _loginViewModel.Login = RestClientMock.CorrectUsername;
+            _loginViewModel.Password = RestClientMock.CorrectPassword;
             var loginData = await _loginViewModel.Authenticate();
 
-            Assert.AreEqual(FakeRestClient.CorrectPersonId, loginData.UserId);
+            Assert.AreEqual(RestClientMock.CorrectPersonId, loginData.UserId);
+            Assert.AreEqual(LoginViewModel.AuthenticationStatus.Ok, _loginViewModel.Status);
         }
 
         [Test]
         public async Task IncorrectAuthenticationTest()
         {
-            _loginViewModel.Login = FakeRestClient.CorrectUsername;
+            _loginViewModel.Login = RestClientMock.CorrectUsername;
             _loginViewModel.Password = "ppl";
             var loginData = await _loginViewModel.Authenticate();
 
             Assert.IsNull(loginData);
+            Assert.AreEqual(LoginViewModel.AuthenticationStatus.WrongCredentials, _loginViewModel.Status);
         }
 
         [Test]
@@ -49,32 +51,60 @@ namespace LocalConnectTest.ViewModelTests
         {
             var mockDataProvider = new Mock<IRestClient>();
             mockDataProvider
-                .Setup(e => e.Login(FakeRestClient.CorrectUsername, FakeRestClient.CorrectPassword))
+                .Setup(e => e.Login(RestClientMock.CorrectUsername, RestClientMock.CorrectPassword))
                 .ThrowsAsync(new Exception());
 
-            _loginViewModel.RestClient = mockDataProvider.Object;
-            _loginViewModel.Login = FakeRestClient.CorrectUsername;
-            _loginViewModel.Password = FakeRestClient.CorrectPassword;
+            _loginViewModel = new LoginViewModel(mockDataProvider.Object);
+            _loginViewModel.Login = RestClientMock.CorrectUsername;
+            _loginViewModel.Password = RestClientMock.CorrectPassword;
             var loginData = await _loginViewModel.Authenticate();
 
             Assert.IsNull(loginData);
+            Assert.AreEqual(LoginViewModel.AuthenticationStatus.ConnectionError, _loginViewModel.Status);
         }
 
-        //[Test]
-        //public async Task ExistingUserRegisterOnServerTest()
-        //{
-        //    var loginViewModel = new LoginViewModel();
-        //    loginViewModel.DataProvider = new RestClient();
-        //    loginViewModel.ChatClient = _chatClient;
+        [Test, Sequential]
+        public async Task PasswordRepeatTest(
+            [Values("a", "b", "abc", "")] string password, 
+            [Values(true, false, false, false)] bool isMatch)
+        {
+            _loginViewModel.Password = "a";
+            _loginViewModel.RepeatedPassword = password;
 
-        //    loginViewModel.Login = string.Empty;
-        //    loginViewModel.Password = FakeDataProvider.CorrectPassword;
-        //    loginViewModel.RepeatedPassword = FakeDataProvider.CorrectPassword;
-        //    loginViewModel.FirstName = "asd";
-        //    loginViewModel.Surname = "qwe";
+            var registerInfo = await _loginViewModel.Register();
 
-        //    var loginData = await loginViewModel.Register();
-        //    Assert.IsNull(loginData);
-        //}
+            Assert.AreEqual(isMatch, 
+                _loginViewModel.Status != LoginViewModel.AuthenticationStatus.PasswordsNotMatch);
+        }
+
+        [Test]
+        public async Task ExistingUserRegisterTest()
+        {
+            _loginViewModel.Login = RestClientMock.CorrectUsername;
+            _loginViewModel.Password = RestClientMock.CorrectPassword;
+            _loginViewModel.RepeatedPassword = RestClientMock.CorrectPassword;
+            _loginViewModel.FirstName = "asd";
+            _loginViewModel.Surname = "qwe";
+
+            var loginData = await _loginViewModel.Register();
+
+            Assert.IsNull(loginData);
+            Assert.AreEqual(LoginViewModel.AuthenticationStatus.UserAlreadyExists, _loginViewModel.Status);
+        }
+
+        [Test]
+        public async Task CorrectRegisterTest()
+        {
+            _loginViewModel.Login = RestClientMock.CorrectUsername + "1";
+            _loginViewModel.Password = RestClientMock.CorrectPassword;
+            _loginViewModel.RepeatedPassword = RestClientMock.CorrectPassword;
+            _loginViewModel.FirstName = "asd";
+            _loginViewModel.Surname = "qwe";
+
+            var loginData = await _loginViewModel.Register();
+
+            Assert.IsNotNull(loginData);
+            Assert.AreEqual(LoginViewModel.AuthenticationStatus.Ok, _loginViewModel.Status);
+        }
     }
 }

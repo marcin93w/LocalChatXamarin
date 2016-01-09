@@ -13,7 +13,7 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PeopleViewModel : ViewModelBase, IRestClientUsingViewModel, ISocketClientUsingViewModel, IUiInvokable
+    public class PeopleViewModel : ViewModelBase, IUiInvokable
     {
         private readonly People _people;
 
@@ -31,10 +31,9 @@ namespace LocalConnect.ViewModel
 
         private OnDataLoadEventHandler _onPeopleLoad;
         private Task _peopleLoadingTask;
-        private bool _messagesListenerAssigned;
 
-        public IRestClient RestClient { get; set; }
-        public ISocketClient SocketClient { get; set; }
+        public IRestClient RestClient { get; }
+        public ISocketClient SocketClient { get; }
         public RunOnUiThreadHandler RunOnUiThread { private get; set; }
 
         public event OnDataLoadEventHandler OnPeopleLoaded
@@ -53,8 +52,10 @@ namespace LocalConnect.ViewModel
             }
         }
 
-        public PeopleViewModel()
+        public PeopleViewModel(IRestClient restClient, ISocketClient socketClient)
         {
+            RestClient = restClient;
+            SocketClient = socketClient;
             _people = new People();
             People = new List<PersonViewModel>();
             Me = new Me();
@@ -110,23 +111,20 @@ namespace LocalConnect.ViewModel
 
         private void SetUpMessagesListener()
         {
-            if (!_messagesListenerAssigned)
-            {
-                _messagesListenerAssigned = true;
-                SocketClient.OnMessageReceived += OnMessageReceived;
-            }
+            SocketClient.OnMessageReceived -= OnMessageReceived;
+            SocketClient.OnMessageReceived += OnMessageReceived;
         }
 
         private async void OnMessageReceived(object sender, MessageReceivedEventArgs receivedEventArgs)
         {
             await _peopleLoadingTask;
-            var person = FindPersonAndIncrementUnreadMessages(receivedEventArgs.Message.SenderId);
+            var person = FindPerson(receivedEventArgs.Message.SenderId);
             if (person == null)
             {
                 var newPerson = await Person.LoadPerson(RestClient, receivedEventArgs.Message.SenderId);
                 lock (_people)
                 {
-                    person = FindPersonAndIncrementUnreadMessages(receivedEventArgs.Message.SenderId);
+                    person = FindPerson(receivedEventArgs.Message.SenderId);
                     if (person == null)
                     {
                         person = new PersonViewModel(newPerson, Me);
@@ -135,18 +133,21 @@ namespace LocalConnect.ViewModel
                         People.Insert(0, person);
                         RunOnUiThread(() => _onPeopleLoad?.Invoke(this, new OnDataLoadEventArgs()));
                     }
+                    else
+                    {
+                        person.UnreadMessages = (person.UnreadMessages ?? 0) + 1;
+                    }
                 }
             }
-        }
-
-        private PersonViewModel FindPersonAndIncrementUnreadMessages(string personId)
-        {
-            var person = People.FirstOrDefault(p => personId == p.Id);
-            if (person != null)
+            else
             {
                 person.UnreadMessages = (person.UnreadMessages ?? 0) + 1;
             }
-            return person;
+        }
+
+        private PersonViewModel FindPerson(string personId)
+        {
+            return People.FirstOrDefault(p => personId == p.Id);
         }
 
         public async Task SendLocationUpdate(Location location)

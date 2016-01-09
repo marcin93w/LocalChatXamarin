@@ -8,12 +8,20 @@ using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel
 {
-    public class PersonChatViewModel : ViewModelBase, 
-        IUiInvokable, IRestClientUsingViewModel, ISocketClientUsingViewModel
+    public class PersonChatViewModel : ViewModelBase, IUiInvokable
     {
         private Conversation _conversation;
 
-#region IUiInvokableViewModel implementation
+        private readonly ISocketClient _socketClient;
+        private readonly IRestClient _restClient;
+
+        public PersonChatViewModel(ISocketClient socketClient, IRestClient restClient)
+        {
+            _socketClient = socketClient;
+            _restClient = restClient;
+        }
+
+        #region IUiInvokableViewModel implementation
 
         public RunOnUiThreadHandler RunOnUiThread { private get; set; }
 
@@ -23,15 +31,12 @@ namespace LocalConnect.ViewModel
         public ObservableCollection<Message> Messages => _conversation.Messages;
         public bool DataLoaded { private set; get; }
 
-        public ISocketClient SocketClient { private get; set; }
-        public IRestClient RestClient { private get; set; }
-
         public void Initialize(PersonViewModel person)
         {
             if (Person == null || Person.Id != person.Id || person.UnreadMessages.HasValue)
             {
                 Person = person;
-                _conversation = new Conversation(Person.Id, SocketClient, RunOnUiThread);
+                _conversation = new Conversation(Person.Id, _socketClient, RunOnUiThread);
                 DataLoaded = false;
                 Person.ClearUnreadMessages();
             }
@@ -41,8 +46,8 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                await Person.LoadDetailedData(RestClient);
-                await _conversation.FetchLastMessages(RestClient);
+                await Person.LoadDetailedData(_restClient);
+                await _conversation.FetchLastMessages(_restClient);
                 DataLoaded = true;
                 return true;
             }
@@ -81,7 +86,7 @@ namespace LocalConnect.ViewModel
         {
             try
             {
-                return (await _conversation.FetchOlderMessages(RestClient)) ? true : (bool?) null;
+                return (await _conversation.FetchOlderMessages(_restClient)) ? true : (bool?) null;
             }
             catch (Exception ex)
             {

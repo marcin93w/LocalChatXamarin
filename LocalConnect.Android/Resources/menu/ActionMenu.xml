@@ -3,11 +3,6 @@
       xmlns:localconnect="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/ActionSearch"
-        android:icon="@android:drawable/ic_menu_search"
-        localconnect:showAsAction="always"
-        android:title="Search"/>
-    <item
         android:id="@+id/ActionSwitchView"
         android:icon="@android:drawable/ic_dialog_map"
         localconnect:showAsAction="always"
@@ -15,6 +10,7 @@
   
     <item android:id="@+id/ActionRefresh"
           android:icon="@android:drawable/ic_menu_rotate"
+          localconnect:showAsAction="always"
           android:title="Refresh"/>
   <item android:id="@+id/ActionSettings"
           android:title="Settings"/>

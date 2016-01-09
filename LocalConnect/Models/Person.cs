@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
+using GeoAPI.Geometries;
 using LocalConnect.Services;
+using NetTopologySuite.Algorithm.Distance;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Operation.Distance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -53,11 +57,21 @@ namespace LocalConnect.Models
             if (Location == null || me.RealLocation == null)
                 return null;
 
-            var results = new float[1];
-            global::Android.Locations.Location.DistanceBetween(
-                me.RealLocation.Lat, me.RealLocation.Lon, Location.Lat, Location.Lon, results);
+            return CalculateDistance(me.RealLocation, Location);
+        }
 
-            return results[0];
+        public double CalculateDistance(Location l1, Location l2)
+        {
+            //Haversine formula for calculating distance
+            double R = 6371000;
+
+            var latDist = (l2.Lat - l1.Lat) * Math.PI / 180;
+            var lonDist = (l2.Lon - l1.Lon) * Math.PI / 180;
+            var h1 = Math.Sin(latDist / 2) * Math.Sin(latDist / 2) +
+                          Math.Cos(l1.Lat * Math.PI / 180) * Math.Cos(l2.Lat * Math.PI / 180) *
+                          Math.Sin(lonDist / 2) * Math.Sin(lonDist / 2);
+            var h2 = 2 * Math.Asin(Math.Min(1, Math.Sqrt(h1)));
+            return R * h2;
         }
     }
 }

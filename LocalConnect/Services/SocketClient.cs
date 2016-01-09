@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using LocalConnect.Helpers;
 using LocalConnect.Models;
 using Newtonsoft.Json.Linq;
@@ -26,7 +27,8 @@ namespace LocalConnect.Services
         
         private Socket _socket;
 
-        private readonly Dictionary<int, OutcomeMessage> _messagesWitingForConfirmation = new Dictionary<int, OutcomeMessage>();
+        private List<OutcomeMessage> _messagesWitingForConfirmation 
+            = new List<OutcomeMessage>();
         private readonly ISessionInfoManager _sessionInfoManager;
 
         public SocketClient(ISessionInfoManager sessionInfoManager)
@@ -38,12 +40,13 @@ namespace LocalConnect.Services
 
         public bool Connect()
         {
-            var personId = _sessionInfoManager.ReadPersonId();
-            if (string.IsNullOrEmpty(personId))
+            var sessionInfo = _sessionInfoManager.ReadSessionInfo();
+            if (string.IsNullOrEmpty(sessionInfo.UserId))
                 return false;
 
             var socketQuery = new Dictionary<string, string>();
-            socketQuery.Add("personId", personId);
+            socketQuery.Add("userId", sessionInfo.UserId);
+            socketQuery.Add("authToken", sessionInfo.Token);
             _socket = IO.Socket(_url, new IO.Options {Query = socketQuery}).Connect();
             _socket.On("chat message", message =>
             {
@@ -62,20 +65,20 @@ namespace LocalConnect.Services
             _socket.On("message saved", res =>
             {
                 var info = res as JObject;
-                int msgIdx = int.Parse(info["clientMessageId"].ToString());
+                string msgIdx = info["clientMessageId"].ToString();
                 string msgId = info["messageId"].ToString();
-                var msg = _messagesWitingForConfirmation[msgIdx];
+                var msg = _messagesWitingForConfirmation.First(m => m.MessageId == msgIdx);
                 msg.Sent = true;
                 msg.MessageId = msgId;
-                _messagesWitingForConfirmation.Remove(msgIdx);
+                _messagesWitingForConfirmation.Remove(msg);
             });
             _socket.On("message error", res =>
             {
                 var info = res as JObject;
-                int msgIdx = int.Parse(info["clientMessageId"].ToString());
-                var msg = _messagesWitingForConfirmation[msgIdx];
+                string msgIdx = info["clientMessageId"].ToString();
+                var msg = _messagesWitingForConfirmation.First(m => m.MessageId == msgIdx);
                 msg.DeliverError = true;
-                _messagesWitingForConfirmation.Remove(msgIdx);
+                _messagesWitingForConfirmation.Remove(msg);
             });
             _socket.On("disconnect", () => IsConnected = false);
             
@@ -85,7 +88,8 @@ namespace LocalConnect.Services
 
         public void Disconnect()
         {
-            _socket.Disconnect();
+            _socket?.Disconnect();
+            OnMessageReceived = null;
         }
 
         public void SendMessage(OutcomeMessage message, int messageIndex)
@@ -96,8 +100,9 @@ namespace LocalConnect.Services
                 { "text", message.Text },
                 { "clientMessageId", messageIndex }
             };
-            _messagesWitingForConfirmation.Add(messageIndex, message);
             _socket.Emit("chat message", msg);
+            message.MessageId = message.ReceiverId + messageIndex;
+            _messagesWitingForConfirmation.Add(message);
         }
 
         public void MarkMessageAsDisplayed(IncomeMessage message)

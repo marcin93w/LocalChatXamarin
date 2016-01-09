@@ -143,7 +143,6 @@
     peopleCtrl.postRegisterUser = function (req, res) {
         var user = new User({
             username: req.body.Username,
-            password: req.body.Password,
             firstname: req.body.Person.FirstName,
             surname: req.body.Person.Surname,
             shortDescription: req.body.Person.ShortDescription,
@@ -163,14 +162,17 @@
             return user.save();
         })
         .then(function() {
+            return user.savePassword(req.body.Password);
+        })
+        .then(function() {
             return user.generateNewToken();
         })
-        .then(function () {
+        .then(function (token) {
             res.json({
                 registered: true,
                 sessionInfo: {
-                    token: user.token,
-                    personId: user.id
+                    token: token,
+                    userId: user.id
                 }
             });
         })
@@ -188,7 +190,7 @@
     }
     
     peopleCtrl.updateMe = function (req, res) {
-        if (!req.body.FirstName || !req.body.Surname || !req.body.ShortDescription || !req.body.LongDescription) {
+        if (!req.body.FirstName || !req.body.Surname) {
             res.send(400);
             return;
         }
@@ -266,6 +268,20 @@
             .catch(function(err) {
                 res.send(500, err);
             });
+    }
+
+    peopleCtrl.checkToken = function (personId, token) {
+        var defer = q.defer();
+        User.findOne({ _id: personId })
+            .then(function(user) {
+                user.verifyToken(token, function(err, res) {
+                    if (err) defer.reject(err);
+                    if (res) defer.resolve();
+                    else defer.reject('unauthorized');
+                });
+            });
+
+        return defer.promise;
     }
 
 })(module.exports);

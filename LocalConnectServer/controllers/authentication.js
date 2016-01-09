@@ -1,5 +1,6 @@
 ﻿(function (auth) {
     var _ = require('underscore');
+    var SHA256 = require("crypto-js/sha256");
 
     var config = require('../config');
 
@@ -20,12 +21,13 @@
 
     passport.use(new BearerStrategy(
         function (token, done) {
-            User.findOne({ token: token }, function (err, user) {
+            var hash = SHA256(token).toString();
+            User.findOne({ token: hash }, function(err, user) {
                 if (err) {
-                     return done(err);
+                    return done(err);
                 }
                 if (!user) {
-                     return done(null, false);
+                    return done(null, false);
                 }
                 return done(null, user, { scope: 'all' });
             });
@@ -100,10 +102,11 @@
     auth.getUserData = function (req, res) {
         var user = req.user;
         user.generateNewToken()
-            .then(function() {
+            .then(function (token) {
+                console.log('Generated token ' + token + ' for user ' + user.id);
                 res.json({
-                    token: user.token,
-                    personId: user.id
+                    token: token,
+                    userId: user.id
                 });
             }, function (error) {
                 res.send(error);
