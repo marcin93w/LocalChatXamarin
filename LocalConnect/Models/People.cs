@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LocalConnect.Services;
-using NetTopologySuite.Geometries;
 
 namespace LocalConnect.Models
 {

@@ -1,12 +1,11 @@
-using System;
 using Android.App;
 using Android.Content;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using LocalConnect.Android.Views.Helpers;
-using LocalConnect.ViewModel;
 using LocalConnect.Helpers;
 using LocalConnect.Services;
+using LocalConnect.ViewModel;
 using Microsoft.Practices.ServiceLocation;
 
 namespace LocalConnect.Android

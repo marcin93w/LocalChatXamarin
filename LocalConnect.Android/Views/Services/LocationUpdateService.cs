@@ -1,13 +1,10 @@
 using System;
-using System.Threading;
 using Android.App;
 using Android.Content;
 using Android.Locations;
 using Android.OS;
-using Android.Widget;
 using Java.Util.Logging;
 using LocalConnect.ViewModel;
-using Newtonsoft.Json;
 using Location = LocalConnect.Models.Location;
 
 namespace LocalConnect.Android.Views.Services

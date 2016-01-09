@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using LocalConnect.Helpers;
 using LocalConnect.Services;
 
 namespace LocalConnect.Models
@@ -21,7 +18,6 @@ namespace LocalConnect.Models
             Avatar = me.Avatar;
             ShortDescription = me.ShortDescription;
             PersonId = me.PersonId;
-            //TODO MaxLocationDisturb = me.Location.Tolerance;
         }
 
         public async Task UpdateLocation(IRestClient restClient, Location location)

@@ -1,19 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Preferences;
-using Android.Runtime;
-using Android.Service.Textservice;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
-using LocalConnect.Models;
-using LocalConnect.Services;
 using LocalConnect.ViewModel;
 using Xamarin.Facebook;
 using Xamarin.Facebook.AppEvents;

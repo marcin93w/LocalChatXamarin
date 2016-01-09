@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
 using System.Threading.Tasks;
-using GeoAPI.Geometries;
 using LocalConnect.Services;
-using NetTopologySuite.Algorithm.Distance;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.Operation.Distance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

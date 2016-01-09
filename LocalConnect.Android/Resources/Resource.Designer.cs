@@ -1788,26 +1788,20 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b008b
 			public const int ActionBar = 2131427467;
 			
-			// aapt resource value: 0x7f0b00c8
-			public const int ActionLogout = 2131427528;
-			
-			// aapt resource value: 0x7f0b00c6
-			public const int ActionRefresh = 2131427526;
-			
 			// aapt resource value: 0x7f0b00c4
-			public const int ActionSearch = 2131427524;
+			public const int ActionLogout = 2131427524;
 			
-			// aapt resource value: 0x7f0b00c7
-			public const int ActionSettings = 2131427527;
+			// aapt resource value: 0x7f0b00c2
+			public const int ActionRefresh = 2131427522;
 			
-			// aapt resource value: 0x7f0b00c5
-			public const int ActionSwitchView = 2131427525;
+			// aapt resource value: 0x7f0b00c3
+			public const int ActionSettings = 2131427523;
 			
-			// aapt resource value: 0x7f0b00b7
-			public const int ActionsPanel = 2131427511;
+			// aapt resource value: 0x7f0b00c1
+			public const int ActionSwitchView = 2131427521;
 			
-			// aapt resource value: 0x7f0b00bb
-			public const int AddMessageForm = 2131427515;
+			// aapt resource value: 0x7f0b00b8
+			public const int AddMessageForm = 2131427512;
 			
 			// aapt resource value: 0x7f0b0084
 			public const int ErrorText = 2131427460;
@@ -1827,8 +1821,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b0089
 			public const int LoadingPanel = 2131427465;
 			
-			// aapt resource value: 0x7f0b00bf
-			public const int LocationDisruptionSpinner = 2131427519;
+			// aapt resource value: 0x7f0b00bc
+			public const int LocationDisruptionSpinner = 2131427516;
 			
 			// aapt resource value: 0x7f0b0087
 			public const int LoginButton = 2131427463;
@@ -1866,8 +1860,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b0070
 			public const int MessageTextContainer = 2131427440;
 			
-			// aapt resource value: 0x7f0b00ba
-			public const int MessagesList = 2131427514;
+			// aapt resource value: 0x7f0b00b7
+			public const int MessagesList = 2131427511;
 			
 			// aapt resource value: 0x7f0b006d
 			public const int MessagesLoadText = 2131427437;
@@ -1926,17 +1920,17 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b007f
 			public const int RegistrationInfoPanel = 2131427455;
 			
-			// aapt resource value: 0x7f0b00bd
-			public const int SendButton = 2131427517;
+			// aapt resource value: 0x7f0b00ba
+			public const int SendButton = 2131427514;
 			
-			// aapt resource value: 0x7f0b00c2
-			public const int SettingsConnectionError = 2131427522;
+			// aapt resource value: 0x7f0b00bf
+			public const int SettingsConnectionError = 2131427519;
 			
-			// aapt resource value: 0x7f0b00c1
-			public const int SettingsPoepleCountInput = 2131427521;
+			// aapt resource value: 0x7f0b00be
+			public const int SettingsPoepleCountInput = 2131427518;
 			
-			// aapt resource value: 0x7f0b00c3
-			public const int SettingsSave = 2131427523;
+			// aapt resource value: 0x7f0b00c0
+			public const int SettingsSave = 2131427520;
 			
 			// aapt resource value: 0x7f0b00b5
 			public const int ShortDescription = 2131427509;
@@ -1944,8 +1938,8 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b0083
 			public const int Surname = 2131427459;
 			
-			// aapt resource value: 0x7f0b00bc
-			public const int TextInput = 2131427516;
+			// aapt resource value: 0x7f0b00b9
+			public const int TextInput = 2131427513;
 			
 			// aapt resource value: 0x7f0b0086
 			public const int ToogleRegisterButton = 2131427462;
@@ -2024,12 +2018,6 @@ namespace LocalConnect.Android
 			
 			// aapt resource value: 0x7f0b002c
 			public const int button = 2131427372;
-			
-			// aapt resource value: 0x7f0b00b8
-			public const int button2 = 2131427512;
-			
-			// aapt resource value: 0x7f0b00b9
-			public const int button3 = 2131427513;
 			
 			// aapt resource value: 0x7f0b004c
 			public const int buttonPanel = 2131427404;
@@ -2343,11 +2331,11 @@ namespace LocalConnect.Android
 			// aapt resource value: 0x7f0b0049
 			public const int textSpacerNoButtons = 2131427401;
 			
-			// aapt resource value: 0x7f0b00be
-			public const int textView1 = 2131427518;
+			// aapt resource value: 0x7f0b00bb
+			public const int textView1 = 2131427515;
 			
-			// aapt resource value: 0x7f0b00c0
-			public const int textView2 = 2131427520;
+			// aapt resource value: 0x7f0b00bd
+			public const int textView2 = 2131427517;
 			
 			// aapt resource value: 0x7f0b00a9
 			public const int time = 2131427497;

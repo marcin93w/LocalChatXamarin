@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Drawing;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
-using Android.Preferences;
-using Android.Support.V4.App;
 using Android.Support.V4.View;
 using Android.Support.V7.App;
 using Android.Views;
@@ -18,8 +16,6 @@ using LocalConnect.ViewModel;
 using Newtonsoft.Json;
 using Square.Picasso;
 using AndroidRes = Android.Resource;
-using Color = Android.Graphics.Color;
-using PopupMenu = Android.Support.V7.Widget.PopupMenu;
 using Toolbar = Android.Support.V7.Widget.Toolbar;
 
 namespace LocalConnect.Android.Views

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 
-
 namespace LocalConnect.Helpers
 {
     public class ObservableInvokableCollection<T> : ObservableCollection<T>, IUiInvokable

@@ -6,7 +6,6 @@ using LocalConnect.Models;
 using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 
-
 namespace LocalConnect.Services
 {
     public class MessageReceivedEventArgs : EventArgs

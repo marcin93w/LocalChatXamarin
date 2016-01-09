@@ -1,20 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
 using GalaSoft.MvvmLight.Helpers;
 using LocalConnect.Models;
 using LocalConnect.ViewModel;
-using Newtonsoft.Json;
 using Square.Picasso;
 using Message = LocalConnect.Models.Message;
 
@@ -99,14 +93,12 @@ namespace LocalConnect.Android.Views
             var personImage = FindViewById<ImageView>(Resource.Id.PersonImage);
             var personImageLayoutParams = personImage.LayoutParameters;
             var longDescription = FindViewById(Resource.Id.LongDescription);
-            var actionsPanel = FindViewById(Resource.Id.ActionsPanel);
             var moreButton = FindViewById<ImageView>(Resource.Id.MoreButton);
             if (_moreInfoDisplayed)
             {
                 personImageLayoutParams.Width = personImageLayoutParams.Height = ConvertDpToPx(50);
                 personImage.LayoutParameters = personImageLayoutParams;
                 longDescription.Visibility = ViewStates.Gone;
-                actionsPanel.Visibility = ViewStates.Gone;
                 _moreInfoDisplayed = false;
                 moreButton.Rotation = 0;
             }
@@ -115,7 +107,6 @@ namespace LocalConnect.Android.Views
                 personImageLayoutParams.Width = personImageLayoutParams.Height = ConvertDpToPx(100);
                 personImage.LayoutParameters = personImageLayoutParams;
                 longDescription.Visibility = ViewStates.Visible;
-                actionsPanel.Visibility = ViewStates.Visible;
                 _moreInfoDisplayed = true;
                 moreButton.Rotation = 180;
             }

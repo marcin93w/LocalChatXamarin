@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
-using Java.Util.Logging;
-using LocalConnect.Models;
 using LocalConnect.Helpers;
+using LocalConnect.Models;
 using LocalConnect.Services;
 
 namespace LocalConnect.ViewModel

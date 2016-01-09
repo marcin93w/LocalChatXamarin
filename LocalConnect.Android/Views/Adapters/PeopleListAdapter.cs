@@ -1,14 +1,9 @@
-using System;
-using System.ComponentModel;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Views;
 using Android.Widget;
-using LocalConnect.Models;
 using LocalConnect.ViewModel;
 using Square.Picasso;
 

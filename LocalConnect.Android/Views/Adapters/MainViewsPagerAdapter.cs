@@ -1,6 +1,4 @@
 using Android.Support.V4.App;
-using Fragment = Android.Support.V4.App.Fragment;
-using FragmentManager = Android.Support.V4.App.FragmentManager;
 
 namespace LocalConnect.Android.Views.Adapters
 {
