@@ -79,6 +79,23 @@ namespace LocalConnect.Android.Views
                 return;
             }
 
+            
+            if (savedInstanceState == null || !_peopleViewModel.DataLoaded || _myDataNeedsReload)
+            {
+                _loadingMyDataTask = _peopleViewModel.FetchMyDataAsync();
+
+                CreateLocationUpdateService();
+                BindToLocationUpdateService(true);
+            }
+            else
+            {
+                LoadingInfoState savedState;
+                if(Enum.TryParse(savedInstanceState.GetString("LoadingInfoState"), false, out savedState))
+                    ChangeLoadingInfoState(savedState);
+
+                BindToLocationUpdateService(false);
+            }
+
             if (!_peopleViewModel.SocketClient.IsConnected)
             {
                 if (!_peopleViewModel.SocketClient.Connect())
@@ -87,27 +104,12 @@ namespace LocalConnect.Android.Views
                     return;
                 }
             }
-            if (savedInstanceState == null || !_peopleViewModel.DataLoaded)
+
+            if (_loadingMyDataTask != null && !await _loadingMyDataTask)
             {
-                _loadingMyDataTask = _peopleViewModel.FetchMyDataAsync();
-
-                CreateLocationUpdateService();
-                BindToLocationUpdateService();
-
-                if (!await _loadingMyDataTask)
-                {
-                    _myDataNeedsReload = true;
-                    ChangeLoadingInfoState(LoadingInfoState.NetworkError);
-                    return;
-                }
-            }
-            else
-            {
-                LoadingInfoState savedState;
-                if(Enum.TryParse(savedInstanceState.GetString("LoadingInfoState"), false, out savedState))
-                    ChangeLoadingInfoState(savedState);
-
-                BindToLocationUpdateService();
+                _myDataNeedsReload = true;
+                ChangeLoadingInfoState(LoadingInfoState.NetworkError);
+                return;
             }
 
             OnMyDataLoaded();
@@ -145,14 +147,15 @@ namespace LocalConnect.Android.Views
             ApplicationContext.StartService(startLocationUpdateServiceIntent);
         }
 
-        private void BindToLocationUpdateService()
+        private void BindToLocationUpdateService(bool attachEvent)
         {
             if (_locationUpdateServiceConnection == null || !_locationUpdateServiceConnection.IsConnected)
             {
                 var startLocationUpdateServiceIntent = new Intent(this, typeof(LocationUpdateService));
 
                 _locationUpdateServiceConnection = new LocationUpdateServiceConnection(null);
-                _locationUpdateServiceConnection.ServiceConnected += OnLocationUpdateServiceConnected;
+                if(attachEvent)
+                    _locationUpdateServiceConnection.ServiceConnected += OnLocationUpdateServiceConnected;
                 ApplicationContext.BindService(startLocationUpdateServiceIntent, _locationUpdateServiceConnection, Bind.AutoCreate);
             }
         }
@@ -165,7 +168,7 @@ namespace LocalConnect.Android.Views
             }
             else
             {
-                if (!await _loadingMyDataTask)
+                if (_loadingMyDataTask != null && !await _loadingMyDataTask)
                     return;
                 try
                 {
@@ -189,7 +192,7 @@ namespace LocalConnect.Android.Views
             }
             else
             {
-                BindToLocationUpdateService();
+                BindToLocationUpdateService(true);
             }
         }
 
@@ -240,6 +243,14 @@ namespace LocalConnect.Android.Views
 
         private async void DataRefreshRequested(object sender, EventArgs eventArgs)
         {
+            if (!_peopleViewModel.SocketClient.IsConnected)
+            {
+                if (!_peopleViewModel.SocketClient.Connect())
+                {
+                    ChangeLoadingInfoState(LoadingInfoState.NetworkError);
+                    return;
+                }
+            }
             if (_myDataNeedsReload)
             {
                 ChangeLoadingInfoState(LoadingInfoState.LoadingData);

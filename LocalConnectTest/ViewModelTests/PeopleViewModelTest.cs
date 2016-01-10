@@ -106,7 +106,7 @@ namespace LocalConnectTest.ViewModelTests
         }
 
         [Test, Sequential]
-        public void NewMessageFromPersonInList(
+        public void MessageFromPersonFromList(
             [Values("1", "6")] string personId, [Values(0, 3)] int currentMessagesCount)
         {
             var person = _peopleViewModel.People.First(p => p.Id == personId);
@@ -116,7 +116,7 @@ namespace LocalConnectTest.ViewModelTests
         }
 
         [Test]
-        public void NewMessageFromPersonOutsideOfList()
+        public void MessageFromPersonOutsideOfList()
         {
             var newPersonId = "newPerson";
             _socketClient.InvokeMessageReceive(new IncomeMessage("", newPersonId, "", DateTime.Now));

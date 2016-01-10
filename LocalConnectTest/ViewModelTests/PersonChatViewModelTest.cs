@@ -35,7 +35,18 @@ namespace LocalConnectTest.ViewModelTests
         public void MessageReceiveTest()
         {
             _socketClient.InvokeMessageReceive(new IncomeMessage("id", _person.PersonId, "", DateTime.Now));
-            Assert.That(_personChatViewModel.Messages.Select(m => m.MessageId), Has.Some.EqualTo("id"));
+            Assert.That(_personChatViewModel.Messages.Last().MessageId, Is.EqualTo("id"));
+        }
+
+        [Test]
+        public void MessageSendingTest()
+        {
+            _personChatViewModel.SendMessage("text");
+            Assert.That(_personChatViewModel.Messages.Last().Text, Is.EqualTo("text"));
+            Assert.True(_personChatViewModel.Messages.Last() is OutcomeMessage);
+            Assert.That((_personChatViewModel.Messages.Last() as OutcomeMessage).ReceiverId, Is.EqualTo("b"));
+            Assert.False((_personChatViewModel.Messages.Last() as OutcomeMessage).Sent);
+            Assert.False((_personChatViewModel.Messages.Last() as OutcomeMessage).DeliverError);
         }
     }
 }

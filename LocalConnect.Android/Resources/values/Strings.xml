@@ -2,7 +2,7 @@
 <resources>
     <string name="Hello">Hello World, Click Me!</string>
     <string name="ApplicationName">LocalConnect2</string>
-    <string name="SettingsLocationDisruption">Select location disruption:</string>
+    <string name="SettingsLocationDisruption">Select location accuracy:</string>
     <string name="SettingsPeopleCount">Number of people to show in list:</string>
     <string name="DataSavingError">Error connecting to server, data could not be saved.</string>
     <string name="DataLoadingError">Error, check your internet connection.</string>

@@ -36,7 +36,10 @@
                 messagesCtrl.setDisplayed(msgId)
                 .then(function () {
                     console.log('message set as displayed: ' + msgId);
-                    //TODO send that info to sender
+                    return messagesCtrl.findSender(msgId);
+                })
+                .then(function(sender) {
+                    io.to(sender.id).emit('message displayed', { messageId: msgId });
                 })
                 .catch(function(err) {
                     console.log('ERROR!!: failed set message as displayed: ' + msgId + ': ' + err);

@@ -10,7 +10,7 @@ namespace LocalConnect.ViewModel
 {
     public class SettingsViewModel : ViewModelBase
     {
-        private static readonly List<int> DisruptionValuesList = new [] { 0, 100, 500, 1000, 5000, 10000, 50000 }.ToList();
+        private static readonly List<int> DisruptionValuesList = new [] { 0, 100, 500, 1000, 5000, 10000, 20000 }.ToList();
 
         private Settings _settings;
         private readonly IRestClient _restClient;

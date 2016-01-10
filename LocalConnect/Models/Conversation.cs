@@ -43,11 +43,11 @@ namespace LocalConnect.Models
             _socketClient.SendMessage(msg, Messages.IndexOf(msg));
         }
 
-        private async Task<int> FetchMessages(IRestClient restClient, Message olderThen = null)
+        private async Task<int> FetchMessages(IRestClient restClient, Message olderThan = null)
         {
             var query = $"lastMessagesWith/{_personId}";
-            if (olderThen != null)
-                query += $"?olderThen={olderThen.MessageId}";
+            if (olderThan != null)
+                query += $"?olderThan={olderThan.MessageId}";
             var lastMessages = await restClient.FetchDataAsync(query);
 
             int count = 0;

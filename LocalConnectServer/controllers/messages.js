@@ -58,18 +58,22 @@
     }
 
     messagesCtrl.getLastMessagesWith = function(req, res) {
-        var olderThen = req.query.olderThen;
-        if (!olderThen) {
+        var olderThan = req.query.olderThan;
+        if (!olderThan) {
             getMessagesWith(req.user, req.params.personId)
                 .then(res.json.bind(res), res.send.bind(res));
         } else {
-            Message.findOne({ '_id': olderThen }, 'dateTime')
+            Message.findOne({ '_id': olderThan }, 'dateTime')
             .then(function(msg) {
                 return getMessagesWith(req.user, req.params.personId, msg.dateTime)
                     .then(res.json.bind(res));
             })
             .catch(res.send.bind(res));
         }
+    };
+
+    messagesCtrl.findSender = function(msgId) {
+        return Message.findOne({ _id: msgId }, 'sender');
     };
 
 })(module.exports);

@@ -65,8 +65,11 @@ namespace LocalConnect.Services
             await PostRequestAsync(request, user);
             var registrationInfo = await ExecuteRequestAsync<RegistrationInfo>(request);
 
-            _authenticationHeader = $"Bearer {registrationInfo.SessionInfo.Token}";
-            _sessionInfoManager.SaveSessionInfo(registrationInfo.SessionInfo);
+            if (registrationInfo.Registered)
+            {
+                _authenticationHeader = $"Bearer {registrationInfo.SessionInfo.Token}";
+                _sessionInfoManager.SaveSessionInfo(registrationInfo.SessionInfo);
+            }
 
             return registrationInfo;
         }

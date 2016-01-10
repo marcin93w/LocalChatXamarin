@@ -10,6 +10,9 @@ namespace LocalConnectTest.Helpers
 {
     class SocketClientMock : ISocketClient
     {
+        private List<OutcomeMessage> _messagesWitingForSentConfirmation = new List<OutcomeMessage>();
+        private List<OutcomeMessage> _messagesWitingForDisplayedConfirmation = new List<OutcomeMessage>();
+
         public SocketClientMock()
         {
             SentMessages = new List<OutcomeMessage>();
@@ -38,6 +41,9 @@ namespace LocalConnectTest.Helpers
 
         public void SendMessage(OutcomeMessage message, int messageIndex)
         {
+            message.MessageId = message.ReceiverId + messageIndex;
+            _messagesWitingForSentConfirmation.Add(message);
+            _messagesWitingForDisplayedConfirmation.Add(message);
             SentMessages.Add(message);
         }
 
