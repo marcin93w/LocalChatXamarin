@@ -63,7 +63,7 @@
     <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
     <EnableProguard>False</EnableProguard>
     <DevInstrumentationEnabled>False</DevInstrumentationEnabled>
-    <JavaMaximumHeapSize>512m</JavaMaximumHeapSize>
+    <JavaMaximumHeapSize>412m</JavaMaximumHeapSize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Engine.IO.Client, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">

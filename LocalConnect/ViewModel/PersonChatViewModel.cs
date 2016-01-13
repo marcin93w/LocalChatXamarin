@@ -60,6 +60,7 @@ namespace LocalConnect.ViewModel
         public void StopChat()
         {
             _conversation.IsHolded = true;
+            Person.ClearUnreadMessages();
         }
         public void ResumeChat()
         {
@@ -73,12 +74,12 @@ namespace LocalConnect.ViewModel
 
         public string GetStatusText(OutcomeMessage message)
         {
+            if (message.Displayed)
+                return "Displayed";
             if (message.Sent)
                 return "Sent";
             if (message.DeliverError)
                 return "Error";
-            if (message.Displayed)
-                return "Displayed";
             return "Sending...";
         }
 

@@ -38,8 +38,9 @@
                     console.log('message set as displayed: ' + msgId);
                     return messagesCtrl.findSender(msgId);
                 })
-                .then(function(sender) {
-                    io.to(sender.id).emit('message displayed', { messageId: msgId });
+                .then(function (msg) {
+                    console.log('emmiting message '+msgId+' displayed to '  + msg.sender );
+                    io.to(msg.sender).emit('message displayed', { messageId: msgId });
                 })
                 .catch(function(err) {
                     console.log('ERROR!!: failed set message as displayed: ' + msgId + ': ' + err);

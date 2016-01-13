@@ -31,8 +31,11 @@ namespace LocalConnect.Models
         {
             if (!IsHolded && messageReceivedEventArgs.Message.SenderId == _personId)
             {
-                Messages.Add(messageReceivedEventArgs.Message);
-                _socketClient.MarkMessageAsDisplayed(messageReceivedEventArgs.Message);
+                if (!Messages.Contains(messageReceivedEventArgs.Message))
+                {
+                    Messages.Add(messageReceivedEventArgs.Message);
+                    _socketClient.MarkMessageAsDisplayed(messageReceivedEventArgs.Message);
+                }
             }
         }
 
